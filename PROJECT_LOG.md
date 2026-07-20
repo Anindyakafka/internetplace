@@ -172,3 +172,22 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - One non-critical warning: unused pretext type imports in `PretextText.svelte` (type-only, expected — runtime usage is via dynamic reference)
 
 **Consequence / next step:** The portfolio website is feature-complete and production-ready. Next steps when the user is ready: (1) deploy to Netlify (or other static host), (2) iterative content/visual polish, (3) optionally address the unused import warning for cleanliness.
+
+---
+
+### 2026-07-21 — Netlify deploy fix: page not found after successful publish
+
+**Decision:** Add a root-level `netlify.toml` file to explicitly configure Netlify's build settings and SPA fallback for the SvelteKit static adapter.
+
+**Context:** The site was deploying to Netlify successfully (build passed, "Published" status in Netlify dashboard), but every URL returned the "Page not found / Looks like you've followed a broken link" 404 page. The project uses `@sveltejs/adapter-static` with `fallback: '404.html'` and `pages: 'build'`, writing prerendered HTML to `build/`. Without a `netlify.toml`, Netlify was inferring the publish directory incorrectly (likely defaulting to the repo root or `dist`), so it never served the actual built site. Even with the correct publish directory, Netlify needs an explicit catch-all redirect rule to serve `404.html` as the SPA fallback for any path that doesn't match a prerendered file.
+
+**What was added (`netlify.toml`):**
+- `[build]` section: `command = "npm run build"`, `publish = "build"` — pins the build command and publish directory.
+- `[[redirects]]` block: `from = "/*"`, `to = "/404.html"`, `status = 404` — serves the SPA fallback for any unmatched route, enabling client-side routing on Netlify's CDN edge.
+
+**Alternatives considered:**
+- *Switching to `@sveltejs/adapter-netlify`* — would add SSR/functions capability we don't need; the static adapter produces fully prerendered HTML and is simpler. The only missing piece was Netlify config, not the adapter.
+- *Configuring publish directory only via the Netlify UI* — works but is fragile (not version-controlled, lost if the site is re-linked). `netlify.toml` is the source of truth and travels with the repo.
+- *Using a 200 (rewrite) instead of 404 for the fallback* — Netlify's SPA rewrite convention is status 200 with `force = false`, but for a fully prerendered static site the 404 fallback is the canonical pattern; every prerendered page already exists as a real HTML file.
+
+**Consequence / next step:** Redeploy on Netlify. The `netlify.toml` should be picked up automatically on the next push. Verify the homepage and at least one deep link (e.g. `/writing/dadri-methodology`) load correctly in the deployed site.
