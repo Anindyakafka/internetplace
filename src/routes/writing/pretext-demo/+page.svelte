@@ -78,7 +78,7 @@ This is what sets pretext apart from simple float behavior. A float gives you a 
 		<figure class="demo-figure">
 			<img
 				src="https://picsum.photos/seed/pretext-demo/320/400"
-				alt="A placeholder image that the text flows around"
+				alt=""
 				width="320"
 				height="400"
 			/>

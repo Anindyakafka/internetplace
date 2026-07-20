@@ -126,33 +126,52 @@
 
 	<div class="writing-grid">
 		{#each filteredEntries as entry (entry.slug)}
-			<a
-				class="entry-card"
-				class:entry-card--featured={entry.featured}
-				class:entry-card--draft={entry.status !== 'published'}
-				href={entry.slug}
-			>
-				<div class="entry-meta">
-					<span class="entry-date">{formatDate(entry.date)}</span>
-					<span class="entry-category-tag">{entry.category}</span>
-					{#if entry.readTime}
-						<span class="entry-readtime">{entry.readTime}</span>
-					{/if}
-				</div>
+			{#if entry.status === 'published'}
+				<a
+					class="entry-card"
+					class:entry-card--featured={entry.featured}
+					href={entry.slug}
+				>
+					<div class="entry-meta">
+						<span class="entry-date">{formatDate(entry.date)}</span>
+						<span class="entry-category-tag">{entry.category}</span>
+						{#if entry.readTime}
+							<span class="entry-readtime">{entry.readTime}</span>
+						{/if}
+					</div>
 
-				<h2 class="entry-title">{entry.title}</h2>
-				<p class="entry-blurb">{entry.blurb}</p>
+					<h2 class="entry-title">{entry.title}</h2>
+					<p class="entry-blurb">{entry.blurb}</p>
 
-				<div class="entry-footer">
-					{#if entry.status === 'published'}
+					<div class="entry-footer">
 						<span class="read-badge">Read →</span>
-					{:else if entry.status === 'draft'}
-						<span class="status-badge status-badge--draft">Draft</span>
-					{:else}
-						<span class="status-badge status-badge--planned">Planned</span>
-					{/if}
+					</div>
+				</a>
+			{:else}
+				<div
+					class="entry-card entry-card--upcoming"
+					class:entry-card--featured={entry.featured}
+				>
+					<div class="entry-meta">
+						<span class="entry-date">{formatDate(entry.date)}</span>
+						<span class="entry-category-tag">{entry.category}</span>
+						{#if entry.readTime}
+							<span class="entry-readtime">{entry.readTime}</span>
+						{/if}
+					</div>
+
+					<h2 class="entry-title">{entry.title}</h2>
+					<p class="entry-blurb">{entry.blurb}</p>
+
+					<div class="entry-footer">
+						{#if entry.status === 'draft'}
+							<span class="status-badge status-badge--draft">In Progress</span>
+						{:else}
+							<span class="status-badge status-badge--planned">Coming Soon</span>
+						{/if}
+					</div>
 				</div>
-			</a>
+			{/if}
 		{/each}
 	</div>
 
@@ -294,7 +313,7 @@
 		);
 	}
 
-	.entry-card--draft {
+	.entry-card--upcoming {
 		opacity: 0.75;
 	}
 

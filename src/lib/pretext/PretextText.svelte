@@ -5,8 +5,7 @@
 		materializeLineRange,
 		type PreparedTextWithSegments,
 		type LayoutCursor,
-		type LayoutLineRange,
-		type LayoutLine
+		type LayoutLineRange
 	} from '@chenglou/pretext';
 	import { buildLineWidthForY, buildLeftOffsetForY, type Obstacle } from './obstacles';
 
