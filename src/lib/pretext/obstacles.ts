@@ -49,17 +49,40 @@ export function buildLineWidthForY(
 }
 
 /**
+ * Build a `leftOffsetForY` function from the obstacle array.
+ * Returns the total horizontal offset (in pixels) that text should be
+ * shifted right at a given vertical position — i.e. the sum of all
+ * left-side obstacle widths that intersect that line.
+ *
+ * Right-side obstacles do NOT contribute to leftOffset; they only
+ * reduce available width (handled by `buildLineWidthForY`).
+ */
+export function buildLeftOffsetForY(
+	obstacles: Obstacle[] = []
+): (y: number) => number {
+	return (y: number): number => {
+		let offset = 0;
+		for (const obs of obstacles) {
+			if (obs.side === 'left' && y >= obs.y0 && y <= obs.y1) {
+				offset += obs.width;
+			}
+		}
+		return offset;
+	};
+}
+
+/**
  * Convenience: build an obstacle from a floated element's bounding rect.
  * Useful when a case-study page renders an image and measures it on mount.
  */
 export function obstacleFromRect(
 	rect: DOMRect,
-	containerLeft: number,
+	containerTop: number,
 	side: 'left' | 'right'
 ): Obstacle {
 	return {
-		y0: rect.top - containerLeft,
-		y1: rect.bottom - containerLeft,
+		y0: rect.top - containerTop,
+		y1: rect.bottom - containerTop,
 		side,
 		width: rect.width
 	};
