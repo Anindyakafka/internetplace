@@ -59,3 +59,34 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 **Context:** Keep the repo structured from day one so the eventual SvelteKit scaffold slots in without moving things around.
 
 **Consequence:** Next session can `npm create svelte@latest` directly into the repo root and start filling `src/routes/`.
+
+---
+
+### 2026-07-21 — Phase 1 Complete: All Core Pages Built
+
+**Decision:** Build all five core pages (Home, About, Work listing, Work detail, Writing) with full content, interactivity, and a cohesive design system matching the inspirations (aman.bh, wholeearth.info, forensic-architecture.org).
+
+**Context:** Phase 0 established scaffolding, docs, and Pretext integration. Phase 1 was the implementation phase — turning the skeleton into a living site. Each page needed to be visually distinctive yet share a consistent design language (typography scale, colour tokens, spacing rhythm). The user emphasised "cool and modern, not mediocre."
+
+**What was built:**
+
+1. **PretextText component** (`src/lib/pretext/PretextText.svelte`) — wraps `@chenglou/pretext` v0.0.8 `prepareWithSegments` / `layoutNextLineRange` / `materializeLineRange`. Figures positioned `absolute` inside `overflow: hidden` containers to avoid BFC collapse (the float bug). Obstacles system (`src/lib/pretext/obstacles.ts`) provides drop-cap and inline-figure obstacles. Demo route at `/writing/pretext-demo`.
+
+2. **Home** (`src/routes/+page.svelte`, ~760 lines) — Hero with animated `fadeUp` / `fadeIn` / `cardIn` keyframes, status-dot pulse, discipline grid (3-col), featured project cards with hover lift + shadow, writing preview section. Responsive at 768px and 480px breakpoints. Reduced-motion media query.
+
+3. **About** (`src/routes/about/+page.svelte`) — CV content rendered: education (M.Sc. Economics Shiv Nadar Inst. 2023–2025, B.Sc. Economics Bidhannagar Govt. College 2020–2023), experience (Research Consultant at Inclusion Economics India Centre / Yale, Research Assistant at Centre for Sustainable Employment / Azim Premji Univ), skills (Python, R, STATA, QGIS, JavaScript, C++, LaTeX, Git, SQL). Mix of prose and structured CV layout.
+
+4. **Work listing** (`src/routes/work/+page.svelte`, ~600 lines) — Whole-Earth-Catalog-style grid of all 7 projects from `src/data/projects.ts`. Interactive category filter using Svelte 5 runes (`$state` for active filter, `$derived` for filtered list). 6 filter categories (all, data, research, tooling, writing, art). Project cards with title, blurb, tags, year badge, collaborator note. Collaboration CTA at bottom. Responsive grid `repeat(auto-fill, minmax(20rem, 1fr))`.
+
+5. **Work detail** (`src/routes/work/[slug]/+page.ts` + `+page.svelte`) — Dynamic routes using SvelteKit `load` function. `+page.ts` finds project by slug with `error(404)` fallback, exports `entries()` for prerendering and `prerender = true`. `+page.svelte` displays all project fields (title, year, status, blurb, categories, repo/live links, collaborators) with a back-link to `/work`.
+
+6. **Writing** (`src/routes/writing/+page.svelte`) — Creative writing index page with essay/notes list, Pretext demo link, collaboration CTA. Matches the home/work design patterns (local `.page-content` styles, section headers, card/list layout, animations, responsive breakpoints, reduced-motion rules).
+
+7. **Data layer** (`src/data/projects.ts`, 150 lines) — `ProjectCategory` type, `Project` interface, 7 projects (cbfc-watch, dadri-forecast, name-ethnicity-detector, mgnrega-assets-bihar, sounding-names-religion, netcdf-manipulation-conversion, electoral-rolls-wb-2002). Exports `featuredProjects`, `projects`, `projectsByCategory(cat)`.
+
+**Alternatives considered:**
+- *Filling content lazily (stub pages first, flesh out later)* — rejected; the user wanted creative, complete pages from the start, not placeholder stubs.
+- *Putting `.page-content` in global.css* — rejected; each page needs slightly different layout, so keeping it local gives per-page control while still feeling consistent.
+- *Using markdown files for project content instead of a typed data file* — rejected for now; `projects.ts` gives type safety, easy filtering, and IDE autocompletion. Markdown case studies can be layered on top later for the long-form Pretext reader.
+
+**Consequence / next step:** Core site is feature-complete. Next priorities: (1) write actual long-form essays / case studies using PretextText, (2) add a Colophon page, (3) wire up deployment to Netlify, (4) iterative visual polish and content review.
