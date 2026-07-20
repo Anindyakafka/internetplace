@@ -22,29 +22,36 @@ Obstacles can sit on either side of the text. The layout function receives a cal
 
 This is what sets pretext apart from simple float behavior. A float gives you a rectangular exclusion zone. Pretext gives you a function — a continuous, per-pixel mapping from vertical position to available width. You can compose multiple overlapping obstacles, L-shaped regions, or any arbitrary polygon, and the text will flow around all of them naturally.`;
 
+	// Figure is absolutely positioned at top-left of the demo body.
+	// Its dimensions define the obstacle. We measure on mount + resize
+	// so the PretextText component gets an accurate carve-out.
+	const FIGURE_WIDTH = 320; // px (matches .demo-figure width)
+	const FIGURE_GAP = 24; // px breathing room between figure and text
+
 	$effect(() => {
 		if (!containerEl) return;
 
-		// Measure the floated image to create an obstacle.
 		const measure = () => {
-			const img = containerEl.querySelector('.demo-float') as HTMLElement | null;
-			if (!img) return;
+			const figure = containerEl.querySelector('.demo-figure') as HTMLElement | null;
+			if (!figure) return;
 
-			const imgRect = img.getBoundingClientRect();
+			const figureRect = figure.getBoundingClientRect();
 			const containerRect = containerEl.getBoundingClientRect();
 
+			// Bottom of the figure includes the caption + margin below.
 			obstacles = [
 				{
-					y0: imgRect.top - containerRect.top,
-					y1: imgRect.bottom - containerRect.top,
+					y0: figureRect.top - containerRect.top,
+					y1: figureRect.bottom - containerRect.top + FIGURE_GAP,
 					side: 'left' as const,
-					width: imgRect.width + 24 // image width + gap
+					width: FIGURE_WIDTH + FIGURE_GAP
 				}
 			];
 		};
 
-		// Wait for layout + image dimensions
-		requestAnimationFrame(measure);
+		// Double rAF ensures image has laid out and the container has its
+		// final width before we sample geometry.
+		requestAnimationFrame(() => requestAnimationFrame(measure));
 
 		const ro = new ResizeObserver(measure);
 		ro.observe(containerEl);
@@ -68,7 +75,7 @@ This is what sets pretext apart from simple float behavior. A float gives you a 
 	</header>
 
 	<div class="demo-body" bind:this={containerEl}>
-		<figure class="demo-float">
+		<figure class="demo-figure">
 			<img
 				src="https://picsum.photos/seed/pretext-demo/320/400"
 				alt="A placeholder image that the text flows around"
@@ -120,20 +127,23 @@ This is what sets pretext apart from simple float behavior. A float gives you a 
 		position: relative;
 	}
 
-	.demo-float {
-		float: left;
+	.demo-figure {
+		position: absolute;
+		top: 0;
+		left: 0;
 		width: 320px;
-		margin: var(--space-xs) var(--space-lg) var(--space-lg) 0;
+		margin: 0;
+		z-index: 1;
 	}
 
-	.demo-float img {
+	.demo-figure img {
 		width: 100%;
 		height: auto;
 		border-radius: 4px;
 		display: block;
 	}
 
-	.demo-float figcaption {
+	.demo-figure figcaption {
 		font-family: var(--font-sans);
 		font-size: var(--text-sm);
 		line-height: 1.5;
