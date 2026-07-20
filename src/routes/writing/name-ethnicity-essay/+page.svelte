@@ -34,16 +34,7 @@ What I did do — what I am doing here — is write about the process in a way I
 
 I no longer work on this project. Not because I think the research questions are illegitimate — discrimination is real, and measuring it matters — but because I became convinced that the statistical machinery was outrunning the ethical infrastructure. We have the tools to classify at scale. We do not yet have the norms to govern what happens after classification. In the gap between those two facts, a lot of harm can fit.`;
 
-	const obstacles: Obstacle[] = [
-		{
-			id: 'figure-1',
-			type: 'right',
-			offsetX: 0,
-			offsetY: 16,
-			width: 200,
-			height: 240
-		}
-	];
+	const obstacles: Obstacle[] = [];
 </script>
 
 <svelte:head>
@@ -61,16 +52,6 @@ I no longer work on this project. Not because I think the research questions are
 	</header>
 
 	<div class="pretext-body">
-		<figure class="pretext-figure pretext-figure--right">
-			<img
-				src="https://picsum.photos/seed/name-ethnicity/200/240"
-				alt=""
-				width="200"
-				height="240"
-			/>
-			<figcaption>A confusion matrix for one of the early model versions. Accuracy is unevenly distributed across groups.</figcaption>
-		</figure>
-
 		<PretextText text={essay} font={BODY_FONT} lineHeight={LINE_HEIGHT} {obstacles} />
 	</div>
 </article>
@@ -115,29 +96,5 @@ I no longer work on this project. Not because I think the research questions are
 		min-height: 400px;
 	}
 
-	.pretext-figure {
-		position: absolute;
-		top: 0;
-		width: 200px;
-		margin: 0;
-		z-index: 1;
-	}
 
-	.pretext-figure--right {
-		right: 0;
-	}
-
-	.pretext-figure img {
-		width: 100%;
-		height: auto;
-		display: block;
-		border-radius: var(--radius);
-	}
-
-	.pretext-figure figcaption {
-		font-size: 0.8rem;
-		color: var(--color-text-muted);
-		line-height: 1.4;
-		margin-top: 0.5rem;
-	}
 </style>

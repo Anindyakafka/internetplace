@@ -76,12 +76,14 @@ This is what sets pretext apart from simple float behavior. A float gives you a 
 
 	<div class="demo-body" bind:this={containerEl}>
 		<figure class="demo-figure">
-			<img
-				src="https://picsum.photos/seed/pretext-demo/320/400"
-				alt=""
-				width="320"
-				height="400"
-			/>
+			<svg viewBox="0 0 320 400" width="320" height="400" xmlns="http://www.w3.org/2000/svg">
+				<rect width="320" height="400" fill="var(--color-surface)" stroke="var(--color-border)" stroke-width="1" />
+				<line x1="0" y1="100" x2="320" y2="100" stroke="var(--color-border)" stroke-width="0.5" />
+				<line x1="0" y1="200" x2="320" y2="200" stroke="var(--color-border)" stroke-width="0.5" />
+				<line x1="0" y1="300" x2="320" y2="300" stroke="var(--color-border)" stroke-width="0.5" />
+				<line x1="107" y1="0" x2="107" y2="400" stroke="var(--color-border)" stroke-width="0.5" />
+				<line x1="213" y1="0" x2="213" y2="400" stroke="var(--color-border)" stroke-width="0.5" />
+			</svg>
 			<figcaption>The image acts as an obstacle — text calculates its break points per-line based on the pixels available at each vertical position.</figcaption>
 		</figure>
 
@@ -136,7 +138,7 @@ This is what sets pretext apart from simple float behavior. A float gives you a 
 		z-index: 1;
 	}
 
-	.demo-figure img {
+	.demo-figure svg {
 		width: 100%;
 		height: auto;
 		border-radius: 4px;

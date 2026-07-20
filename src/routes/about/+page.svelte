@@ -248,7 +248,7 @@
 			I'd love to hear from you.
 		</p>
 		<div class="contact-actions">
-			<a class="btn btn--primary" href="mailto:anindya@example.com">
+			<a class="btn btn--primary" href="mailto:hello@anindyasingh.dev">
 				Get in touch
 				<svg viewBox="0 0 16 16" width="14" height="14"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
 			</a>

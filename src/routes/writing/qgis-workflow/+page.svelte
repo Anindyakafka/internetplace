@@ -36,16 +36,7 @@ One final note: save your QGIS project file as a .qgz (the newer format) rather 
 
 The deeper lesson is that reproducibility is not a single decision but a discipline. Every step of this pipeline — projection, topology, attribution, symbology, export — has a default that is convenient and wrong. The convenient path produces a map. The disciplined path produces a map that another researcher, given the same inputs, could reconstruct to the pixel. That is the standard I aim for, and that I frequently fall short of. But it is the right direction to fall short in.`;
 
-	const obstacles: Obstacle[] = [
-		{
-			id: 'figure-1',
-			type: 'left',
-			offsetX: 0,
-			offsetY: 16,
-			width: 180,
-			height: 220
-		}
-	];
+	const obstacles: Obstacle[] = [];
 </script>
 
 <svelte:head>
@@ -63,16 +54,6 @@ The deeper lesson is that reproducibility is not a single decision but a discipl
 	</header>
 
 	<div class="pretext-body">
-		<figure class="pretext-figure pretext-figure--left">
-			<img
-				src="https://picsum.photos/seed/qgis-workflow/180/220"
-				alt=""
-				width="180"
-				height="220"
-			/>
-			<figcaption>A typical QGIS project layout — layer panel on the left, map canvas centre, processing toolbox docked right.</figcaption>
-		</figure>
-
 		<PretextText text={note} font={BODY_FONT} lineHeight={LINE_HEIGHT} {obstacles} />
 	</div>
 </article>
@@ -117,29 +98,5 @@ The deeper lesson is that reproducibility is not a single decision but a discipl
 		min-height: 400px;
 	}
 
-	.pretext-figure {
-		position: absolute;
-		top: 0;
-		width: 180px;
-		margin: 0;
-		z-index: 1;
-	}
 
-	.pretext-figure--left {
-		left: 0;
-	}
-
-	.pretext-figure img {
-		width: 100%;
-		height: auto;
-		display: block;
-		border-radius: var(--radius);
-	}
-
-	.pretext-figure figcaption {
-		font-size: 0.8rem;
-		color: var(--color-text-muted);
-		line-height: 1.4;
-		margin-top: 0.5rem;
-	}
 </style>

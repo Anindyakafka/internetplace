@@ -1,6 +1,7 @@
 /* ========================================================================
    internetplace — global styles
-   Design system: modern, editorial, generous whitespace, strong typography
+   Design system: clean, paper-like, editorial minimalism
+   Inspired by kazukinoda.com — generous whitespace, restrained palette
    ======================================================================== */
 
 /* --- Reset --- */
@@ -29,6 +30,7 @@ html {
 	--font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
 	/* Type Scale (modular, 1.250 — Major Third) */
+	--step--2: clamp(0.7rem, 0.67rem + 0.15vw, 0.78rem);
 	--step--1: clamp(0.8rem, 0.76rem + 0.2vw, 0.9rem);
 	--step-0: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
 	--step-1: clamp(1.25rem, 1.2rem + 0.25vw, 1.4rem);
@@ -49,35 +51,51 @@ html {
 	--space-3xl: 6rem;
 	--space-4xl: 8rem;
 
-	/* Colors — light theme */
-	--color-bg: #fafaf7;
-	--color-surface: #ffffff;
-	--color-text: #1a1a1a;
-	--color-text-muted: #5a5a5a;
-	--color-border: #e2e2dc;
-	--color-accent: #2b5acf;
-	--color-accent-hover: #1a47a8;
-	--color-accent-soft: rgba(43, 90, 207, 0.08);
+	/* Colors — light theme (warm paper) */
+	--color-bg: #f7f5f0;
+	--color-surface: #fffefb;
+	--color-surface-raised: #ffffff;
+	--color-text: #232323;
+	--color-text-secondary: #555;
+	--color-text-muted: #888;
+	--color-border: #e5e2d9;
+	--color-border-strong: #d4d0c4;
+	--color-accent: #3d3d3d;
+	--color-accent-hover: #000;
+	--color-accent-soft: rgba(61, 61, 61, 0.06);
+	--color-highlight: #c8a96a;
 
 	/* Layout */
 	--max-width: 72rem;
-	--measure: 38rem; /* optimal line length for prose */
-	--radius: 4px;
-	--radius-lg: 12px;
-	--transition: 200ms ease;
+	--measure: 38rem;
+	--measure-wide: 48rem;
+	--radius: 2px;
+	--radius-lg: 8px;
+	--transition: 250ms ease;
+	--transition-slow: 450ms cubic-bezier(0.22, 1, 0.36, 1);
+
+	/* Shadows — subtle, paper-like */
+	--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+	--shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
-@media (prefers-color-scheme: dark) {
-	:root {
-		--color-bg: #0e0e10;
-		--color-surface: #18181b;
-		--color-text: #e8e8e3;
-		--color-text-muted: #9a9a96;
-		--color-border: #2a2a2e;
-		--color-accent: #6b9bff;
-		--color-accent-hover: #8fb2ff;
-		--color-accent-soft: rgba(107, 155, 255, 0.1);
-	}
+/* Dark theme — manual toggle via [data-theme="dark"] */
+[data-theme='dark'] {
+	--color-bg: #1a1916;
+	--color-surface: #252320;
+	--color-surface-raised: #2a2825;
+	--color-text: #e5e1d8;
+	--color-text-secondary: #b0aca0;
+	--color-text-muted: #7a766c;
+	--color-border: #383530;
+	--color-border-strong: #4a463f;
+	--color-accent: #d4d0c4;
+	--color-accent-hover: #fffefb;
+	--color-accent-soft: rgba(212, 208, 196, 0.08);
+	--color-highlight: #c8a96a;
+
+	--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+	--shadow-md: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* --- Base --- */

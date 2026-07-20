@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { browser } from '$app/environment';
 	import type { Snippet } from 'svelte';
 	import '../lib/styles/global.css';
 
@@ -7,14 +8,37 @@
 
 	const navLinks = [
 		{ href: '/', label: 'Index' },
+		{ href: '/about', label: 'About' },
 		{ href: '/work', label: 'Work' },
 		{ href: '/writing', label: 'Writing' },
-		{ href: '/about', label: 'About' },
 		{ href: '/colophon', label: 'Colophon' }
 	];
 
 	let scrolled = $state(false);
 	let menuOpen = $state(false);
+	let theme = $state<'light' | 'dark'>('light');
+
+	// Restore saved theme (or system preference) on mount
+	$effect(() => {
+		if (!browser) return;
+		const stored = localStorage.getItem('theme') as 'light' | 'dark' | null;
+		if (stored) {
+			theme = stored;
+		} else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+			theme = 'dark';
+		}
+	});
+
+	// Apply theme to <html> and persist
+	$effect(() => {
+		if (!browser) return;
+		document.documentElement.setAttribute('data-theme', theme);
+		localStorage.setItem('theme', theme);
+	});
+
+	function toggleTheme() {
+		theme = theme === 'light' ? 'dark' : 'light';
+	}
 
 	$effect(() => {
 		const onScroll = () => {
@@ -38,7 +62,6 @@
 	<header class="site-header" class:scrolled>
 		<div class="header-inner">
 			<a href="/" class="site-id" onclick={() => (menuOpen = false)}>
-				<span class="site-mark">◇</span>
 				<span class="site-name">Anindya Singh</span>
 			</a>
 
@@ -63,6 +86,29 @@
 						{link.label}
 					</a>
 				{/each}
+				<button
+					class="theme-toggle"
+					aria-label="Toggle dark mode"
+					onclick={toggleTheme}
+				>
+					{#if theme === 'light'}
+						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+						</svg>
+					{:else}
+						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+							<circle cx="12" cy="12" r="5"></circle>
+							<line x1="12" y1="1" x2="12" y2="3"></line>
+							<line x1="12" y1="21" x2="12" y2="23"></line>
+							<line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+							<line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+							<line x1="1" y1="12" x2="3" y2="12"></line>
+							<line x1="21" y1="12" x2="23" y2="12"></line>
+							<line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+							<line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+						</svg>
+					{/if}
+				</button>
 			</nav>
 		</div>
 	</header>
@@ -76,9 +122,8 @@
 			<div class="footer-col">
 				<a class="footer-label" href="/colophon">Colophon</a>
 				<p class="footer-text">
-					Built with <a href="https://kit.svelte.dev" target="_blank" rel="noopener">SvelteKit</a>
-					and <a href="https://github.com/chenglou/pretext" target="_blank" rel="noopener">Pretext</a>.
-					Set in Inter, Newsreader &amp; JetBrains Mono.
+					Built with <a href="https://kit.svelte.dev" target="_blank" rel="noopener">SvelteKit</a>.
+					Set in Inter &amp; Newsreader.
 				</p>
 			</div>
 			<div class="footer-col">
@@ -93,7 +138,7 @@
 				<p class="footer-text">Delhi NCR, India</p>
 			</div>
 		</div>
-		<p class="footer-copy">© {new Date().getFullYear()} Anindya Singh. All rights reserved.</p>
+		<p class="footer-copy">© {new Date().getFullYear()} Anindya Singh</p>
 	</footer>
 </div>
 
@@ -195,6 +240,30 @@
 		height: 4px;
 		border-radius: 50%;
 		background: var(--color-accent);
+	}
+
+	/* ── Theme toggle ── */
+	.theme-toggle {
+		background: none;
+		border: none;
+		cursor: pointer;
+		color: var(--color-text-muted);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: var(--space-3xs) var(--space-2xs);
+		border-radius: var(--radius);
+		transition: color var(--transition), background var(--transition);
+	}
+
+	.theme-toggle:hover {
+		color: var(--color-text);
+		background: var(--color-accent-soft);
+	}
+
+	.theme-toggle svg {
+		width: 18px;
+		height: 18px;
 	}
 
 	/* ── Menu toggle (mobile) ── */
@@ -331,6 +400,11 @@
 		.site-nav a {
 			padding: var(--space-s);
 			font-size: var(--step-1);
+		}
+
+		.theme-toggle {
+			padding: var(--space-s);
+			align-self: flex-start;
 		}
 
 		.site-nav a.active::after {

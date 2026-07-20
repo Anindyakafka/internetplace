@@ -23,8 +23,8 @@
 		},
 		{
 			slug: '/writing/dadri-methodology/',
-			title: 'Forecasting Dadri: A Methodological Note',
-			blurb: 'How machine learning and meteorological data can predict agricultural outcomes in semi-arid India. Covers feature engineering, model selection, and the limits of weather-only forecasts.',
+			title: 'Fieldwork in Dadri: A Methodology Note',
+			blurb: 'Methodology from fieldwork in Dadri, western Uttar Pradesh: 214 household surveys across seven villages, satellite imagery analysis across two decades, oral histories, and the politics of land records in a peri-urban landscape.',
 			date: '2025-03-15',
 			category: 'essay',
 			readTime: '18 min',
@@ -185,7 +185,7 @@
 			I'm always open to co-authoring essays, building interactive demos, or writing
 			about interesting datasets. If you have an idea, let's talk.
 		</p>
-		<a class="text-link" href="mailto:anindya@example.com">Get in touch →</a>
+		<a class="text-link" href="mailto:hello@anindyasingh.dev">Get in touch →</a>
 	</section>
 </section>
 

@@ -126,7 +126,7 @@
 		<h2 class="collab-title">Open to collaboration</h2>
 		<p class="collab-text">
 			Working on something at the intersection of data, research, and civic tech?
-			<a href="mailto:anindyasingh@protonmail.com" class="text-link">Get in touch.</a>
+			<a href="mailto:hello@anindyasingh.dev" class="text-link">Get in touch.</a>
 		</p>
 	</section>
 </section>

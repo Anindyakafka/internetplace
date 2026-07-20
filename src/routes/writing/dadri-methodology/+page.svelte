@@ -32,16 +32,7 @@ Ethical considerations pervaded every stage of this research. Informed consent w
 
 What follows is an account of that methodology — not as a recipe to be followed, but as a set of decisions made under constraints, with all the trade-offs those decisions entailed. I describe what I did, why I did it, what it revealed, and what it missed. The account is offered in the spirit of transparency rather than authority, as one researcher's attempt to make visible the machinery behind findings that might otherwise appear more certain than they are.`;
 
-	const obstacles: Obstacle[] = [
-		{
-			id: 'figure-1',
-			type: 'left',
-			offsetX: 0,
-			offsetY: 16,
-			width: 200,
-			height: 260
-		}
-	];
+	const obstacles: Obstacle[] = [];
 </script>
 
 <svelte:head>
@@ -59,16 +50,6 @@ What follows is an account of that methodology — not as a recipe to be followe
 	</header>
 
 	<div class="pretext-body">
-		<figure class="pretext-figure">
-			<img
-				src="https://picsum.photos/seed/dadri-fieldwork/200/260"
-				alt=""
-				width="200"
-				height="260"
-			/>
-			<figcaption>Fields on the edge of Dadri, where agricultural land meets industrial encroachment.</figcaption>
-		</figure>
-
 		<PretextText text={essay} font={BODY_FONT} lineHeight={LINE_HEIGHT} {obstacles} />
 	</div>
 </article>
@@ -113,26 +94,5 @@ What follows is an account of that methodology — not as a recipe to be followe
 		min-height: 400px;
 	}
 
-	.pretext-figure {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 200px;
-		margin: 0;
-		z-index: 1;
-	}
 
-	.pretext-figure img {
-		width: 100%;
-		height: auto;
-		display: block;
-		border-radius: var(--radius);
-	}
-
-	.pretext-figure figcaption {
-		font-size: 0.8rem;
-		color: var(--color-text-muted);
-		line-height: 1.4;
-		margin-top: 0.5rem;
-	}
 </style>
