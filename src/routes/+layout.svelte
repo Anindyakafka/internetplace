@@ -9,7 +9,8 @@
 		{ href: '/', label: 'Index' },
 		{ href: '/work', label: 'Work' },
 		{ href: '/writing', label: 'Writing' },
-		{ href: '/about', label: 'About' }
+		{ href: '/about', label: 'About' },
+		{ href: '/colophon', label: 'Colophon' }
 	];
 
 	let scrolled = $state(false);
@@ -73,7 +74,7 @@
 	<footer class="site-footer">
 		<div class="footer-inner">
 			<div class="footer-col">
-				<p class="footer-label">Colophon</p>
+				<a class="footer-label" href="/colophon">Colophon</a>
 				<p class="footer-text">
 					Built with <a href="https://kit.svelte.dev" target="_blank" rel="noopener">SvelteKit</a>
 					and <a href="https://github.com/chenglou/pretext" target="_blank" rel="noopener">Pretext</a>.
@@ -252,6 +253,12 @@
 		letter-spacing: 0.08em;
 		color: var(--color-text-muted);
 		margin: 0;
+		text-decoration: none;
+		transition: color var(--transition);
+	}
+
+	.footer-label[href]:hover {
+		color: var(--color-accent);
 	}
 
 	.footer-text {
