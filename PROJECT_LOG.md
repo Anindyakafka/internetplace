@@ -90,3 +90,85 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - *Using markdown files for project content instead of a typed data file* — rejected for now; `projects.ts` gives type safety, easy filtering, and IDE autocompletion. Markdown case studies can be layered on top later for the long-form Pretext reader.
 
 **Consequence / next step:** Core site is feature-complete. Next priorities: (1) write actual long-form essays / case studies using PretextText, (2) add a Colophon page, (3) wire up deployment to Netlify, (4) iterative visual polish and content review.
+
+---
+
+### 2026-07-22 — Long-form essay content expanded (3 essays)
+
+**Decision:** Expand three essay pages from stubs/placeholders into full-length long-form prose pieces, each 800–1200 words with rich, specific detail from the actual research projects.
+
+**Context:** Phase 1 left the writing section with essay pages that had only short teaser content. The user's core requirement was to "really use pretext for all the long format text" — meaning these pages needed substantial body content to justify and showcase the Pretext obstacle-aware reflow engine. Stubs defeat the purpose.
+
+**What was expanded:**
+
+1. **`/writing/dadri-methodology`** — Full methodology narrative for the Dadri air-quality forecasting project. Covers data sources (Sentinel-5P TROPOMI, CPCB monitoring stations, ERA5 meteorological reanalysis), spatial interpolation approach (IDW + kriging comparison), temporal modelling (ARIMA baseline vs LSTM), and validation strategy (walk-forward CV against held-out station data).
+
+2. **`/writing/name-ethnicity-essay`** — Extended essay on the name-to-ethnicity classifier: training data assembly (Florida voter rolls + ethnicolr-classified supplements), model architecture (character-level CNN with grapheme clusters), fairness considerations (Brahmin vs Dalit name overlap, colonial-era surnames), and downstream application to the caste-wage-gap literature.
+
+3. **`/writing/qgis-workflow`** — Detailed QGIS workflow writeup: raw NetCDF ingestion via `r.grow.distance`, CRS reconciliation (EPSG:4326 → 7755 for South Asia), raster algebra for NO₂ anomalies, mapComposer automation through PyQGIS, and export pipeline producing both print-ready PDFs and web tiles.
+
+**Alternatives considered:**
+- *Writing essays as standalone Markdown files under `src/content/`* — the original architecture planned for this, but the PretextText component already handles the rendering pipeline inside `.svelte` pages. Adding a Markdown loader would introduce an extra hop without benefit at this stage. Can still be done later if content volume grows.
+- *Keeping essays short (500 words)* — rejected; the whole point of Pretext is long-form reflow, and short copy doesn't stress-test the obstacle system.
+
+**Consequence / next step:** The writing section now has three substantive long-form pieces. Future additions (MGNREGA assets, electoral rolls) can follow the same page template. If essay count grows beyond ~6, consider migrating to Markdown files + a dynamic `writing/[slug]` route.
+
+---
+
+### 2026-07-22 — Colophon page created
+
+**Decision:** Add a dedicated **Colophon** page at `/colophon` documenting the site's technology, typography, colour system, and design inspirations.
+
+**Context:** The original site architecture (2026-07-20 IA decision) called for a Colophon as part of the indieweb-inspired structure. It was deferred during Phase 1 to prioritise the five core pages. Now that those are complete, the Colophon rounds out the site and satisfies the "I want everything there" requirement.
+
+**What was built:**
+
+- **`src/routes/colophon/+page.svelte`** — Full page with four sections:
+  1. *Stack* — SvelteKit + adapter-static, Svelte 5 runes, @chenglou/pretext v0.0.8, prerendered static output.
+  2. *Typography* — Inter (sans), Newsreader (serif), JetBrains Mono (mono). Type scale based on 1.250 Major Third ratio with `clamp()` fluid sizing.
+  3. *Colour* — Light/dark themes via `prefers-color-scheme`. Accent: #2b5acf (light) / #6b9bff (dark). Warm off-white background #fafaf7 / near-black #0e0e10.
+  4. *Inspirations* — Credits aman.bh, wholeearth.info, and forensic-architecture.org with descriptions of what was borrowed from each.
+
+- Page uses the same `page-content` container pattern, local CSS scoping, and animation keyframes as other pages. Reduced-motion query included.
+
+**Alternatives considered:**
+- *Omitting the Colophon entirely* — rejected; it's a standard indieweb convention and the user explicitly wanted a complete site.
+- *Putting it in the footer as a small block* — rejected; the Colophon deserves its own page since it documents real design decisions and credits.
+
+**Consequence / next step:** Colophon is linked from the footer and the navigation bar. Content may be updated if the stack changes or new inspirations are incorporated.
+
+---
+
+### 2026-07-22 — Footer and navigation wired for Colophon; CSS anchor fix
+
+**Decision:** (1) Add Colophon to the `navLinks` array in `+layout.svelte` so it appears in the top navigation bar. (2) Convert the footer "Colophon" label from a plain `<p>` to an `<a href="/colophon">` link. (3) Add `text-decoration: none` and explicit `color: var(--color-text-muted)` to the `.footer-label` CSS rule to prevent the anchor from inheriting global link styling.
+
+**Context:** After creating the Colophon page, it was unreachable — not in the nav, and the footer label was non-clickable. The prerenderer follows all `a href` links, so a page with no inbound links would be orphaned (though `+layout.svelte` nav links would have caught it once added). Separately, once the footer label became an anchor, it would inherit the global `a` styling (accent colour #2b5acf / #6b9bff, underline on hover), which clashed with the muted, uppercase monospace label aesthetic.
+
+**What changed in `+layout.svelte`:**
+- `navLinks` array: added `{ href: '/colophon', label: 'Colophon' }` as the fifth entry.
+- Footer markup: `<p class="footer-label">Colophon</p>` → `<a class="footer-label" href="/colophon">Colophon</a>`.
+- `.footer-label` CSS: added `text-decoration: none;` (prevents underline) and confirmed `color: var(--color-text-muted);` (prevents accent-colour inheritance).
+
+**Alternatives considered:**
+- *Leaving Colophon out of the nav bar (footer-only link)* — rejected; the nav bar is the primary navigation surface and the Colophon is a top-level page.
+- *Creating a separate `.footer-label-link` class instead of reusing `.footer-label`* — rejected; the label styling should be identical whether it's a link or not. Adding a new class would be unnecessary duplication. The `text-decoration: none` override on the existing class is cleaner.
+
+**Consequence / next step:** All pages are now linked from both the nav bar and the footer. The Colophon is fully reachable. No orphaned routes. Ready for final build verification.
+
+---
+
+### 2026-07-22 — Final build verification: PASS
+
+**Decision:** Run `npm run build` as the final verification step for the complete portfolio site.
+
+**Context:** After all content expansion (3 essays), Colophon page creation, and footer/nav wiring were complete, a clean production build was needed to confirm no regressions and that all routes prerender correctly for static deployment.
+
+**Result:** ✅ **BUILD PASSED.**
+- SSR bundle: 175 modules transformed in 1.36s
+- Client bundle: 203 modules transformed
+- All routes prerendered: `/`, `/work`, `/work/[slug]` (7 project pages), `/writing`, `/writing/dadri-methodology`, `/writing/name-ethnicity-essay`, `/writing/qgis-workflow`, `/about`, `/colophon`
+- Static site written to `build/` directory
+- One non-critical warning: unused pretext type imports in `PretextText.svelte` (type-only, expected — runtime usage is via dynamic reference)
+
+**Consequence / next step:** The portfolio website is feature-complete and production-ready. Next steps when the user is ready: (1) deploy to Netlify (or other static host), (2) iterative content/visual polish, (3) optionally address the unused import warning for cleanliness.
