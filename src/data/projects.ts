@@ -25,6 +25,7 @@ export interface Project {
   collaborators?: string[];
   thumbnail?: string;       // path under /images/projects/
   featured?: boolean;       // surface on home
+  regions?: string[];       // geographic regions (state codes) for map
 }
 
 export const projects: Project[] = [
@@ -38,6 +39,7 @@ export const projects: Project[] = [
     repo: "https://github.com/Anindyakafka/CensorBoard_records",
     liveUrl: "https://cbfc.watch/",
     featured: true,
+    regions: ["DL"]
   },
   {
     slug: "dadri-forecast",
@@ -48,6 +50,7 @@ export const projects: Project[] = [
     status: "external",
     liveUrl: "https://khanderartspace.netlify.app/dadri-forecast",
     featured: true,
+    regions: ["UP", "RJ", "HR"]
   },
   {
     slug: "name-ethnicity-detector",
@@ -58,6 +61,7 @@ export const projects: Project[] = [
     status: "external",
     repo: "https://github.com/Anindyakafka/name-ethnicity-detector",
     featured: true,
+    regions: ["MH"]
   },
   {
     slug: "mgnrega-assets-bihar",
@@ -67,6 +71,7 @@ export const projects: Project[] = [
     categories: ["data", "tooling"],
     status: "external",
     repo: "https://github.com/Anindyakafka/MGNREGA_assets",
+    regions: ["BH"]
   },
   {
     slug: "sounding-names-religion",
@@ -76,6 +81,7 @@ export const projects: Project[] = [
     categories: ["research", "writing"],
     status: "external",
     repo: "https://github.com/Anindyakafka/Sounding-Names_religion",
+    regions: ["MH", "KA"]
   },
   {
     slug: "netcdf-manipulation-conversion",
@@ -85,6 +91,7 @@ export const projects: Project[] = [
     categories: ["tooling", "data"],
     status: "external",
     repo: "https://github.com/Anindyakafka/netCDF_manipulation_x_conversion",
+    regions: ["KA"]
   },
   {
     slug: "electoral-rolls-wb-2002",
@@ -94,6 +101,7 @@ export const projects: Project[] = [
     categories: ["data", "research"],
     status: "external",
     repo: "https://github.com/Anindyakafka/Electoral-Rolls-West-Bengal-2002",
+    regions: ["WB"]
   },
 ];
 

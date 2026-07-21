@@ -191,3 +191,32 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - *Using a 200 (rewrite) instead of 404 for the fallback* — Netlify's SPA rewrite convention is status 200 with `force = false`, but for a fully prerendered static site the 404 fallback is the canonical pattern; every prerendered page already exists as a real HTML file.
 
 **Consequence / next step:** Redeploy on Netlify. The `netlify.toml` should be picked up automatically on the next push. Verify the homepage and at least one deep link (e.g. `/writing/dadri-methodology`) load correctly in the deployed site.
+
+---
+
+### 2026-07-22 — Map page initiated
+
+**Decision:** Create a new **Map** landing page at `/map` featuring an interactive India SVG that shows geographic distribution of work and allows clicking on states/regions to explore related projects.
+
+**Context:** The portfolio site, though complete, lacked a geographic visualization component. Given that most work is India-focused (Dadri air quality in Uttar Pradesh, West Bengal electoral rolls, Bihar MGNREGA assets, caste-wage-gap studies), a map interface provides an intuitive, visual way to discover projects by location. Matches the "cool and modern" aesthetic while adding functional depth.
+
+**What will be built:**
+- **`src/routes/map/+page.svelte`** — Full-screen or large-section map page with:
+  1. Interactive India SVG (states as clickable paths with hover states)
+  2. Sidebar or overlay panel showing projects for selected region
+  3. Search/filter by location or project type
+  4. Responsive layout (mobile-first)
+  5. Visual indicators for regions with active projects
+  6. Same design language as rest of site (Inter/Newsreader, colour tokens, spacing rhythm)
+  7. Reduced-motion support for accessibility
+
+- **India SVG asset** — to be placed at `static/images/india-map.svg`. Once placed, will be loaded via `<img>` with inline fallback until implementation completes.
+
+- **Navigation integration** — Add Map to `navLinks` array in `+layout.svelte` for consistent site-wide access.
+
+**Alternatives considered:**
+- *Using a map library like Leaflet or Mapbox* — rejected; overkill for static project locations, adds significant bundle weight, India boundaries require custom tiles anyway. Inline SVG gives total control and is lightweight.
+- *Building only a static map image* — rejected; interactivity (hover states, click-to-filter) is what makes a map useful for navigation and discovery.
+- *Waiting until SVG is placed* — rejected; can scaffold the page with placeholder that works once SVG is in place. Structure is more important than asset timing.
+
+**Consequence / next step:** Build the Map page component, wire navigation, and provide clear instructions for where to place the India SVG. Once SVG is in `static/images/india-map.svg`, the page will render correctly. May need to adjust path IDs and coordinate systems based on the actual SVG structure.
