@@ -1,185 +1,194 @@
 /**
  * India Map Action
- * 
- * Loads and enhances an India SVG with interactive functionality:
- * - Clickable state/region paths
- * - Hover states and tooltips
- * - Visual distinction between active and inactive regions
- * - Smooth transitions and accessibility support
- * 
- * @param node - The HTMLImageElement containing the India SVG
- * @param params - Configuration parameters
+ *
+ * Fetches the India SVG, inlines it into the target container, and wires up
+ * per-state interactivity (hover, click, active/inactive styling).
+ *
+ * SVGs loaded via <img> are sandboxed — their internal DOM is inaccessible.
+ * So we MUST inline the SVG for click/hover on individual state paths to work.
+ *
+ * The SVG (static/assets/india.svg) uses IDs like `INUP`, `INWB`, `INBR`, etc.
+ * The two-letter suffix is the ISO-style state code we use throughout the app.
  */
-export function indiaMap(
-	node: HTMLImageElement,
-	params: {
-		regions: Array<{ id: string; name: string; projects: any[] }>;
-		onRegionClick: (regionId: string) => void;
-		onRegionHover: (regionId: string) => void;
-		onRegionLeave: () => void;
-	}
-) {
-	const { regions, onRegionClick, onRegionHover, onRegionLeave } = params;
-	let svgDocument: Document | null = null;
-	let regionElements: Map<string, SVGPathElement> = new Map();
 
-	// Extract state IDs from SVG paths
-	const STATE_IDS = [
-		'JK', 'JH', 'KA', 'MH', 'MP', 'UP', 'WB', 'BH', 'OR', 'GJ', 'RJ', 'DL', 'HR', 'PB', 
-		'UK', 'HP', 'AS', 'AR', 'NL', 'MN', 'MZ', 'TR', 'ML', 'SK', 'TG', 'AP', 'KA', 'KL',
-		'TN', 'GA', 'CH', 'PY', 'AN', 'DN', 'DD', 'LD'
-	];
+export interface IndiaMapRegion {
+	id: string; // 2-letter state code, e.g. "UP", "BR", "DL"
+	name: string;
+	projects: unknown[];
+}
 
-	// Get active region IDs
-	const activeRegionIds = new Set(regions.map(r => r.id));
+export interface IndiaMapParameters {
+	regions: IndiaMapRegion[];
+	svgUrl: string;
+	onRegionClick: (regionId: string) => void;
+	onRegionHover: (regionId: string | null) => void;
+}
+
+export function indiaMap(node: HTMLElement, params: IndiaMapParameters) {
+	let currentParams = params;
+	let cleanupFns: Array<() => void> = [];
+	let abortController: AbortController | null = null;
 
 	/**
-	 * Initialize the map after SVG loads
+	 * Extract the 2-letter state code from an SVG path ID.
+	 * `INUP` -> "UP", `INBR` -> "BR", `INAN` -> "AN".
 	 */
-	async function initializeMap() {
+	function stateCodeFromId(rawId: string | null): string | null {
+		if (!rawId) return null;
+		const id = rawId.toUpperCase();
+		if (!id.startsWith('IN')) return null;
+		const code = id.slice(2);
+		return code.length >= 2 ? code : null;
+	}
+
+	/**
+	 * Inline the SVG and wire up interactivity.
+	 */
+	async function render() {
+		// Tear down any previous render.
+		cleanupFns.forEach((fn) => fn());
+		cleanupFns = [];
+		node.innerHTML = '';
+
+		abortController?.abort();
+		abortController = new AbortController();
+
 		try {
-			// Fetch SVG as text
-			const response = await fetch(node.src);
+			const response = await fetch(currentParams.svgUrl, {
+				signal: abortController.signal
+			});
 			if (!response.ok) {
-				console.error('Failed to load India SVG:', response.statusText);
+				console.error('[indiaMap] Failed to load SVG:', response.status, response.statusText);
 				return;
 			}
 
 			const svgText = await response.text();
 			const parser = new DOMParser();
-			svgDocument = parser.parseFromString(svgText, 'image/svg+xml');
-			const svgElement = svgDocument.querySelector('svg');
+			const doc = parser.parseFromString(svgText, 'image/svg+xml');
 
-			if (!svgElement) {
-				console.error('No SVG element found in document');
+			// Check for parse errors.
+			const parseError = doc.querySelector('parsererror');
+			if (parseError) {
+				console.error('[indiaMap] SVG parse error:', parseError.textContent);
 				return;
 			}
 
-			// Process all path elements
-			const paths = svgElement.querySelectorAll('path');
-			paths.forEach(path => {
-				const pathId = path.id || path.getAttribute('data-id');
-				if (!pathId) return;
+			const svgEl = doc.documentElement;
+			svgEl.removeAttribute('width');
+			svgEl.removeAttribute('height');
+			svgEl.style.width = '100%';
+			svgEl.style.height = 'auto';
+			svgEl.style.display = 'block';
 
-				// Try to match with known state IDs
-				const stateId = STATE_IDS.find(id => 
-					pathId.toUpperCase().includes(id) || 
-					pathId.toLowerCase().includes(id.toLowerCase())
+			// Inline into the container.
+			node.appendChild(svgEl);
+
+			const activeIds = new Set(currentParams.regions.map((r) => r.id.toUpperCase()));
+
+			// Style + wire every state path.
+			const paths = svgEl.querySelectorAll('path[id]');
+			paths.forEach((path) => {
+				const code = stateCodeFromId(path.getAttribute('id'));
+				if (!code) return;
+
+				const isActive = activeIds.has(code);
+				applyStateStyle(path, isActive, false);
+
+				if (!isActive) {
+					path.style.pointerEvents = 'none';
+					return;
+				}
+
+				path.style.cursor = 'pointer';
+				path.setAttribute('role', 'button');
+				path.setAttribute('tabindex', '0');
+				path.setAttribute(
+					'aria-label',
+					currentParams.regions.find((r) => r.id.toUpperCase() === code)?.name ?? code
 				);
 
-				if (stateId) {
-					enhancePath(path, stateId);
-				}
+				const onClick = (event: MouseEvent) => {
+					event.preventDefault();
+					event.stopPropagation();
+					currentParams.onRegionClick(code);
+				};
+				const onKey = (event: KeyboardEvent) => {
+					if (event.key === 'Enter' || event.key === ' ') {
+						event.preventDefault();
+						currentParams.onRegionClick(code);
+					}
+				};
+				const onEnter = () => {
+					applyStateStyle(path, true, true);
+					currentParams.onRegionHover(code);
+				};
+				const onLeave = () => {
+					applyStateStyle(path, true, false);
+					currentParams.onRegionHover(null);
+				};
+
+				path.addEventListener('click', onClick);
+				path.addEventListener('keydown', onKey);
+				path.addEventListener('mouseenter', onEnter);
+				path.addEventListener('mouseleave', onLeave);
+				path.addEventListener('focus', onEnter);
+				path.addEventListener('blur', onLeave);
+
+				cleanupFns.push(() => {
+					path.removeEventListener('click', onClick);
+					path.removeEventListener('keydown', onKey);
+					path.removeEventListener('mouseenter', onEnter);
+					path.removeEventListener('mouseleave', onLeave);
+					path.removeEventListener('focus', onEnter);
+					path.removeEventListener('blur', onLeave);
+				});
 			});
-
-			// Create a blob URL for the modified SVG
-			const svgString = new XMLSerializer().serializeToString(svgElement);
-			const blob = new Blob([svgString], { type: 'image/svg+xml' });
-			const url = URL.createObjectURL(blob);
-			
-			// Update the image source
-			node.src = url;
-
-			// Clean up when image is done loading
-			node.onload = () => {
-				URL.revokeObjectURL(url);
-			};
-		} catch (error) {
-			console.error('Error initializing India map:', error);
+		} catch (err) {
+			if ((err as Error).name !== 'AbortError') {
+				console.error('[indiaMap] Error loading SVG:', err);
+			}
 		}
 	}
 
 	/**
-	 * Enhance a path element with interactivity
+	 * Apply visual state to a path.
+	 * Reads CSS custom properties so it respects the site theme.
 	 */
-	function enhancePath(path: SVGPathElement, stateId: string) {
-		const isActive = activeRegionIds.has(stateId);
+	function applyStateStyle(path: SVGPathElement, isActive: boolean, isHovered: boolean) {
+		const styles = getComputedStyle(node);
+		const accent = styles.getPropertyValue('--color-accent').trim() || '#3b82f6';
+		const accentSoft = styles.getPropertyValue('--color-accent-soft').trim() || 'rgba(59,130,246,0.2)';
+		const border = styles.getPropertyValue('--color-border').trim() || '#e5e7eb';
+		const stroke = styles.getPropertyValue('--color-text').trim() || '#1f2937';
 
-		// Set initial fill based on activity
 		if (isActive) {
-			path.style.fill = 'var(--color-accent, #3b82f6)';
-			path.style.fillOpacity = '0.3';
+			path.style.fill = isHovered ? accent : accentSoft;
+			path.style.fillOpacity = isHovered ? '0.85' : '0.55';
+			path.style.stroke = accent;
+			path.style.strokeWidth = isHovered ? '1.2' : '0.6';
 		} else {
-			path.style.fill = 'var(--color-border, #e5e7eb)';
-			path.style.fillOpacity = '0.1';
+			path.style.fill = border;
+			path.style.fillOpacity = '0.25';
+			path.style.stroke = stroke;
+			path.style.strokeWidth = '0.4';
+			path.style.strokeOpacity = '0.4';
 		}
-
-		path.style.stroke = 'var(--color-text, #1f2937)';
-		path.style.strokeWidth = '0.5';
-		path.style.transition = 'fill 0.2s ease, fill-opacity 0.2s ease, stroke-width 0.2s ease';
-
-		// Add click handler
-		path.addEventListener('click', (e) => {
-			e.preventDefault();
-			e.stopPropagation();
-			if (isActive) {
-				onRegionClick(stateId);
-			}
-		});
-
-		// Add hover handlers
-		path.addEventListener('mouseenter', () => {
-			if (isActive) {
-				path.style.fillOpacity = '0.6';
-				path.style.strokeWidth = '1';
-			}
-			onRegionHover(stateId);
-		});
-
-		path.addEventListener('mouseleave', () => {
-			if (isActive) {
-				path.style.fillOpacity = '0.3';
-				path.style.strokeWidth = '0.5';
-			}
-			onRegionLeave();
-		});
-
-		// Store reference
-		regionElements.set(stateId, path);
+		path.style.transition =
+			'fill 0.18s ease, fill-opacity 0.18s ease, stroke 0.18s ease, stroke-width 0.18s ease';
 	}
 
-	/**
-	 * Update map when regions change
-	 */
-	function updateMap() {
-		regionElements.forEach((path, stateId) => {
-			const isActive = activeRegionIds.has(stateId);
-			
-			if (isActive) {
-				path.style.fill = 'var(--color-accent, #3b82f6)';
-				path.style.fillOpacity = '0.3';
-			} else {
-				path.style.fill = 'var(--color-border, #e5e7eb)';
-				path.style.fillOpacity = '0.1';
-			}
-		});
-	}
+	render();
 
-	// Initialize on load
-	if (node.complete) {
-		initializeMap();
-	} else {
-		node.addEventListener('load', initializeMap);
-	}
-
-	// Cleanup
 	return {
-		destroy() {
-			regionElements.forEach((path, stateId) => {
-				path.removeEventListener('click', () => {});
-				path.removeEventListener('mouseenter', () => {});
-				path.removeEventListener('mouseleave', () => {});
-			});
-			regionElements.clear();
+		update(newParams: IndiaMapParameters) {
+			currentParams = newParams;
+			render();
 		},
-		update(newParams: typeof params) {
-			// Update regions if they change
-			if (newParams.regions !== params.regions) {
-				params.regions = newParams.regions;
-				updateMap();
-			}
+		destroy() {
+			abortController?.abort();
+			cleanupFns.forEach((fn) => fn());
+			cleanupFns = [];
+			node.innerHTML = '';
 		}
 	};
 }
-
-export type IndiaMapParameters = Parameters<typeof indiaMap>[1];

@@ -71,7 +71,7 @@ export const projects: Project[] = [
     categories: ["data", "tooling"],
     status: "external",
     repo: "https://github.com/Anindyakafka/MGNREGA_assets",
-    regions: ["BH"]
+    regions: ["BR"]
   },
   {
     slug: "sounding-names-religion",

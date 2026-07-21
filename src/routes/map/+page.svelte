@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { reveal } from '$lib/actions/reveal';
+	import { indiaMap } from '$lib/actions/india-map';
 	import { projects } from '$data/projects';
-	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 
 	type Region = {
 		id: string;
@@ -13,7 +14,7 @@
 	const regionMap: Record<string, string[]> = {
 		'UP': ['dadri-forecast'],
 		'WB': ['electoral-rolls-wb-2002'],
-		'BH': ['mgnrega-assets-bihar'],
+		'BR': ['mgnrega-assets-bihar'],
 		'DL': ['cbfc-watch'],
 		'MH': ['sounding-names-religion', 'name-ethnicity-detector'],
 		'KA': ['netcdf-manipulation-conversion'],
@@ -25,54 +26,46 @@
 	let hoveredRegionId = $state<string | null>(null);
 	let searchQuery = $state('');
 
-	// Build regions list from project data
-	let regions = $derived<Region[]>(() => {
-		const regionSet = new Set<string>();
-		
-		// Collect all regions from mapped projects
-		Object.values(regionMap).forEach(slugs => {
-			slugs.forEach(slug => {
-				const proj = projects.find(p => p.slug === slug);
-				if (proj?.regions) {
-					proj.regions.forEach(r => regionSet.add(r));
-				}
-			});
-		});
+	// Build regions list directly from project metadata.
+	// Each project's `regions` field is the source of truth for geography.
+	let regions = $derived.by<Region[]>(() => {
+		const regionIds = new Set<string>();
+		projects.forEach((p) => p.regions?.forEach((r) => regionIds.add(r)));
 
-		// Build region objects
-		const regionList: Region[] = Array.from(regionSet).map(regionId => {
-			const relatedProjects = projects.filter(p => 
-				p.regions?.includes(regionId)
-			).map(p => ({
-				title: p.title,
-				slug: p.slug,
-				blurb: p.blurb,
-				year: p.year.toString(),
-				categories: p.categories
-			}));
+		return Array.from(regionIds)
+			.map((regionId) => {
+				const relatedProjects = projects
+					.filter((p) => p.regions?.includes(regionId))
+					.map((p) => ({
+						title: p.title,
+						slug: p.slug,
+						blurb: p.blurb,
+						year: p.year.toString(),
+						categories: p.categories
+					}));
 
-			return {
-				id: regionId,
-				name: getRegionName(regionId),
-				projects: relatedProjects
-			};
-		});
-
-		// Sort by project count (most active first)
-		return regionList.sort((a, b) => b.projects.length - a.projects.length);
+				return {
+					id: regionId,
+					name: getRegionName(regionId),
+					projects: relatedProjects
+				};
+			})
+			.sort((a, b) => b.projects.length - a.projects.length);
 	});
 
 	// Filter regions based on search
-	let filteredRegions = $derived(() => {
+	let filteredRegions = $derived.by<Region[]>(() => {
 		if (!searchQuery.trim()) return regions;
-		
+
 		const query = searchQuery.toLowerCase();
-		return regions.filter(region =>
-			region.name.toLowerCase().includes(query) ||
-			region.projects.some(proj =>
-				proj.title.toLowerCase().includes(query) ||
-				proj.blurb.toLowerCase().includes(query)
-			)
+		return regions.filter(
+			(region) =>
+				region.name.toLowerCase().includes(query) ||
+				region.projects.some(
+					(proj) =>
+						proj.title.toLowerCase().includes(query) ||
+						proj.blurb.toLowerCase().includes(query)
+				)
 		);
 	});
 
@@ -80,7 +73,7 @@
 		const names: Record<string, string> = {
 			'UP': 'Uttar Pradesh',
 			'WB': 'West Bengal',
-			'BH': 'Bihar',
+			'BR': 'Bihar',
 			'DL': 'Delhi',
 			'MH': 'Maharashtra',
 			'KA': 'Karnataka',
@@ -97,12 +90,8 @@
 		}
 	}
 
-	function handleRegionMouseEnter(regionId: string) {
+	function handleRegionHover(regionId: string | null) {
 		hoveredRegionId = regionId;
-	}
-
-	function handleRegionMouseLeave() {
-		hoveredRegionId = null;
 	}
 
 	function clearSelection() {
@@ -110,7 +99,7 @@
 	}
 
 	function navigateToProject(slug: string) {
-		window.location.href = `/work/${slug}`;
+		goto(`/work/${slug}`);
 	}
 </script>
 
@@ -163,12 +152,12 @@
 		<div class="map-container">
 			<!-- India SVG Map -->
 			<div class="india-map-wrapper">
-				<img
-					src="/images/india-map.svg"
-					alt="India map with clickable regions"
-					class="india-map"
-					use:indiaMap={{ regions, onRegionClick: handleRegionClick, onRegionHover: handleRegionMouseEnter, onRegionLeave: handleRegionMouseLeave }}
-				/>
+				<div
+				class="india-map"
+				role="img"
+				aria-label="India map with clickable regions"
+				use:indiaMap={{ regions, svgUrl: '/assets/india.svg', onRegionClick: handleRegionClick, onRegionHover: handleRegionHover }}
+				></div>
 			</div>
 
 			<!-- Legend -->
@@ -256,8 +245,8 @@
 								<button
 									class="region-button"
 									onclick={() => handleRegionClick(region.id)}
-									onmouseenter={() => handleRegionMouseEnter(region.id)}
-									onmouseleave={handleRegionMouseLeave}
+								onmouseenter={() => handleRegionHover(region.id)}
+								onmouseleave={() => handleRegionHover(null)}
 									class:hovered={hoveredRegionId === region.id}
 								>
 									<span class="region-item-name">{region.name}</span>
@@ -358,7 +347,6 @@
 	.search-input {
 		width: 100%;
 		padding: var(--space-md) var(--space-lg);
-		padding-right: {searchQuery ? '3.5rem' : 'var(--space-lg)'};
 		font-size: var(--step-0);
 		font-family: var(--font-sans);
 		border: 1px solid var(--color-border);
@@ -908,7 +896,14 @@
 		}
 
 		@keyframes fadeUp {
-			none;
+			from {
+				opacity: 1;
+				transform: none;
+			}
+			to {
+				opacity: 1;
+				transform: none;
+			}
 		}
 	}
 </style>
