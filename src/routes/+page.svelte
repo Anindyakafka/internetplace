@@ -1,323 +1,393 @@
 ﻿<script lang="ts">
-import { featuredProjects } from '$data/projects';
-import { reveal } from '$lib/actions/reveal';
+     import { projects, featuredProjects } from '$data/projects';
+     import { reveal } from '$lib/actions/reveal';
+     import { indiaMap } from '$lib/actions/india-map';
 
-let year = new Date().getFullYear();
+     type RegionProject = {
+          title: string;
+          slug: string;
+          year: number | string;
+     };
+
+     type Region = {
+          id: string;
+          name: string;
+          projects: RegionProject[];
+     };
+
+     const regionNames: Record<string, string> = {
+          UP: 'Uttar Pradesh',
+          WB: 'West Bengal',
+          BR: 'Bihar',
+          DL: 'Delhi',
+          MH: 'Maharashtra',
+          KA: 'Karnataka',
+          RJ: 'Rajasthan',
+          HR: 'Haryana'
+     };
+
+     let hoveredRegionId = $state<string | null>(null);
+     let selectedRegionId = $state<string | null>(null);
+
+     let regions = $derived.by<Region[]>(() => {
+          const ids = new Set<string>();
+          projects.forEach((project) => project.regions?.forEach((id) => ids.add(id)));
+
+          return Array.from(ids)
+               .map((id) => ({
+                    id,
+                    name: regionNames[id] ?? id,
+                    projects: projects
+                         .filter((project) => project.regions?.includes(id))
+                         .map((project) => ({ title: project.title, slug: project.slug, year: project.year }))
+               }))
+               .sort((a, b) => b.projects.length - a.projects.length);
+     });
+
+     let activeRegion = $derived.by<Region | null>(() => {
+          if (selectedRegionId) return regions.find((region) => region.id === selectedRegionId) ?? null;
+          if (hoveredRegionId) return regions.find((region) => region.id === hoveredRegionId) ?? null;
+          return null;
+     });
+
+     function handleRegionClick(regionId: string) {
+          selectedRegionId = selectedRegionId === regionId ? null : regionId;
+     }
+
+     function handleRegionHover(regionId: string | null) {
+          hoveredRegionId = regionId;
+     }
 </script>
 
 <svelte:head>
-<title>Anindya Singh — Researcher, Data Scientist, Writer</title>
-<meta
-name="description"
-content="Portfolio of Anindya Singh — researcher, data scientist, and writer. Data projects, research, and essays on caste, labour, names, and political ecology."
-/>
-<meta name="author" content="Anindya Singh" />
-<meta property="og:title" content="Anindya Singh — Researcher, Data Scientist, Writer" />
-<meta
-property="og:description"
-content="Data projects, research, and essays on caste, labour, names, and political ecology."
-/>
-<meta property="og:type" content="website" />
+     <title>Anindya Singh — Researcher, Data Scientist, Writer</title>
+     <meta
+          name="description"
+          content="Map-based landing for Anindya Singh's work, writing, and research across India."
+     />
+     <meta name="author" content="Anindya Singh" />
+     <meta property="og:title" content="Anindya Singh — Researcher, Data Scientist, Writer" />
+     <meta
+          property="og:description"
+          content="Explore projects, writing, and background through a map-centered landing page."
+     />
+     <meta property="og:type" content="website" />
 </svelte:head>
 
-<!-- ═══════════════════════════════════════════════
-     HERO
-     ═══════════════════════════════════════════════ -->
-<section class="hero" use:reveal>
-<div class="hero-inner">
-<p class="hero-overline">
-<span class="status-dot" aria-hidden="true"></span>
-Available for research collaborations &middot; {year}
-</p>
+<section class="landing" use:reveal>
+     <header class="landing-header">
+          <p class="kicker">Field Notes and Coordinates</p>
+          <h1>
+               A map-led index into research, writing, and tools.
+          </h1>
+          <p class="intro">
+               This is not a dashboard. It is a terrain to wander: enter through regions, then drift into
+               projects, essays, and background.
+          </p>
+     </header>
 
-<h1 class="hero-title">
-Anindya Singh is a researcher, data scientist, and writer working at the intersection of
-<em>economics</em>, <em>data</em>, and <em>social impact</em>.
-</h1>
+     <div class="exploration-canvas" use:reveal={{ delay: 70 }}>
+          <a class="orbit-link orbit-link--about" href="/about">
+               <span class="orbit-label">About</span>
+               <span class="orbit-copy">who I am and where the work comes from</span>
+          </a>
 
-<p class="hero-tagline">
-Building tools and writing about caste, labour, names, and the political ecology of
-South Asia. Currently based in India.
-</p>
-</div>
-</section>
+          <a class="orbit-link orbit-link--work" href="/work">
+               <span class="orbit-label">Work</span>
+               <span class="orbit-copy">all projects, pipelines, and case studies</span>
+          </a>
 
-<!-- ═══════════════════════════════════════════════
-     SELECTED WORK
-     ═══════════════════════════════════════════════ -->
-<section class="selected" use:reveal={ { delay: 60 } }>
-<div class="section-label">
-<span>Selected Work</span>
-<a href="/work" class="see-all">All projects →</a>
-</div>
+          <a class="orbit-link orbit-link--writing" href="/writing">
+               <span class="orbit-label">Writing</span>
+               <span class="orbit-copy">essays, methods, and long-form notes</span>
+          </a>
 
-<ul class="work-rows" role="list">
-{#each featuredProjects as project}
-<li class="work-row">
-<a
-class="work-link"
-href={project.liveUrl ?? project.repo ?? '#'}
-target={project.liveUrl || project.repo ? '_blank' : undefined}
-rel={project.liveUrl || project.repo ? 'noopener noreferrer' : undefined}
->
-<span class="work-year">{project.year}</span>
-<span class="work-title">{project.title}</span>
-<span class="work-tags">
-{#each project.categories as cat}
-<span class="work-tag">{cat}</span>
-{/each}
-</span>
-<span class="work-arrow" aria-hidden="true">↗</span>
-</a>
-</li>
-{/each}
-</ul>
-</section>
+          <a class="orbit-link orbit-link--colophon" href="/colophon">
+               <span class="orbit-label">Colophon</span>
+               <span class="orbit-copy">stack, type, and design references</span>
+          </a>
 
-<!-- ═══════════════════════════════════════════════
-     WRITING NOTE
-     ═══════════════════════════════════════════════ -->
-<section class="writing-note" use:reveal={ { delay: 60 } }>
-<div class="section-label">
-<span>Writing</span>
-<a href="/writing" class="see-all">Archive →</a>
-</div>
-<p>
-Essays and manifestos on caste, labour, and the politics of data — published through art
-spaces and independent venues.
-</p>
-</section>
+          <div class="map-center">
+               <div class="map-shell">
+                    <div
+                         class="india-map"
+                         role="img"
+                         aria-label="India map with active regions"
+                         use:indiaMap={{
+                              regions,
+                              svgUrl: '/assets/india.svg',
+                              onRegionClick: handleRegionClick,
+                              onRegionHover: handleRegionHover
+                         }}
+                    ></div>
+               </div>
+          </div>
+     </div>
 
-<!-- ═══════════════════════════════════════════════
-     FOOTER LINK
-     ═══════════════════════════════════════════════ -->
-<section class="home-footer" use:reveal>
-<p>
-Want to work together? <a href="mailto:hello@anindyasingh.dev">hello@anindyasingh.dev</a>
-</p>
+     <section class="region-panel" use:reveal={{ delay: 110 }}>
+          {#if activeRegion}
+               <p class="region-meta">{activeRegion.name} · {activeRegion.projects.length} project{activeRegion.projects.length > 1 ? 's' : ''}</p>
+               <ul class="region-links" role="list">
+                    {#each activeRegion.projects as project}
+                         <li>
+                              <a href={`/work/${project.slug}`}>{project.title} <span>{project.year}</span></a>
+                         </li>
+                    {/each}
+               </ul>
+          {:else}
+               <p class="region-meta">Choose or hover a region on the map to reveal the trail.</p>
+          {/if}
+     </section>
+
+     <section class="featured-strip" use:reveal={{ delay: 140 }}>
+          <p class="strip-label">Featured Coordinates</p>
+          <div class="strip-items">
+               {#each featuredProjects.slice(0, 3) as project}
+                    <a class="strip-item" href={`/work/${project.slug}`}>
+                         <span class="strip-year">{project.year}</span>
+                         <span class="strip-title">{project.title}</span>
+                    </a>
+               {/each}
+          </div>
+     </section>
+
+     <p class="contact-note">
+          Open to collaborations and commissions: <a href="mailto:hello@anindyasingh.dev">hello@anindyasingh.dev</a>
+     </p>
 </section>
 
 <style>
-/* ═══ HERO ═══ */
-.hero {
-padding: var(--space-4xl) 0 var(--space-3xl);
-min-height: 55vh;
-display: flex;
-align-items: center;
-}
+     .landing {
+          max-width: var(--max-width);
+          margin: 0 auto;
+          padding: var(--space-3xl) var(--space-l);
+     }
 
-.hero-inner {
-max-width: var(--measure-wide);
-}
+     .landing-header {
+          max-width: 50rem;
+          margin-bottom: var(--space-xl);
+     }
 
-.hero-overline {
-display: inline-flex;
-align-items: center;
-gap: var(--space-2xs);
-font-size: var(--step--1);
-color: var(--color-text-muted);
-font-family: var(--font-mono);
-margin-bottom: var(--space-xl);
-letter-spacing: 0.01em;
-}
+     .kicker {
+          font-family: var(--font-mono);
+          font-size: var(--step--1);
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: var(--color-text-muted);
+          margin-bottom: var(--space-s);
+     }
 
-.status-dot {
-width: 7px;
-height: 7px;
-border-radius: 50%;
-background: #22c55e;
-animation: pulse 2.4s ease-in-out infinite;
-}
+     .landing-header h1 {
+          font-size: clamp(2rem, 4.8vw, 3.6rem);
+          line-height: 1.08;
+          font-weight: 500;
+          margin-bottom: var(--space-m);
+     }
 
-@keyframes pulse {
-0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
-50% { box-shadow: 0 0 0 5px rgba(34, 197, 94, 0); }
-}
+     .intro {
+          font-family: var(--font-serif);
+          font-size: var(--step-1);
+          line-height: 1.55;
+          color: var(--color-text-secondary);
+     }
 
-.hero-title {
-font-family: var(--font-serif);
-font-size: clamp(1.75rem, 4.5vw, 3rem);
-line-height: 1.2;
-letter-spacing: -0.02em;
-font-weight: 400;
-margin-bottom: var(--space-lg);
-color: var(--color-text);
-}
+     .exploration-canvas {
+          position: relative;
+          min-height: 38rem;
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-lg);
+          background:
+               radial-gradient(circle at 20% 20%, color-mix(in srgb, var(--color-accent-soft) 36%, transparent), transparent 35%),
+               radial-gradient(circle at 80% 80%, color-mix(in srgb, var(--color-accent-soft) 28%, transparent), transparent 32%),
+               var(--color-surface);
+          overflow: hidden;
+     }
 
-.hero-title em {
-font-style: italic;
-color: var(--color-accent);
-}
+     .map-center {
+          position: absolute;
+          inset: 0;
+          display: grid;
+          place-items: center;
+          padding: var(--space-l);
+     }
 
-.hero-tagline {
-font-size: var(--step-1);
-line-height: 1.6;
-color: var(--color-text-muted);
-max-width: 34rem;
-}
+     .map-shell {
+          width: min(28rem, 85vw);
+          aspect-ratio: 1 / 1;
+          border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+          border-radius: 50%;
+          background: color-mix(in srgb, var(--color-bg) 70%, var(--color-surface));
+          box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-border) 50%, transparent);
+          display: grid;
+          place-items: center;
+          padding: var(--space-l);
+     }
 
-/* ═══ SECTION LABELS ═══ */
-.section-label {
-display: flex;
-justify-content: space-between;
-align-items: baseline;
-margin-bottom: var(--space-lg);
-font-family: var(--font-mono);
-font-size: var(--step--1);
-color: var(--color-text-muted);
-letter-spacing: 0.04em;
-text-transform: uppercase;
-}
+     .india-map {
+          width: 100%;
+          max-width: 20rem;
+     }
 
-.see-all {
-color: var(--color-text-muted);
-text-decoration: none;
-transition: color var(--transition);
-}
+     .orbit-link {
+          position: absolute;
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+          padding: var(--space-s) var(--space-m);
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-lg);
+          background: color-mix(in srgb, var(--color-surface) 84%, transparent);
+          backdrop-filter: blur(3px);
+          text-decoration: none;
+          max-width: 16rem;
+          transition: transform var(--transition), border-color var(--transition), background var(--transition);
+     }
 
-.see-all:hover {
-color: var(--color-accent);
-}
+     .orbit-link:hover {
+          transform: translateY(-2px);
+          border-color: var(--color-border-strong);
+          background: var(--color-surface-raised);
+     }
 
-/* ═══ SELECTED WORK ROWS ═══ */
-.selected {
-padding: var(--space-2xl) 0;
-border-top: 1px solid var(--color-border);
-}
+     .orbit-label {
+          font-family: var(--font-mono);
+          font-size: var(--step--1);
+          text-transform: uppercase;
+          letter-spacing: 0.07em;
+          color: var(--color-text);
+     }
 
-.work-rows {
-list-style: none;
-padding: 0;
-margin: 0;
-}
+     .orbit-copy {
+          font-size: var(--step--1);
+          line-height: 1.45;
+          color: var(--color-text-muted);
+     }
 
-.work-row {
-border-bottom: 1px solid var(--color-border);
-}
+     .orbit-link--about { top: 8%; left: 4%; }
+     .orbit-link--work { top: 10%; right: 4%; }
+     .orbit-link--writing { bottom: 10%; left: 4%; }
+     .orbit-link--colophon { bottom: 8%; right: 4%; }
 
-.work-link {
-display: grid;
-grid-template-columns: 3.5rem 1fr auto auto;
-align-items: baseline;
-gap: var(--space-md);
-padding: var(--space-md) 0;
-text-decoration: none;
-color: inherit;
-transition: padding-left var(--transition);
-}
+     .region-panel {
+          margin-top: var(--space-l);
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-lg);
+          padding: var(--space-m);
+          background: var(--color-surface);
+     }
 
-.work-link:hover {
-padding-left: var(--space-sm);
-}
+     .region-meta {
+          font-family: var(--font-mono);
+          font-size: var(--step--1);
+          color: var(--color-text-muted);
+     }
 
-.work-link:hover .work-title {
-color: var(--color-accent);
-}
+     .region-links {
+          list-style: none;
+          margin-top: var(--space-s);
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+          gap: var(--space-s);
+     }
 
-.work-link:hover .work-arrow {
-opacity: 1;
-transform: translate(2px, -2px);
-}
+     .region-links a {
+          display: flex;
+          justify-content: space-between;
+          gap: var(--space-s);
+          padding: 0.7rem 0.9rem;
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius);
+          text-decoration: none;
+          font-family: var(--font-serif);
+          color: var(--color-text);
+     }
 
-.work-year {
-font-family: var(--font-mono);
-font-size: var(--step--1);
-color: var(--color-text-muted);
-white-space: nowrap;
-}
+     .region-links a span {
+          font-family: var(--font-mono);
+          font-size: var(--step--2);
+          color: var(--color-text-muted);
+     }
 
-.work-title {
-font-family: var(--font-serif);
-font-size: var(--step-1);
-font-weight: 400;
-color: var(--color-text);
-transition: color var(--transition);
-}
+     .featured-strip {
+          margin-top: var(--space-l);
+     }
 
-.work-tags {
-display: flex;
-gap: var(--space-2xs);
-flex-wrap: wrap;
-}
+     .strip-label {
+          font-family: var(--font-mono);
+          font-size: var(--step--1);
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          color: var(--color-text-muted);
+          margin-bottom: var(--space-xs);
+     }
 
-.work-tag {
-font-family: var(--font-mono);
-font-size: 0.625rem;
-text-transform: uppercase;
-letter-spacing: 0.04em;
-color: var(--color-text-muted);
-opacity: 0.7;
-}
+     .strip-items {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+          gap: var(--space-s);
+     }
 
-.work-arrow {
-font-size: var(--step-0);
-color: var(--color-accent);
-opacity: 0;
-transition: opacity var(--transition), transform var(--transition);
-}
+     .strip-item {
+          display: grid;
+          grid-template-columns: auto 1fr;
+          gap: var(--space-s);
+          align-items: baseline;
+          padding: 0.8rem 0.9rem;
+          text-decoration: none;
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius);
+          background: var(--color-surface);
+     }
 
-/* ═══ WRITING NOTE ═══ */
-.writing-note {
-padding: var(--space-2xl) 0;
-border-top: 1px solid var(--color-border);
-}
+     .strip-year {
+          font-family: var(--font-mono);
+          font-size: var(--step--2);
+          color: var(--color-text-muted);
+     }
 
-.writing-note p {
-font-family: var(--font-serif);
-font-size: var(--step-1);
-line-height: 1.6;
-color: var(--color-text-muted);
-max-width: var(--measure);
-}
+     .strip-title {
+          font-family: var(--font-serif);
+          font-size: var(--step-0);
+          color: var(--color-text);
+     }
 
-/* ═══ HOME FOOTER ═══ */
-.home-footer {
-padding: var(--space-2xl) 0 var(--space-3xl);
-border-top: 1px solid var(--color-border);
-}
+     .contact-note {
+          margin-top: var(--space-xl);
+          font-size: var(--step-0);
+          color: var(--color-text-secondary);
+     }
 
-.home-footer p {
-font-size: var(--step-0);
-color: var(--color-text-muted);
-}
+     @media (max-width: 900px) {
+          .exploration-canvas {
+               min-height: auto;
+               padding: var(--space-l);
+               display: grid;
+               grid-template-columns: 1fr;
+               gap: var(--space-s);
+          }
 
-.home-footer a {
-color: var(--color-accent);
-text-decoration: none;
-border-bottom: 1px solid var(--color-accent-soft);
-transition: color var(--transition);
-}
+          .map-center,
+          .orbit-link {
+               position: static;
+          }
 
-.home-footer a:hover {
-color: var(--color-accent-hover);
-}
+          .map-center {
+               order: -1;
+               padding: 0;
+          }
 
-/* ═══ RESPONSIVE ═══ */
-@media (max-width: 640px) {
-.hero {
-min-height: 45vh;
-padding: var(--space-3xl) 0 var(--space-2xl);
-}
+          .map-shell {
+               margin: 0 auto var(--space-xs);
+          }
 
-.work-link {
-grid-template-columns: 3rem 1fr auto;
-gap: var(--space-sm);
-}
+          .orbit-link {
+               max-width: none;
+          }
+     }
 
-.work-tags {
-display: none;
-}
-
-.section-label {
-flex-direction: column;
-gap: var(--space-2xs);
-}
-}
-
-/* ═══ REDUCED MOTION ═══ */
-@media (prefers-reduced-motion: reduce) {
-.status-dot {
-animation: none;
-}
-}
+     @media (prefers-reduced-motion: reduce) {
+          .orbit-link {
+               transition: none;
+          }
+     }
 </style>

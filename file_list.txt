@@ -1,0 +1,372 @@
+[Output too large (55KB). Full output saved to: c:\Users\anind\AppData\Roaming\Code\copilot-terminal-output\copilot-terminal-output-3324dcd1-7a2e-4926-957f-24d40391afdc.txt]
+[Use readFile or grep to examine the full output.]
+
+PS C:\Users\anind\internetplace> 
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+d-----        20-07-2026  07:20 PM                generated                    
+d-----        22-07-2026  07:17 PM                output                       
+d-----        22-07-2026  07:17 PM                types                        
+-a----        22-07-2026  07:17 PM          15558 ambient.d.ts  
+
+[... middle of output truncated ...]
+
+ism-svelte
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+-a----        20-07-2026  05:31 PM            281 .editorconfig                
+-a----        20-07-2026  05:31 PM           1013 .eslintrc.json               
+-a----        20-07-2026  05:31 PM             53 .prettierrc.yaml             
+-a----        20-07-2026  05:31 PM           3455 index.js                     
+-a----        20-07-2026  05:31 PM            605 package.json                 
+-a----        20-07-2026  05:31 PM            668 README.md                    
+
+
+    Directory: C:\Users\anind\internetplace\node_modules\prismjs
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+d-----        20-07-2026  05:31 PM                components                   
+d-----        20-07-2026  05:31 PM                plugins                      
+d-----        20-07-2026  05:31 PM                themes                       
+-a----        20-07-2026  05:31 PM         270363 CHANGELOG.md                 
+-a----        20-07-2026  05:31 PM          26203 components.js                
+-a----        20-07-2026  05:31 PM          33941 components.json              
+-a----        20-07-2026  05:31 PM          11827 dependencies.js              
+-a----        20-07-2026  05:31 PM           1066 LICENSE                      
+-a----        20-07-2026  05:31 PM           2312 package.json                 
+-a----        20-07-2026  05:31 PM          58240 prism.js                     
+-a----        20-07-2026  05:31 PM           3788 README.md                    
+-a----        20-07-2026  05:31 PM             35 _headers                     
+
+
+    Directory: C:\Users\anind\internetplace\node_modules\readdirp
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+d-----        20-07-2026  05:31 PM                esm                          
+-a----        20-07-2026  05:31 PM           3683 index.d.ts                   
+-a----        20-07-2026  05:31 PM           9967 index.js                     
+-a----        20-07-2026  05:31 PM           1114 LICENSE                      
+-a----        20-07-2026  05:31 PM           1660 package.json                 
+-a----        20-07-2026  05:31 PM           6423 README.md                    
+
+
+    Directory: C:\Users\anind\internetplace\node_modules\rollup
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+d-----        20-07-2026  05:31 PM                dist                         
+-a----        20-07-2026  05:31 PM          35231 LICENSE.md                   
+-a----        20-07-2026  05:31 PM          12427 package.json                 
+-a----        20-07-2026  05:31 PM           9999 README.md                    
+
+
+    Directory: C:\Users\anind\internetplace\node_modules\sade
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+d-----        20-07-2026  05:31 PM                lib                          
+-a----        20-07-2026  05:31 PM            938 index.d.ts                   
+-a----        20-07-2026  05:31 PM           1122 license                      
+-a----        20-07-2026  05:31 PM            820 package.json                 
+-a----        20-07-2026  05:31 PM          20116 readme.md                    
+
+
+    Directory: C:\Users\anind\internetplace\node_modules\set-cookie-parser
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+d-----        20-07-2026  05:31 PM                dist                         
+d-----        20-07-2026  05:31 PM                lib                          
+-a----        20-07-2026  05:31 PM           1126 LICENSE                      
+-a----        20-07-2026  05:31 PM           1480 package.json                 
+-a----        20-07-2026  05:31 PM           5931 README.md                    
+
+
+    Directory: C:\Users\anind\internetplace\node_modules\sirv
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+-a----        20-07-2026  05:31 PM           5245 build.js                     
+-a----        20-07-2026  05:31 PM           5223 build.mjs                    
+-a----        20-07-2026  05:31 PM            773 index.d.mts                  
+-a----        20-07-2026  05:31 PM            844 index.d.ts                   
+-a----        20-07-2026  05:31 PM            834 package.json                 
+-a----        20-07-2026  05:31 PM           8964 readme.md                    
+
+
+    Directory: C:\Users\anind\internetplace\node_modules\source-map-js
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+d-----        20-07-2026  05:31 PM                lib                          
+-a----        20-07-2026  05:31 PM           1526 LICENSE                      
+-a----        20-07-2026  05:31 PM           2548 package.json                 
+-a----        20-07-2026  05:31 PM          26040 README.md                    
+-a----        20-07-2026  05:31 PM           3408 source-map.d.ts              
+-a----        20-07-2026  05:31 PM            405 source-map.js                
+
+
+    Directory: C:\Users\anind\internetplace\node_modules\svelte
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+d-----        20-07-2026  05:31 PM                compiler                     
+d-----        20-07-2026  05:31 PM                src                          
+d-----        20-07-2026  05:31 PM                types                        
+-a----        20-07-2026  05:31 PM             27 action.d.ts                  
+-a----        20-07-2026  05:31 PM             27 animate.d.ts                 
+-a----        20-07-2026  05:31 PM             27 compiler.d.ts                
+-a----        20-07-2026  05:31 PM             27 easing.d.ts                  
+-a----        20-07-2026  05:31 PM          87411 elements.d.ts                
+-a----        20-07-2026  05:31 PM             27 index.d.ts                   
+-a----        20-07-2026  05:31 PM             27 legacy.d.ts                  
+-a----        20-07-2026  05:31 PM           1126 LICENSE.md                   
+-a----        20-07-2026  05:31 PM             27 motion.d.ts                  
+-a----        20-07-2026  05:31 PM           5662 package.json                 
+-a----        20-07-2026  05:31 PM           1799 README.md                    
+-a----        20-07-2026  05:31 PM             27 store.d.ts                   
+-a----        20-07-2026  05:31 PM          10938 svelte-html.d.ts             
+-a----        20-07-2026  05:31 PM             27 transition.d.ts              
+
+
+    Directory: C:\Users\anind\internetplace\node_modules\svelte-check
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+d-----        20-07-2026  05:31 PM                bin                          
+d-----        20-07-2026  05:31 PM                dist                         
+-a----        20-07-2026  05:31 PM           1131 LICENSE                      
+-a----        20-07-2026  05:31 PM           1918 package.json                 
+-a----        20-07-2026  05:31 PM          11212 README.md                    
+
+
+    Directory: C:\Users\anind\internetplace\node_modules\totalist
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+d-----        20-07-2026  05:31 PM                dist                         
+d-----        20-07-2026  05:31 PM                sync                         
+-a----        20-07-2026  05:31 PM            195 index.d.ts                   
+-a----        20-07-2026  05:31 PM           1114 license                      
+-a----        20-07-2026  05:31 PM           1108 package.json                 
+-a----        20-07-2026  05:31 PM           2847 readme.md                    
+
+
+    Directory: C:\Users\anind\internetplace\node_modules\typescript
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+d-----        20-07-2026  05:31 PM                bin                          
+d-----        20-07-2026  05:31 PM                lib                          
+-a----        20-07-2026  05:31 PM           9197 LICENSE.txt                  
+-a----        20-07-2026  05:31 PM           3620 package.json                 
+-a----        20-07-2026  05:31 PM           2842 README.md                    
+-a----        20-07-2026  05:31 PM           2656 SECURITY.md                  
+-a----        20-07-2026  05:31 PM          37824 ThirdPartyNoticeText.txt     
+
+
+    Directory: C:\Users\anind\internetplace\node_modules\unist-util-is
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+-a----        20-07-2026  05:31 PM            156 convert.d.ts                 
+-a----        20-07-2026  05:31 PM           1322 convert.js                   
+-a----        20-07-2026  05:31 PM           1990 index.d.ts                   
+-a----        20-07-2026  05:31 PM            791 index.js                     
+-a----        20-07-2026  05:31 PM           1099 license                      
+-a----        20-07-2026  05:31 PM           2652 package.json                 
+-a----        20-07-2026  05:31 PM           5736 readme.md                    
+
+
+    Directory: 
+    C:\Users\anind\internetplace\node_modules\unist-util-stringify-position
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+d-----        20-07-2026  05:31 PM                types                        
+-a----        20-07-2026  05:31 PM            890 index.js                     
+-a----        20-07-2026  05:31 PM           1099 license                      
+-a----        20-07-2026  05:31 PM           2245 package.json                 
+-a----        20-07-2026  05:31 PM           4094 readme.md                    
+
+
+    Directory: C:\Users\anind\internetplace\node_modules\unist-util-visit
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+d-----        20-07-2026  05:31 PM                types                        
+-a----        20-07-2026  05:31 PM            668 index.js                     
+-a----        20-07-2026  05:31 PM           1099 license                      
+-a----        20-07-2026  05:31 PM           2495 package.json                 
+-a----        20-07-2026  05:31 PM           3714 readme.md                    
+
+
+    Directory: 
+    C:\Users\anind\internetplace\node_modules\unist-util-visit-parents
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+d-----        20-07-2026  05:31 PM                types                        
+-a----        20-07-2026  05:31 PM             62 color.browser.js             
+-a----        20-07-2026  05:31 PM             86 color.js                     
+-a----        20-07-2026  05:31 PM           2037 index.js                     
+-a----        20-07-2026  05:31 PM           1099 license                      
+-a----        20-07-2026  05:31 PM           2631 package.json                 
+-a----        20-07-2026  05:31 PM           7620 readme.md                    
+
+
+    Directory: C:\Users\anind\internetplace\node_modules\vfile-message
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+d-----        20-07-2026  05:31 PM                types                        
+-a----        20-07-2026  05:31 PM           1904 index.js                     
+-a----        20-07-2026  05:31 PM           1099 license                      
+-a----        20-07-2026  05:31 PM           2126 package.json                 
+-a----        20-07-2026  05:31 PM           4789 readme.md                    
+
+
+    Directory: C:\Users\anind\internetplace\node_modules\vite
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+d-----        20-07-2026  05:31 PM                bin                          
+d-----        20-07-2026  05:31 PM                dist                         
+d-----        20-07-2026  05:31 PM                types                        
+-a----        20-07-2026  05:31 PM           4743 client.d.ts                  
+-a----        20-07-2026  05:31 PM           1624 index.cjs                    
+-a----        20-07-2026  05:31 PM            209 index.d.cts                  
+-a----        20-07-2026  05:31 PM         162419 LICENSE.md                   
+-a----        20-07-2026  05:31 PM           4893 package.json                 
+-a----        20-07-2026  05:31 PM           1152 README.md                    
+
+
+    Directory: C:\Users\anind\internetplace\node_modules\vitefu
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+d-----        20-07-2026  05:31 PM                src                          
+-a----        20-07-2026  05:31 PM           1074 LICENSE                      
+-a----        20-07-2026  05:31 PM           1029 package.json                 
+-a----        20-07-2026  05:31 PM            123 README.md                    
+
+
+    Directory: C:\Users\anind\internetplace\node_modules\zimmerframe
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+d-----        20-07-2026  05:31 PM                src                          
+d-----        20-07-2026  05:31 PM                types                        
+-a----        20-07-2026  05:31 PM           1135 LICENSE                      
+-a----        20-07-2026  05:31 PM            735 package.json                 
+-a----        20-07-2026  05:31 PM           5176 README.md                    
+
+
+    Directory: C:\Users\anind\internetplace\src
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+d-----        20-07-2026  04:50 PM                content                      
+d-----        20-07-2026  04:50 PM                data                         
+d-----        21-07-2026  05:35 AM                lib                          
+d-----        21-07-2026  06:45 PM                routes                       
+-a----        20-07-2026  05:27 PM            282 app.d.ts                     
+-a----        20-07-2026  05:27 PM            896 app.html                     
+
+
+    Directory: C:\Users\anind\internetplace\src\content
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+d-----        20-07-2026  04:50 PM                essays                       
+d-----        20-07-2026  04:50 PM                projects                     
+
+
+    Directory: C:\Users\anind\internetplace\src\data
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+-a----        21-07-2026  07:46 PM           3836 projects.ts                  
+
+
+    Directory: C:\Users\anind\internetplace\src\lib
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+d-----        21-07-2026  07:44 PM                actions                      
+d-----        21-07-2026  03:27 AM                components                   
+d-----        20-07-2026  07:02 PM                pretext                      
+d-----        20-07-2026  05:26 PM                styles                       
+
+
+    Directory: C:\Users\anind\internetplace\src\routes
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+d-----        20-07-2026  07:26 PM                about                        
+d-----        21-07-2026  03:58 AM                colophon                     
+d-----        21-07-2026  06:48 PM                map                          
+d-----        21-07-2026  02:57 AM                work                         
+d-----        21-07-2026  03:22 AM                writing                      
+-a----        22-07-2026  07:16 PM           7406 +layout.svelte               
+-a----        20-07-2026  05:27 PM            207 +layout.ts                   
+-a----        22-07-2026  07:16 PM          12627 +page.svelte                 
+
+
+    Directory: C:\Users\anind\internetplace\static
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+d-----        21-07-2026  07:36 PM                assets                       
+d-----        21-07-2026  06:01 PM                images                       
+-a----        20-07-2026  07:29 PM            302 favicon.svg                  
+
+
+    Directory: C:\Users\anind\internetplace\static\assets
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+-a----        21-07-2026  07:36 PM         208400 india.svg                    
+
+
+    Directory: C:\Users\anind\internetplace\static\images
+
+
+Mode                 LastWriteTime         Length Name                         
+----                 -------------         ------ ----                         
+d-----        20-07-2026  04:50 PM                projects                     
+-a----        21-07-2026  05:53 PM        2511908 anindya1.png                 
+-a----        21-07-2026  06:01 PM        2763470 anindya2.png                 
+-a----        21-07-2026  05:42 PM         205708 INSIDER __ home page.webp    

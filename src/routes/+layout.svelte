@@ -1,21 +1,11 @@
 <script lang="ts">
-	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
 	import type { Snippet } from 'svelte';
 	import '../lib/styles/global.css';
 
 	let { children }: { children: Snippet } = $props();
 
-	const navLinks = [
-		{ href: '/', label: 'Index' },
-		{ href: '/about', label: 'About' },
-		{ href: '/work', label: 'Work' },
-		{ href: '/writing', label: 'Writing' },
-		{ href: '/colophon', label: 'Colophon' }
-	];
-
 	let scrolled = $state(false);
-	let menuOpen = $state(false);
 	let theme = $state<'light' | 'dark'>('light');
 
 	// Restore saved theme (or system preference) on mount
@@ -61,55 +51,33 @@
 <div class="site">
 	<header class="site-header" class:scrolled>
 		<div class="header-inner">
-			<a href="/" class="site-id" onclick={() => (menuOpen = false)}>
+			<a href="/" class="site-id">
 				<span class="site-name">Anindya Singh</span>
 			</a>
 
 			<button
-				class="menu-toggle"
-				aria-label="Toggle menu"
-				aria-expanded={menuOpen}
-				onclick={() => (menuOpen = !menuOpen)}
+				class="theme-toggle"
+				aria-label="Toggle dark mode"
+				onclick={toggleTheme}
 			>
-				<span></span>
-				<span></span>
+				{#if theme === 'light'}
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+					</svg>
+				{:else}
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+						<circle cx="12" cy="12" r="5"></circle>
+						<line x1="12" y1="1" x2="12" y2="3"></line>
+						<line x1="12" y1="21" x2="12" y2="23"></line>
+						<line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+						<line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+						<line x1="1" y1="12" x2="3" y2="12"></line>
+						<line x1="21" y1="12" x2="23" y2="12"></line>
+						<line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+						<line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+					</svg>
+				{/if}
 			</button>
-
-			<nav class="site-nav" class:open={menuOpen}>
-				{#each navLinks as link (link.href)}
-					{@const current = $page.url.pathname}
-					<a
-						href={link.href}
-						class:active={current === link.href || (link.href !== '/' && current.startsWith(link.href))}
-						onclick={() => (menuOpen = false)}
-					>
-						{link.label}
-					</a>
-				{/each}
-				<button
-					class="theme-toggle"
-					aria-label="Toggle dark mode"
-					onclick={toggleTheme}
-				>
-					{#if theme === 'light'}
-						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-							<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-						</svg>
-					{:else}
-						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-							<circle cx="12" cy="12" r="5"></circle>
-							<line x1="12" y1="1" x2="12" y2="3"></line>
-							<line x1="12" y1="21" x2="12" y2="23"></line>
-							<line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-							<line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-							<line x1="1" y1="12" x2="3" y2="12"></line>
-							<line x1="21" y1="12" x2="23" y2="12"></line>
-							<line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-							<line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-						</svg>
-					{/if}
-				</button>
-			</nav>
 		</div>
 	</header>
 
@@ -192,46 +160,6 @@
 		white-space: nowrap;
 	}
 
-	/* ── Navigation ── */
-	.site-nav {
-		display: flex;
-		align-items: center;
-		gap: var(--space-xs);
-	}
-
-	.site-nav a {
-		font-family: var(--font-sans);
-		font-size: var(--step--1);
-		font-weight: 500;
-		color: var(--color-text-muted);
-		text-decoration: none;
-		padding: var(--space-3xs) var(--space-2xs);
-		border-radius: var(--radius);
-		transition: color var(--transition), background var(--transition);
-		position: relative;
-	}
-
-	.site-nav a:hover {
-		color: var(--color-text);
-		background: var(--color-accent-soft);
-	}
-
-	.site-nav a.active {
-		color: var(--color-text);
-	}
-
-	.site-nav a.active::after {
-		content: '';
-		position: absolute;
-		bottom: -2px;
-		left: 50%;
-		transform: translateX(-50%);
-		width: 4px;
-		height: 4px;
-		border-radius: 50%;
-		background: var(--color-accent);
-	}
-
 	/* ── Theme toggle ── */
 	.theme-toggle {
 		background: none;
@@ -254,26 +182,6 @@
 	.theme-toggle svg {
 		width: 18px;
 		height: 18px;
-	}
-
-	/* ── Menu toggle (mobile) ── */
-	.menu-toggle {
-		display: none;
-		flex-direction: column;
-		gap: 5px;
-		background: none;
-		border: none;
-		cursor: pointer;
-		padding: var(--space-2xs);
-	}
-
-	.menu-toggle span {
-		display: block;
-		width: 22px;
-		height: 2px;
-		background: var(--color-text);
-		border-radius: 2px;
-		transition: transform 250ms ease, opacity 200ms ease;
 	}
 
 	/* ── Main ── */
@@ -360,45 +268,8 @@
 
 	/* ── Responsive ── */
 	@media (max-width: 640px) {
-		.menu-toggle {
-			display: flex;
-		}
-
-		.site-nav {
-			position: absolute;
-			top: 64px;
-			left: 0;
-			right: 0;
-			background: var(--color-bg);
-			border-bottom: 1px solid var(--color-border);
-			flex-direction: column;
-			align-items: stretch;
-			padding: var(--space-s);
-			gap: var(--space-2xs);
-			transform: translateY(-100%);
-			opacity: 0;
-			pointer-events: none;
-			transition: transform 300ms ease, opacity 200ms ease;
-		}
-
-		.site-nav.open {
-			transform: translateY(0);
-			opacity: 1;
-			pointer-events: auto;
-		}
-
-		.site-nav a {
-			padding: var(--space-s);
-			font-size: var(--step-1);
-		}
-
 		.theme-toggle {
-			padding: var(--space-s);
-			align-self: flex-start;
-		}
-
-		.site-nav a.active::after {
-			display: none;
+			padding: var(--space-2xs) var(--space-xs);
 		}
 
 		.footer-inner {

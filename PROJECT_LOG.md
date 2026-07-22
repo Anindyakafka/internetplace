@@ -219,6 +219,35 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - *Building only a static map image* — rejected; interactivity (hover states, click-to-filter) is what makes a map useful for navigation and discovery.
 - *Waiting until SVG is placed* — rejected; can scaffold the page with placeholder that works once SVG is in place. Structure is more important than asset timing.
 
+---
+
+### 2026-07-22 — Landing realigned: map-centered navigation, navbar pages removed
+
+**Decision:** Redesign the homepage as a map-centered exploration canvas and remove top-navbar page links from the global header. Route discovery to About, Work, Writing, and Colophon is now embedded directly into the landing page.
+
+**Context:** The previous homepage felt visually misaligned and linear (hero + list sections), while the interactive map lived in a separate route and read more like a data explorer. User feedback requested a more spatial, exploratory landing where the map sits centered, with navigation distributed across the page rather than in a conventional navbar.
+
+**What changed:**
+
+1. **Global header simplification (`src/routes/+layout.svelte`)**
+  - Removed nav link array and mobile menu toggle.
+  - Header now keeps only site identity (home link) and theme toggle.
+  - Deleted related nav/menu CSS to avoid stale layout behavior.
+
+2. **Homepage rebuild (`src/routes/+page.svelte`)**
+  - Replaced the old editorial stack with a new map-led landing composition.
+  - Centered India map inside a circular "map-shell" focal element.
+  - Added four orbit-style landing links (About, Work, Writing, Colophon) around the map.
+  - Added lightweight region interaction panel: hover/click on states reveals related project links.
+  - Kept a compact featured-project strip and collaboration contact line beneath the map canvas.
+  - Preserved responsive behavior: orbit cards collapse into a vertical flow on smaller screens.
+
+**Alternatives considered:**
+- *Keep navbar and also add landing links* — rejected; duplicate navigation dilutes the intended exploratory interaction.
+- *Move the existing `/map` page wholesale to `/`* — rejected; too dashboard-like for the landing intent.
+
+**Consequence / next step:** Navigation now reads as place-based exploration from first load. Next polish pass can tune card positioning and map scale after visual QA on desktop + mobile.
+
 **Consequence / next step:** Build the Map page component, wire navigation, and provide clear instructions for where to place the India SVG. Once SVG is in `static/images/india-map.svg`, the page will render correctly. May need to adjust path IDs and coordinate systems based on the actual SVG structure.
 
 ---
