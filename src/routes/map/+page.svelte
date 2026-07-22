@@ -10,18 +10,6 @@
 		projects: Array<{ title: string; slug: string; blurb: string; year: string; categories: string[] }>;
 	};
 
-	// Project-location mapping
-	const regionMap: Record<string, string[]> = {
-		'UP': ['dadri-forecast'],
-		'WB': ['electoral-rolls-wb-2002'],
-		'BR': ['mgnrega-assets-bihar'],
-		'DL': ['cbfc-watch'],
-		'MH': ['sounding-names-religion', 'name-ethnicity-detector'],
-		'KA': ['netcdf-manipulation-conversion'],
-		'RJ': ['dadri-forecast'],
-		'HR': ['dadri-forecast']
-	};
-
 	let selectedRegion = $state<Region | null>(null);
 	let hoveredRegionId = $state<string | null>(null);
 	let searchQuery = $state('');
