@@ -306,7 +306,7 @@
 		line-height: 1.1;
 		font-weight: 400;
 		letter-spacing: -0.02em;
-		margin-bottom: var(--space-md);
+		margin-bottom: var(--space-m);
 		color: var(--color-text);
 	}
 
@@ -323,7 +323,7 @@
 		font-size: var(--step--1);
 		color: var(--color-text-muted);
 		opacity: 0.8;
-		margin-top: var(--space-sm);
+		margin-top: var(--space-s);
 	}
 
 	/* ═══ SEARCH BAR ═══ */
@@ -334,11 +334,11 @@
 
 	.search-input {
 		width: 100%;
-		padding: var(--space-md) var(--space-lg);
+		padding: var(--space-m) var(--space-l);
 		font-size: var(--step-0);
 		font-family: var(--font-sans);
 		border: 1px solid var(--color-border);
-		border-radius: 8px;
+		border-radius: var(--radius-lg);
 		background: var(--color-surface);
 		color: var(--color-text);
 		transition: border-color var(--transition), box-shadow var(--transition);
@@ -357,7 +357,7 @@
 
 	.search-clear {
 		position: absolute;
-		right: var(--space-md);
+		right: var(--space-m);
 		top: 50%;
 		transform: translateY(-50%);
 		background: none;
@@ -391,9 +391,9 @@
 	.india-map-wrapper {
 		position: relative;
 		background: var(--color-surface);
-		border-radius: 12px;
+		border-radius: var(--radius-lg);
 		overflow: hidden;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+		box-shadow: var(--shadow-sm);
 	}
 
 	.india-map {
@@ -407,7 +407,7 @@
 		margin-top: var(--space-lg);
 		padding: var(--space-lg);
 		background: var(--color-surface);
-		border-radius: 8px;
+		border-radius: var(--radius-lg);
 		border: 1px solid var(--color-border);
 	}
 
@@ -417,19 +417,19 @@
 		text-transform: uppercase;
 		letter-spacing: 0.04em;
 		color: var(--color-text-muted);
-		margin-bottom: var(--space-md);
+		margin-bottom: var(--space-m);
 	}
 
 	.legend-items {
 		display: flex;
 		flex-direction: column;
-		gap: var(--space-sm);
+		gap: var(--space-s);
 	}
 
 	.legend-item {
 		display: flex;
 		align-items: center;
-		gap: var(--space-sm);
+		gap: var(--space-s);
 		font-size: var(--step--1);
 		color: var(--color-text-muted);
 	}
@@ -452,8 +452,8 @@
 	/* ═══ SIDEBAR ═══ */
 	.map-sidebar {
 		background: var(--color-surface);
-		border-radius: 12px;
-		padding: var(--space-lg);
+		border-radius: var(--radius-lg);
+		padding: var(--space-l);
 		border: 1px solid var(--color-border);
 		max-height: calc(100vh - var(--space-2xl));
 		overflow-y: auto;
@@ -481,7 +481,7 @@
 		display: inline-flex;
 		align-items: center;
 		gap: var(--space-2xs);
-		padding: var(--space-xs) var(--space-sm);
+		padding: var(--space-xs) var(--space-s);
 		background: none;
 		border: none;
 		color: var(--color-text-muted);
@@ -489,7 +489,7 @@
 		font-size: var(--step--1);
 		cursor: pointer;
 		transition: color var(--transition);
-		margin-bottom: var(--space-lg);
+		margin-bottom: var(--space-l);
 	}
 
 	.back-button:hover {
@@ -509,7 +509,7 @@
 		font-family: var(--font-mono);
 		font-size: var(--step--1);
 		color: var(--color-text-muted);
-		margin-bottom: var(--space-lg);
+		margin-bottom: var(--space-l);
 	}
 
 	.region-projects {
@@ -518,20 +518,20 @@
 		margin: 0;
 		display: flex;
 		flex-direction: column;
-		gap: var(--space-md);
+		gap: var(--space-m);
 	}
 
 	.project-card {
-		padding: var(--space-md);
-		background: var(--color-background);
+		padding: var(--space-m);
+		background: var(--color-surface);
 		border: 1px solid var(--color-border);
-		border-radius: 8px;
+		border-radius: var(--radius-lg);
 		transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
 	}
 
 	.project-card:hover {
 		transform: translateY(-2px);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+		box-shadow: var(--shadow-md);
 		border-color: var(--color-accent-soft);
 	}
 
@@ -562,7 +562,7 @@
 		font-size: var(--step-0);
 		color: var(--color-text-muted);
 		line-height: 1.5;
-		margin-bottom: var(--space-sm);
+		margin-bottom: var(--space-s);
 	}
 
 	.project-tags {
@@ -579,7 +579,7 @@
 		padding: 0.2em 0.5em;
 		background: var(--color-accent-soft);
 		color: var(--color-accent);
-		border-radius: 4px;
+		border-radius: var(--radius);
 	}
 
 	.project-arrow {
@@ -613,7 +613,7 @@
 		font-family: var(--font-mono);
 		font-size: var(--step--1);
 		color: var(--color-text-muted);
-		margin-bottom: var(--space-sm);
+		margin-bottom: var(--space-s);
 	}
 
 	.preview-projects {
@@ -632,7 +632,7 @@
 		font-size: var(--step-2);
 		font-weight: 400;
 		color: var(--color-text);
-		margin-bottom: var(--space-md);
+		margin-bottom: var(--space-m);
 		line-height: 1.2;
 	}
 
@@ -649,7 +649,7 @@
 		text-transform: uppercase;
 		letter-spacing: 0.04em;
 		color: var(--color-text-muted);
-		margin-bottom: var(--space-md);
+		margin-bottom: var(--space-m);
 	}
 
 	.regions-list {
@@ -658,7 +658,7 @@
 		margin: 0;
 		display: flex;
 		flex-direction: column;
-		gap: var(--space-xs);
+		gap: var(--space-s);
 	}
 
 	.region-item {
@@ -671,10 +671,10 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		padding: var(--space-sm) var(--space-md);
-		background: var(--color-background);
+		padding: var(--space-s) var(--space-m);
+		background: var(--color-surface);
 		border: 1px solid var(--color-border);
-		border-radius: 6px;
+		border-radius: calc(var(--radius-lg) - 2px);
 		cursor: pointer;
 		transition: background var(--transition), border-color var(--transition), transform var(--transition);
 		font-family: var(--font-sans);
@@ -705,7 +705,7 @@
 		color: var(--color-text-muted);
 		background: var(--color-accent-soft);
 		padding: 0.2em 0.5em;
-		border-radius: 12px;
+		border-radius: var(--radius-lg);
 	}
 
 	/* ═══ REGION GRID SECTION ═══ */
@@ -719,24 +719,24 @@
 		font-size: var(--step-3);
 		font-weight: 400;
 		color: var(--color-text);
-		margin-bottom: var(--space-lg);
+		margin-bottom: var(--space-l);
 		line-height: 1.2;
 	}
 
 	.region-grid {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
-		gap: var(--space-md);
+		gap: var(--space-m);
 	}
 
 	.region-card {
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
-		padding: var(--space-lg);
+		padding: var(--space-l);
 		background: var(--color-surface);
 		border: 1px solid var(--color-border);
-		border-radius: 8px;
+		border-radius: var(--radius-lg);
 		cursor: pointer;
 		transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
 		font-family: var(--font-sans);
@@ -747,7 +747,7 @@
 
 	.region-card:hover:not(.empty) {
 		transform: translateY(-2px);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+		box-shadow: var(--shadow-md);
 		border-color: var(--color-accent);
 	}
 
@@ -816,7 +816,7 @@
 
 	@media (max-width: 768px) {
 		.map-hero {
-			padding: var(--space-xl) 0 var(--space-md);
+			padding: var(--space-xl) 0 var(--space-m);
 		}
 
 		.map-title {
@@ -828,8 +828,8 @@
 		}
 
 		.map-visualization {
-			padding: var(--space-lg) 0;
-			gap: var(--space-lg);
+			padding: var(--space-l) 0;
+			gap: var(--space-l);
 		}
 
 		.region-grid {
@@ -837,7 +837,7 @@
 		}
 
 		.region-card {
-			padding: var(--space-md);
+			padding: var(--space-m);
 		}
 	}
 
@@ -855,7 +855,7 @@
 		}
 
 		.project-card {
-			padding: var(--space-md);
+			padding: var(--space-m);
 		}
 	}
 

@@ -220,3 +220,20 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - *Waiting until SVG is placed* — rejected; can scaffold the page with placeholder that works once SVG is in place. Structure is more important than asset timing.
 
 **Consequence / next step:** Build the Map page component, wire navigation, and provide clear instructions for where to place the India SVG. Once SVG is in `static/images/india-map.svg`, the page will render correctly. May need to adjust path IDs and coordinate systems based on the actual SVG structure.
+
+---
+
+### 2026-07-22 — Map page visual cleanup
+
+**Decision:** Normalize the map page styling to the shared design tokens and replace the cramped ad hoc values with the global spacing, radius, surface, and shadow variables.
+
+**Context:** The `/map` page was visually working but looked compressed because several styles referenced undefined token names such as `--space-sm`, `--space-md`, `--space-lg`, and `--color-background`. Those values collapsed to zero or failed to resolve, which removed rhythm from the layout and made the page feel like a skeleton instead of a finished interface.
+
+**What changed:**
+- Replaced map-page spacing references with the global scale (`--space-s`, `--space-m`, `--space-l`).
+- Replaced `--color-background` with `--color-surface`.
+- Swapped hardcoded radii for shared radius tokens.
+- Swapped hardcoded shadows for shared shadow tokens.
+- Tightened responsive spacing so the mobile layout keeps the same hierarchy without feeling crowded.
+
+**Consequence / next step:** The map page now follows the same visual system as the rest of the site. Next pass is browser review for any remaining page-level polish or layout issues elsewhere in the site.

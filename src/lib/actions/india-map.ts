@@ -102,7 +102,7 @@ export function indiaMap(node: HTMLElement, params: IndiaMapParameters) {
 			const activeIds = new Set(currentParams.regions.map((r) => r.id.toUpperCase()));
 
 			// Style + wire every state path.
-			const paths = svgEl.querySelectorAll('path[id]');
+			const paths = svgEl.querySelectorAll<SVGPathElement>('path[id]');
 			paths.forEach((path) => {
 				const code = stateCodeFromId(path.getAttribute('id'));
 				if (!code) return;
