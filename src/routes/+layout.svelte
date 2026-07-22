@@ -192,16 +192,6 @@
 		white-space: nowrap;
 	}
 
-	.site-mark {
-		font-size: 1.1em;
-		color: var(--color-accent);
-		transition: transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
-	}
-
-	.site-id:hover .site-mark {
-		transform: rotate(180deg);
-	}
-
 	/* ── Navigation ── */
 	.site-nav {
 		display: flex;

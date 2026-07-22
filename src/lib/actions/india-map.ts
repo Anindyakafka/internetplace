@@ -50,6 +50,12 @@ export function indiaMap(node: HTMLElement, params: IndiaMapParameters) {
 		cleanupFns = [];
 		node.innerHTML = '';
 
+		// Defensive guard: if regions isn't ready yet (e.g. $derived not
+		// evaluated on first mount), bail out — update() will re-render.
+		if (!Array.isArray(currentParams.regions)) {
+			return;
+		}
+
 		abortController?.abort();
 		abortController = new AbortController();
 
@@ -76,6 +82,16 @@ export function indiaMap(node: HTMLElement, params: IndiaMapParameters) {
 			const svgEl = doc.documentElement;
 			svgEl.removeAttribute('width');
 			svgEl.removeAttribute('height');
+
+			// The source SVG uses a lowercase `viewbox` attribute, which browsers
+			// ignore (SVG attributes are case-sensitive). Fix it so the map
+			// scales to fit its container instead of rendering at 1000×1000px.
+			const lowerViewBox = svgEl.getAttribute('viewbox');
+			if (lowerViewBox && !svgEl.getAttribute('viewBox')) {
+				svgEl.setAttribute('viewBox', lowerViewBox);
+				svgEl.removeAttribute('viewbox');
+			}
+
 			svgEl.style.width = '100%';
 			svgEl.style.height = 'auto';
 			svgEl.style.display = 'block';

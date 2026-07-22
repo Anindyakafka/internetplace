@@ -402,15 +402,6 @@
 		display: block;
 	}
 
-	.india-map path {
-		cursor: pointer;
-		transition: fill var(--transition), opacity var(--transition);
-	}
-
-	.india-map path:hover {
-		opacity: 0.8;
-	}
-
 	/* ═══ LEGEND ═══ */
 	.map-legend {
 		margin-top: var(--space-lg);
@@ -870,15 +861,12 @@
 
 	/* ═══ REDUCED MOTION ═══ */
 	@media (prefers-reduced-motion: reduce) {
-		.india-map path {
-			transition: none;
-		}
-
 		.region-card,
 		.region-button,
 		.project-card,
 		.region-details,
-		.region-preview {
+		.region-preview,
+		.region-guide {
 			transition: none;
 			animation: none;
 		}
