@@ -99,7 +99,7 @@
 	/>
 </svelte:head>
 
-<div class="map-page" use:reveal>
+<div class="map-page">
 	<!-- ═══════════════════════════════════════════════
 	     MAP HERO
 	     ═══════════════════════════════════════════════ -->
@@ -245,39 +245,33 @@
 					</ul>
 				</div>
 			{/if}
+
+				<div class="sidebar-extras">
+					<div class="sidebar-compact-header">
+						<span class="sidebar-kicker">Browse all regions</span>
+						<span class="sidebar-note">{filteredRegions.length} matched</span>
+					</div>
+
+					<div class="region-grid region-grid--compact">
+						{#each filteredRegions as region}
+							<button
+								class="region-card"
+								onclick={() => handleRegionClick(region.id)}
+								class:empty={region.projects.length === 0}
+								disabled={region.projects.length === 0}
+							>
+								<span class="region-card-name">{region.name}</span>
+								<span class="region-card-badge">{region.projects.length} projects</span>
+							</button>
+						{/each}
+					</div>
+
+					<p class="sidebar-footer-text">
+						Working on something in a new region?
+						<a href="mailto:hello@anindyasingh.dev">Let's collaborate</a>.
+					</p>
+				</div>
 		</aside>
-	</section>
-
-	<!-- ═══════════════════════════════════════════════
-	     REGION LIST (ALTERNATE VIEW)
-	     ═══════════════════════════════════════════════ -->
-	<section class="region-grid-section">
-		<h2 class="section-title">All Regions</h2>
-		<div class="region-grid">
-			{#each filteredRegions as region}
-				<button
-					class="region-card"
-					onclick={() => handleRegionClick(region.id)}
-					class:empty={region.projects.length === 0}
-					disabled={region.projects.length === 0}
-				>
-					<span class="region-card-name">{region.name}</span>
-					<span class="region-card-badge">{region.projects.length} projects</span>
-				</button>
-			{/each}
-		</div>
-	</section>
-
-	<!-- ═══════════════════════════════════════════════
-	     FOOTER CTA
-	     ═══════════════════════════════════════════════ -->
-	<section class="map-footer">
-		<div class="footer-content">
-			<p class="footer-text">
-				Working on something in a new region? 
-				<a href="mailto:hello@anindyasingh.dev">Let's collaborate</a>.
-			</p>
-		</div>
 	</section>
 </div>
 
@@ -287,11 +281,15 @@
 		min-height: 100vh;
 		display: flex;
 		flex-direction: column;
+		padding-bottom: var(--space-2xl);
+		background:
+			radial-gradient(circle at top left, color-mix(in srgb, var(--color-accent-soft) 20%, transparent), transparent 32rem),
+			linear-gradient(to bottom, var(--color-bg), var(--color-surface));
 	}
 
 	/* ═══ MAP HERO ═══ */
 	.map-hero {
-		padding: var(--space-2xl) 0 var(--space-lg);
+		padding: var(--space-xl) 0 var(--space-l);
 		border-bottom: 1px solid var(--color-border);
 	}
 
@@ -379,7 +377,7 @@
 		display: grid;
 		grid-template-columns: 2fr 1fr;
 		gap: var(--space-xl);
-		padding: var(--space-xl) 0;
+		padding: var(--space-xl) 0 var(--space-2xl);
 		align-items: start;
 	}
 
@@ -455,7 +453,7 @@
 		border-radius: var(--radius-lg);
 		padding: var(--space-l);
 		border: 1px solid var(--color-border);
-		max-height: calc(100vh - var(--space-2xl));
+		max-height: calc(100vh - var(--space-xl));
 		overflow-y: auto;
 		position: sticky;
 		top: var(--space-xl);
@@ -627,6 +625,34 @@
 		animation: fadeUp 0.3s ease-out;
 	}
 
+	.sidebar-extras {
+		margin-top: var(--space-l);
+		padding-top: var(--space-l);
+		border-top: 1px solid var(--color-border);
+	}
+
+	.sidebar-compact-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: var(--space-s);
+		margin-bottom: var(--space-s);
+	}
+
+	.sidebar-kicker {
+		font-family: var(--font-mono);
+		font-size: var(--step--1);
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		color: var(--color-text-muted);
+	}
+
+	.sidebar-note {
+		font-family: var(--font-mono);
+		font-size: var(--step--2);
+		color: var(--color-text-muted);
+	}
+
 	.guide-title {
 		font-family: var(--font-serif);
 		font-size: var(--step-2);
@@ -729,6 +755,11 @@
 		gap: var(--space-m);
 	}
 
+	.region-grid--compact {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--space-s);
+	}
+
 	.region-card {
 		display: flex;
 		flex-direction: column;
@@ -768,30 +799,21 @@
 	}
 
 	/* ═══ MAP FOOTER ═══ */
-	.map-footer {
-		padding: var(--space-2xl) 0 var(--space-3xl);
-		border-top: 1px solid var(--color-border);
-		margin-top: auto;
-	}
-
-	.footer-content {
-		max-width: var(--measure-wide);
-	}
-
-	.footer-text {
-		font-size: var(--step-1);
+	.sidebar-footer-text {
+		margin-top: var(--space-l);
+		font-size: var(--step-0);
 		color: var(--color-text-muted);
 		line-height: 1.6;
 	}
 
-	.footer-text a {
+	.sidebar-footer-text a {
 		color: var(--color-accent);
 		text-decoration: none;
 		border-bottom: 1px solid var(--color-accent-soft);
 		transition: color var(--transition), border-color var(--transition);
 	}
 
-	.footer-text a:hover {
+	.sidebar-footer-text a:hover {
 		color: var(--color-accent-hover);
 		border-color: var(--color-accent);
 	}
@@ -800,6 +822,7 @@
 	@media (max-width: 1024px) {
 		.map-visualization {
 			grid-template-columns: 1fr;
+			padding-bottom: var(--space-xl);
 		}
 
 		.map-container {
@@ -811,6 +834,10 @@
 			position: relative;
 			top: 0;
 			max-height: 60vh;
+		}
+
+		.region-grid--compact {
+			grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
 		}
 	}
 
@@ -834,6 +861,10 @@
 
 		.region-grid {
 			grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+		}
+
+		.region-grid--compact {
+			grid-template-columns: 1fr;
 		}
 
 		.region-card {

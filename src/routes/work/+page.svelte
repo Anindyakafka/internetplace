@@ -17,7 +17,7 @@
 	let filtered = $derived(
 		activeFilter === "all"
 			? projects
-			: projects.filter((p) => p.categories.includes(activeFilter))
+			: projects.filter((p) => p.categories.includes(activeFilter as ProjectCategory))
 	);
 
 	const statusLabel = (status: string) => {

@@ -237,3 +237,19 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - Tightened responsive spacing so the mobile layout keeps the same hierarchy without feeling crowded.
 
 **Consequence / next step:** The map page now follows the same visual system as the rest of the site. Next pass is browser review for any remaining page-level polish or layout issues elsewhere in the site.
+
+---
+
+### 2026-07-22 — Map page section consolidation and deployment unblock
+
+**Decision:** Collapse the lower map sections into the sidebar, remove the page-level reveal wrapper, and fix the work-page filter type mismatch so the repo can build cleanly for Netlify.
+
+**Context:** The map page still felt too section-heavy and airy, especially on first render. Separately, the deployed site was staying stale because the repo’s type check failed in `work`, which would block a fresh production build.
+
+**What changed:**
+- Moved the “all regions” browser and collaboration CTA into the map sidebar.
+- Removed the standalone region list and footer sections from the map page.
+- Tightened the hero spacing and dropped the reveal wrapper to make content appear immediately.
+- Fixed the `Filter`/`ProjectCategory` mismatch in the work page so `npm run check` passes again.
+
+**Consequence / next step:** The local site is buildable again and the map page is structurally denser. The Netlify deployment should update on the next redeploy using the now-clean build.
