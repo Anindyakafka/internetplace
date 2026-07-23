@@ -390,3 +390,33 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - Fixed the `Filter`/`ProjectCategory` mismatch in the work page so `npm run check` passes again.
 
 **Consequence / next step:** The local site is buildable again and the map page is structurally denser. The Netlify deployment should update on the next redeploy using the now-clean build.
+
+---
+
+### 2026-07-23 — Real SECC metrics integrated into map interactions
+
+**Decision:** Replace placeholder map metrics with real state-level values from `static/data/secc_state_summary.json` on both the landing map (`/`) and the dedicated map page (`/map`).
+
+**Context:** The data pipeline for large local CSVs was already in place, but the UI still used prototype values for adivasi share and density/elevation behavior. User asked to continue with deployable “real data driven things on the map.”
+
+**What changed:**
+- Updated `src/routes/+page.svelte`:
+  - Loads `/data/secc_state_summary.json` in browser.
+  - Maps ISO state codes used in project metadata to SECC state codes.
+  - Derives per-region metrics from real data: ST share (as adivasi proxy), SC share, population, households, density index, and elevation intensity.
+  - Uses these values in hover HUD and elevation styling.
+- Updated `src/routes/map/+page.svelte`:
+  - Loads same summary data and derives region metrics.
+  - Passes `getRegionElevation` to map action for real relief effect.
+  - Shows ST/SC/population details in selected and preview panels.
+- Updated `docs/SECC_DEPLOYMENT.md`:
+  - Added CI-safe checklist clarifying that `static/data/secc_state_summary.json` should be committed for Git-driven Netlify builds.
+
+**Validation:**
+- `npm run data:prepare` succeeds and writes summary JSON.
+- Summary now contains multiple state keys (not collapsed to one).
+- `npm run build` succeeds after integration.
+
+**Consequence / next step:**
+- Map interactions are now data-backed in production as long as the derived JSON is present.
+- Next pass can add legends/tooltips that explicitly explain ST/SC share semantics and source timestamp (`generatedAt`).
