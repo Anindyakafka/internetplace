@@ -27,3 +27,11 @@ Thumbs.db
 
 # Local pretext demo artifacts
 /tmp/
+
+# Large local research datasets (kept off GitHub)
+src/data/shrug-secc-mord-rural-csv/
+src/data/shrug-secc-parsed-urban-csv/
+
+# Local workspace artifacts
+file_list.txt
+temp_build_output.txt

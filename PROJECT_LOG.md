@@ -229,6 +229,50 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 
 **What changed:**
 
+---
+
+### 2026-07-23 — Large local SECC data strategy for static deployment
+
+**Decision:** Keep raw SHRUG/SECC CSV datasets local and untracked in Git, and generate a lightweight deployable state-summary JSON before build.
+
+**Context:** The repository contains very large source data (`secc_rural_shrid.csv` ~564 MB plus additional CSVs). User requirement was to avoid pushing these files to GitHub while still supporting deployment (Netlify/static build).
+
+**What changed:**
+
+1. **Build pipeline wiring (`package.json`)**
+  - Added `data:prepare` script: `node scripts/prepare-secc-state-summary.mjs`.
+  - Updated `build` script to run data preparation first: `npm run data:prepare && vite build`.
+
+2. **Data-prep implementation (`scripts/prepare-secc-state-summary.mjs`)**
+  - Added a Node streaming aggregation script for large CSVs.
+  - Reads local rural and urban `*_shrid.csv` files when present.
+  - Derives state code robustly from available columns, including `pc11_state_id` and SHRUG `shrid2` composite keys.
+  - Outputs `static/data/secc_state_summary.json` with combined/rural/urban state totals and SC/ST shares.
+  - Gracefully skips generation if raw CSVs are unavailable (so CI builds still succeed).
+
+3. **Git tracking policy (`.gitignore`)**
+  - Added ignores for:
+    - `src/data/shrug-secc-mord-rural-csv/`
+    - `src/data/shrug-secc-parsed-urban-csv/`
+  - Added local artifact ignores (`file_list.txt`, `temp_build_output.txt`).
+
+4. **Documentation**
+  - Added `docs/SECC_DEPLOYMENT.md` documenting deployment modes, build behavior, and attribution considerations.
+  - Updated `README.md` with a “Large data workflow (SECC / SHRUG)” section.
+
+**Validation:**
+- `npm run data:prepare` now succeeds and produces `static/data/secc_state_summary.json` with 33 state keys.
+- `npm run build` succeeds after pipeline changes.
+
+**Alternatives considered:**
+- Committing raw CSVs to GitHub (rejected due to size and repo hygiene).
+- Switching to a serverful adapter and querying raw CSV at runtime (rejected for current static-site goals).
+- Leaving deployment dependent on local manual artifacts without scripted prep (rejected for reproducibility).
+
+**Consequence / next step:**
+- Site can deploy from lightweight derived data while raw datasets stay local.
+- Next data step is to map the generated state metrics into the homepage/map interaction layer for real hover values.
+
 1. **Global header simplification (`src/routes/+layout.svelte`)**
   - Removed nav link array and mobile menu toggle.
   - Header now keeps only site identity (home link) and theme toggle.

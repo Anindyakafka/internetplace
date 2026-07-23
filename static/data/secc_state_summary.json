@@ -1,0 +1,799 @@
+{
+  "generatedAt": "2026-07-23T09:13:34.956Z",
+  "source": {
+    "rural": "src\\data\\shrug-secc-mord-rural-csv\\secc_rural_shrid.csv",
+    "urban": "src\\data\\shrug-secc-parsed-urban-csv\\secc_urban_shrid.csv"
+  },
+  "states": {
+    "combined": {
+      "10": {
+        "households": 18343928,
+        "population": 97715701,
+        "scPopulation": 15934315,
+        "stPopulation": 1436093,
+        "scShare": 0.16306811708741056,
+        "stShare": 0.01469664070581105
+      },
+      "11": {
+        "households": 118489,
+        "population": 532360,
+        "scPopulation": 31762,
+        "stPopulation": 193710,
+        "scShare": 0.059662634307611394,
+        "stShare": 0.3638703133218123
+      },
+      "12": {
+        "households": 246460,
+        "population": 1198440,
+        "scPopulation": 152,
+        "stPopulation": 892871,
+        "scShare": 0.00012683157688771183,
+        "stShare": 0.7450282827044921
+      },
+      "13": {
+        "households": 364403,
+        "population": 1838692,
+        "scPopulation": 1400,
+        "stPopulation": 1669781,
+        "scShare": 0.0007614108387711342,
+        "stShare": 0.9081352384373779
+      },
+      "14": {
+        "households": 511208,
+        "population": 2664755,
+        "scPopulation": 86594,
+        "stPopulation": 1242263,
+        "scShare": 0.032496051288085366,
+        "stShare": 0.4661827264141728
+      },
+      "15": {
+        "households": 200901,
+        "population": 860963,
+        "scPopulation": 4840,
+        "stPopulation": 843021,
+        "scShare": 0.005621610264444828,
+        "stShare": 0.9791605955174941
+      },
+      "16": {
+        "households": 634589,
+        "population": 403832,
+        "scPopulation": 61751,
+        "stPopulation": 171737,
+        "scShare": 0.15291259731769646,
+        "stShare": 0.4252684284553973
+      },
+      "17": {
+        "households": 499344,
+        "population": 2637878,
+        "scPopulation": 26219,
+        "stPopulation": 2395559,
+        "scShare": 0.009939343037926473,
+        "stShare": 0.9081387617987193
+      },
+      "18": {
+        "households": 5666043,
+        "population": 27663804,
+        "scPopulation": 2264335,
+        "stPopulation": 4163592,
+        "scShare": 0.08185192044566547,
+        "stShare": 0.15050686199294855
+      },
+      "19": {
+        "households": 15239156,
+        "population": 67956403,
+        "scPopulation": 18427442,
+        "stPopulation": 4986817,
+        "scShare": 0.27116565226409345,
+        "stShare": 0.07338259946891015
+      },
+      "20": {
+        "households": 5288684,
+        "population": 26276424,
+        "scPopulation": 3318782,
+        "stPopulation": 7017751,
+        "scShare": 0.1263026506194298,
+        "stShare": 0.26707405086780456
+      },
+      "21": {
+        "households": 8980813,
+        "population": 37826718,
+        "scPopulation": 6606701,
+        "stPopulation": 8608687,
+        "scShare": 0.17465699263671622,
+        "stShare": 0.22758218764022556
+      },
+      "22": {
+        "households": 5334879,
+        "population": 22053857,
+        "scPopulation": 2901823,
+        "stPopulation": 7232157,
+        "scShare": 0.13157892922347394,
+        "stShare": 0.327931630629314
+      },
+      "23": {
+        "households": 13360482,
+        "population": 58465311,
+        "scPopulation": 8618004,
+        "stPopulation": 13277495,
+        "scShare": 0.1474037107503981,
+        "stShare": 0.2271003948917539
+      },
+      "24": {
+        "households": 9949110,
+        "population": 46341305,
+        "scPopulation": 2722138,
+        "stPopulation": 7863101,
+        "scShare": 0.05874107117466893,
+        "stShare": 0.16967801512113878
+      },
+      "25": {
+        "households": 23271,
+        "population": 109012,
+        "scPopulation": 4380,
+        "stPopulation": 7082,
+        "scShare": 0.04017556639944844,
+        "stShare": 0.06496174591509936
+      },
+      "26": {
+        "households": 19978,
+        "population": 80159,
+        "scPopulation": 1731,
+        "stPopulation": 8944,
+        "scShare": 0.021594580770718196,
+        "stShare": 0.1115782382514752
+      },
+      "27": {
+        "households": 20028551,
+        "population": 91316979,
+        "scPopulation": 9401907,
+        "stPopulation": 8953809,
+        "scShare": 0.1029590208646783,
+        "stShare": 0.09805196575429834
+      },
+      "28": {
+        "households": 17573682,
+        "population": 69803863,
+        "scPopulation": 11885629,
+        "stPopulation": 5033990,
+        "scShare": 0.17027180007330006,
+        "stShare": 0.07211620756037587
+      },
+      "29": {
+        "households": 9097526,
+        "population": 13166592,
+        "scPopulation": 2083619,
+        "stPopulation": 770266,
+        "scShare": 0.1582504153687336,
+        "stShare": 0.05850153534343176
+      },
+      "30": {
+        "households": 166461,
+        "population": 715819,
+        "scPopulation": 13853,
+        "stPopulation": 91943,
+        "scShare": 0.019353139029808727,
+        "stShare": 0.12844463862939723
+      },
+      "33": {
+        "households": 15673267,
+        "population": 32130114,
+        "scPopulation": 5760768,
+        "stPopulation": 289072,
+        "scShare": 0.17929496436041303,
+        "stShare": 0.008996920399214877
+      },
+      "34": {
+        "households": 230261,
+        "population": 801721,
+        "scPopulation": 153281,
+        "stPopulation": 0,
+        "scShare": 0.1911899526144382,
+        "stShare": 0
+      },
+      "35": {
+        "households": 83362,
+        "population": 335732,
+        "scPopulation": 0,
+        "stPopulation": 30503,
+        "scShare": 0,
+        "stShare": 0.09085520593806964
+      },
+      "01": {
+        "households": 1979557,
+        "population": 10766385,
+        "scPopulation": 899333,
+        "stPopulation": 1366214,
+        "scShare": 0.0835315674628663,
+        "stShare": 0.12689627308126253
+      },
+      "02": {
+        "households": 1413135,
+        "population": 6352316,
+        "scPopulation": 1532914,
+        "stPopulation": 387062,
+        "scShare": 0.2413158394024107,
+        "stShare": 0.060932447351567914
+      },
+      "03": {
+        "households": 4509248,
+        "population": 9097416,
+        "scPopulation": 2417941,
+        "stPopulation": 156,
+        "scShare": 0.26578327593011575,
+        "stShare": 0.00001714772557415704
+      },
+      "04": {
+        "households": 213115,
+        "population": 151590,
+        "scPopulation": 31998,
+        "stPopulation": 0,
+        "scShare": 0.21108566869751838,
+        "stShare": 0
+      },
+      "05": {
+        "households": 1686361,
+        "population": 1810669,
+        "scPopulation": 326838,
+        "stPopulation": 56540,
+        "scShare": 0.1805065473154564,
+        "stShare": 0.03122608133238242
+      },
+      "06": {
+        "households": 4393050,
+        "population": 16371351,
+        "scPopulation": 3475687,
+        "stPopulation": 3386,
+        "scShare": 0.21230302177825236,
+        "stShare": 0.00020682471412030172
+      },
+      "07": {
+        "households": 2787161,
+        "population": 9073919,
+        "scPopulation": 1172155,
+        "stPopulation": 177,
+        "scShare": 0.12917851353695703,
+        "stShare": 0.000019473817224479462
+      },
+      "08": {
+        "households": 11990634,
+        "population": 17152816,
+        "scPopulation": 2967610,
+        "stPopulation": 1444422,
+        "scShare": 0.17301006227598786,
+        "stShare": 0.08420904250561338
+      },
+      "09": {
+        "households": 29604705,
+        "population": 55860126,
+        "scPopulation": 10419848,
+        "stPopulation": 310111,
+        "scShare": 0.186534630284245,
+        "stShare": 0.005551562838402451
+      }
+    },
+    "rural": {
+      "10": {
+        "households": 16696521,
+        "population": 92399536,
+        "scPopulation": 15418617,
+        "stPopulation": 1406736,
+        "scShare": 0.1668689874686438,
+        "stShare": 0.01522448677238545
+      },
+      "11": {
+        "households": 87172,
+        "population": 405794,
+        "scPopulation": 22510,
+        "stPopulation": 157924,
+        "scShare": 0.05547149538928619,
+        "stShare": 0.3891728315352124
+      },
+      "12": {
+        "households": 189474,
+        "population": 962191,
+        "scPopulation": 152,
+        "stPopulation": 763711,
+        "scShare": 0.00015797283865703077,
+        "stShare": 0.7937215257299512
+      },
+      "13": {
+        "households": 273003,
+        "population": 1404897,
+        "scPopulation": 548,
+        "stPopulation": 1341445,
+        "scShare": 0.0003900641891908529,
+        "stShare": 0.9548351223858795
+      },
+      "14": {
+        "households": 399045,
+        "population": 2119150,
+        "scPopulation": 55103,
+        "stPopulation": 1197649,
+        "scShare": 0.026002412345866487,
+        "stShare": 0.5651552732314337
+      },
+      "15": {
+        "households": 99708,
+        "population": 471992,
+        "scPopulation": 1403,
+        "stPopulation": 466545,
+        "scShare": 0.002972506258849744,
+        "stShare": 0.9884596374830675
+      },
+      "16": {
+        "households": 626191,
+        "population": 373775,
+        "scPopulation": 55069,
+        "stPopulation": 169805,
+        "scShare": 0.14733195104006422,
+        "stShare": 0.4542973714132834
+      },
+      "17": {
+        "households": 441596,
+        "population": 2345797,
+        "scPopulation": 15614,
+        "stPopulation": 2174957,
+        "scShare": 0.006656063518591964,
+        "stShare": 0.927171986151127
+      },
+      "18": {
+        "households": 5246522,
+        "population": 26102136,
+        "scPopulation": 2083528,
+        "stPopulation": 4043640,
+        "scShare": 0.079822127669393,
+        "stShare": 0.15491604436955253
+      },
+      "19": {
+        "households": 13756412,
+        "population": 61838225,
+        "scPopulation": 17435746,
+        "stPopulation": 4871404,
+        "scShare": 0.2819574092621552,
+        "stShare": 0.07877658306533113
+      },
+      "20": {
+        "households": 4392330,
+        "population": 23860099,
+        "scPopulation": 3083807,
+        "stPopulation": 6871315,
+        "scShare": 0.12924535644215054,
+        "stShare": 0.287983507528615
+      },
+      "21": {
+        "households": 8129903,
+        "population": 34207819,
+        "scPopulation": 6094507,
+        "stPopulation": 8354122,
+        "scShare": 0.17816122114364133,
+        "stShare": 0.2442167454927802
+      },
+      "22": {
+        "households": 4288532,
+        "population": 18464710,
+        "scPopulation": 2411773,
+        "stPopulation": 6868838,
+        "scShare": 0.13061525956213124,
+        "stShare": 0.3719981675277973
+      },
+      "23": {
+        "households": 10575589,
+        "population": 48480467,
+        "scPopulation": 7113522,
+        "stPopulation": 12792613,
+        "scShare": 0.14672964510075387,
+        "stShare": 0.2638714905614624
+      },
+      "24": {
+        "households": 6466288,
+        "population": 32518534,
+        "scPopulation": 2019103,
+        "stPopulation": 7626548,
+        "scShare": 0.06209083718226658,
+        "stShare": 0.23452926875485838
+      },
+      "25": {
+        "households": 13131,
+        "population": 65531,
+        "scPopulation": 2484,
+        "stPopulation": 5311,
+        "scShare": 0.037899902776875834,
+        "stShare": 0.08103969227559003
+      },
+      "27": {
+        "households": 12587115,
+        "population": 58425835,
+        "scPopulation": 6603587,
+        "stPopulation": 8329690,
+        "scShare": 0.11302511204514247,
+        "stShare": 0.14256860555406137
+      },
+      "28": {
+        "households": 13692998,
+        "population": 54195271,
+        "scPopulation": 10214530,
+        "stPopulation": 4673695,
+        "scShare": 0.18847640555651873,
+        "stShare": 0.08623806724609583
+      },
+      "29": {
+        "households": 7523131,
+        "population": 7270817,
+        "scPopulation": 1347546,
+        "stPopulation": 576796,
+        "scShare": 0.18533631371107845,
+        "stShare": 0.07933034746124579
+      },
+      "30": {
+        "households": 117870,
+        "population": 510226,
+        "scPopulation": 9242,
+        "stPopulation": 87036,
+        "scShare": 0.018113541842242457,
+        "stShare": 0.17058323174436427
+      },
+      "33": {
+        "households": 9222489,
+        "population": 8098941,
+        "scPopulation": 2206848,
+        "stPopulation": 168937,
+        "scShare": 0.2724859953912493,
+        "stShare": 0.020859146893402482
+      },
+      "34": {
+        "households": 89012,
+        "population": 366167,
+        "scPopulation": 106832,
+        "stPopulation": 0,
+        "scShare": 0.29175758601949386,
+        "stShare": 0
+      },
+      "35": {
+        "households": 59126,
+        "population": 239184,
+        "scPopulation": 0,
+        "stPopulation": 29244,
+        "scShare": 0,
+        "stShare": 0.1222657033915312
+      },
+      "01": {
+        "households": 1532273,
+        "population": 8430412,
+        "scPopulation": 755482,
+        "stPopulation": 1310503,
+        "scShare": 0.08961390387574326,
+        "stShare": 0.1554495144435737
+      },
+      "02": {
+        "households": 1257191,
+        "population": 5907946,
+        "scPopulation": 1454758,
+        "stPopulation": 376482,
+        "scShare": 0.24623760408579717,
+        "stShare": 0.06372471252583894
+      },
+      "03": {
+        "households": 3166017,
+        "population": 2973055,
+        "scPopulation": 1093650,
+        "stPopulation": 156,
+        "scShare": 0.3678539414844327,
+        "stShare": 0.00005247127954242353
+      },
+      "04": {
+        "households": 5149,
+        "population": 21593,
+        "scPopulation": 4443,
+        "stPopulation": 0,
+        "scShare": 0.2057611262909276,
+        "stShare": 0
+      },
+      "05": {
+        "households": 1328927,
+        "population": 1344824,
+        "scPopulation": 274054,
+        "stPopulation": 53191,
+        "scShare": 0.20378409891372304,
+        "stShare": 0.03955211585032552
+      },
+      "06": {
+        "households": 2874917,
+        "population": 15547590,
+        "scPopulation": 3357060,
+        "stPopulation": 3250,
+        "scShare": 0.2159215857713878,
+        "stShare": 0.000209035611965252
+      },
+      "07": {
+        "households": 79127,
+        "population": 397193,
+        "scPopulation": 56364,
+        "stPopulation": 0,
+        "scShare": 0.1419058241207675,
+        "stShare": 0
+      },
+      "08": {
+        "households": 9786947,
+        "population": 8519905,
+        "scPopulation": 1611083,
+        "stPopulation": 1176242,
+        "scShare": 0.18909638709533808,
+        "stShare": 0.13805816454096878
+      },
+      "09": {
+        "households": 24185216,
+        "population": 37413599,
+        "scPopulation": 8108962,
+        "stPopulation": 250843,
+        "scShare": 0.2167383562628542,
+        "stShare": 0.006704594219267749
+      }
+    },
+    "urban": {
+      "10": {
+        "households": 1647407,
+        "population": 5316165,
+        "scPopulation": 515698,
+        "stPopulation": 29357,
+        "scShare": 0.0970057055942279,
+        "stShare": 0.005522219965953736
+      },
+      "11": {
+        "households": 31317,
+        "population": 126566,
+        "scPopulation": 9252,
+        "stPopulation": 35786,
+        "scShare": 0.07310020068580819,
+        "stShare": 0.2827457611048781
+      },
+      "12": {
+        "households": 56986,
+        "population": 236249,
+        "scPopulation": 0,
+        "stPopulation": 129160,
+        "scShare": 0,
+        "stShare": 0.5467113088309369
+      },
+      "13": {
+        "households": 91400,
+        "population": 433795,
+        "scPopulation": 852,
+        "stPopulation": 328336,
+        "scShare": 0.0019640613653914866,
+        "stShare": 0.756892080360539
+      },
+      "14": {
+        "households": 112163,
+        "population": 545605,
+        "scPopulation": 31491,
+        "stPopulation": 44614,
+        "scShare": 0.05771757956763593,
+        "stShare": 0.08176977850276299
+      },
+      "15": {
+        "households": 101193,
+        "population": 388971,
+        "scPopulation": 3437,
+        "stPopulation": 376476,
+        "scShare": 0.00883613431335498,
+        "stShare": 0.967876782587905
+      },
+      "16": {
+        "households": 8398,
+        "population": 30057,
+        "scPopulation": 6682,
+        "stPopulation": 1932,
+        "scShare": 0.22231094254250258,
+        "stShare": 0.06427787204311808
+      },
+      "17": {
+        "households": 57748,
+        "population": 292081,
+        "scPopulation": 10605,
+        "stPopulation": 220602,
+        "scShare": 0.03630842129409308,
+        "stShare": 0.7552767896576634
+      },
+      "18": {
+        "households": 419520,
+        "population": 1561668,
+        "scPopulation": 180807,
+        "stPopulation": 119953,
+        "scShare": 0.1157784137656218,
+        "stShare": 0.07681062157128896
+      },
+      "19": {
+        "households": 1482743,
+        "population": 6118178,
+        "scPopulation": 991697,
+        "stPopulation": 115413,
+        "scShare": 0.16209018674286216,
+        "stShare": 0.018864019046910725
+      },
+      "20": {
+        "households": 896354,
+        "population": 2416325,
+        "scPopulation": 234975,
+        "stPopulation": 146436,
+        "scShare": 0.09724478288309726,
+        "stShare": 0.060602774875068544
+      },
+      "21": {
+        "households": 850910,
+        "population": 3618899,
+        "scPopulation": 512194,
+        "stPopulation": 254565,
+        "scShare": 0.1415331016422398,
+        "stShare": 0.07034321764713522
+      },
+      "22": {
+        "households": 1046347,
+        "population": 3589147,
+        "scPopulation": 490050,
+        "stPopulation": 363319,
+        "scShare": 0.13653661998240807,
+        "stShare": 0.10122711608078465
+      },
+      "23": {
+        "households": 2784893,
+        "population": 9984844,
+        "scPopulation": 1504482,
+        "stPopulation": 484882,
+        "scShare": 0.15067657288485503,
+        "stShare": 0.04856181081852798
+      },
+      "24": {
+        "households": 3482822,
+        "population": 13822771,
+        "scPopulation": 703035,
+        "stPopulation": 236553,
+        "scShare": 0.05086063403757507,
+        "stShare": 0.017113260937376903
+      },
+      "25": {
+        "households": 10140,
+        "population": 43481,
+        "scPopulation": 1896,
+        "stPopulation": 1771,
+        "scShare": 0.04360525286906925,
+        "stShare": 0.04073043398265909
+      },
+      "26": {
+        "households": 19978,
+        "population": 80159,
+        "scPopulation": 1731,
+        "stPopulation": 8944,
+        "scShare": 0.021594580770718196,
+        "stShare": 0.1115782382514752
+      },
+      "27": {
+        "households": 7441436,
+        "population": 32891144,
+        "scPopulation": 2798320,
+        "stPopulation": 624120,
+        "scShare": 0.08507822686651463,
+        "stShare": 0.018975306157289467
+      },
+      "28": {
+        "households": 3880684,
+        "population": 15608591,
+        "scPopulation": 1671099,
+        "stPopulation": 360294,
+        "scShare": 0.10706279403250776,
+        "stShare": 0.023083081574496227
+      },
+      "29": {
+        "households": 1574394,
+        "population": 5895775,
+        "scPopulation": 736072,
+        "stPopulation": 193469,
+        "scShare": 0.12484740971330538,
+        "stShare": 0.03281492454051451
+      },
+      "30": {
+        "households": 48591,
+        "population": 205593,
+        "scPopulation": 4611,
+        "stPopulation": 4907,
+        "scShare": 0.022429475175981657,
+        "stShare": 0.023868346872106927
+      },
+      "33": {
+        "households": 6450778,
+        "population": 24031173,
+        "scPopulation": 3553920,
+        "stPopulation": 120135,
+        "scShare": 0.14788789708130212,
+        "stShare": 0.004999134974352209
+      },
+      "34": {
+        "households": 141249,
+        "population": 435554,
+        "scPopulation": 46449,
+        "stPopulation": 0,
+        "scShare": 0.10664349311451622,
+        "stShare": 0
+      },
+      "35": {
+        "households": 24236,
+        "population": 96548,
+        "scPopulation": 0,
+        "stPopulation": 1259,
+        "scShare": 0,
+        "stShare": 0.013040145834196461
+      },
+      "01": {
+        "households": 447283,
+        "population": 2335973,
+        "scPopulation": 143851,
+        "stPopulation": 55711,
+        "scShare": 0.061580715843625344,
+        "stShare": 0.023849035663494743
+      },
+      "02": {
+        "households": 155944,
+        "population": 444370,
+        "scPopulation": 78156,
+        "stPopulation": 10580,
+        "scShare": 0.17588045997704616,
+        "stShare": 0.02380898800549092
+      },
+      "03": {
+        "households": 1343231,
+        "population": 6124361,
+        "scPopulation": 1324291,
+        "stPopulation": 0,
+        "scShare": 0.21623334209080322,
+        "stShare": 0
+      },
+      "04": {
+        "households": 207966,
+        "population": 129997,
+        "scPopulation": 27555,
+        "stPopulation": 0,
+        "scShare": 0.21197009510018466,
+        "stShare": 0
+      },
+      "05": {
+        "households": 357434,
+        "population": 465845,
+        "scPopulation": 52784,
+        "stPopulation": 3349,
+        "scShare": 0.11330774801226101,
+        "stShare": 0.0071900687732093915
+      },
+      "06": {
+        "households": 1518133,
+        "population": 823761,
+        "scPopulation": 118627,
+        "stPopulation": 136,
+        "scShare": 0.14400657472252268,
+        "stShare": 0.000165096429668314
+      },
+      "07": {
+        "households": 2708034,
+        "population": 8676726,
+        "scPopulation": 1115791,
+        "stPopulation": 177,
+        "scShare": 0.12859589764052654,
+        "stShare": 0.000020365266789134224
+      },
+      "08": {
+        "households": 2203688,
+        "population": 8632912,
+        "scPopulation": 1356527,
+        "stPopulation": 268180,
+        "scShare": 0.15713431165803468,
+        "stShare": 0.031064819569080578
+      },
+      "09": {
+        "households": 5419489,
+        "population": 18446527,
+        "scPopulation": 2310886,
+        "stPopulation": 59268,
+        "scShare": 0.1252748552613725,
+        "stShare": 0.0032129625267672338
+      }
+    }
+  }
+}

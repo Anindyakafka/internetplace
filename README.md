@@ -38,6 +38,17 @@ npm install
 npm run dev -- --open
 ```
 
+## Large data workflow (SECC / SHRUG)
+
+This repo can work with very large local CSVs without committing them to GitHub.
+
+- Raw directories under `src/data/shrug-secc-*` are gitignored.
+- Before production build, `npm run build` runs `npm run data:prepare`.
+- `data:prepare` creates a lightweight derived file at `static/data/secc_state_summary.json`.
+- If raw CSVs are not present (for example, CI on Netlify), build still succeeds.
+
+See `docs/SECC_DEPLOYMENT.md` for deployment modes.
+
 ## Projects indexed here
 
 - **CBFC Watch** — [cbfc.watch](https://cbfc.watch/) · interactive explorer of Indian film censor cuts (data: [CensorBoard_records](https://github.com/Anindyakafka/CensorBoard_records))
