@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { projects } from '$data/projects';
 	import { indiaMap } from '$lib/actions/india-map';
 
@@ -16,8 +17,20 @@
 
 	type RegionMetric = {
 		adivasiShare: number;
+		scShare: number;
 		densityIndex: number;
+		households: number;
+		population: number;
 		elevation: number;
+	};
+
+	type SeccStateMetric = {
+		households: number;
+		population: number;
+		scPopulation: number;
+		stPopulation: number;
+		scShare: number;
+		stShare: number;
 	};
 
 	const regionNames: Record<string, string> = {
@@ -31,17 +44,29 @@
 		HR: 'Haryana'
 	};
 
-	// Placeholder values for interactive prototype until real data is provided.
-	const regionMetrics: Record<string, RegionMetric> = {
-		UP: { adivasiShare: 0.9, densityIndex: 24, elevation: 0.26 },
-		WB: { adivasiShare: 5.8, densityIndex: 37, elevation: 0.48 },
-		BR: { adivasiShare: 1.3, densityIndex: 52, elevation: 0.58 },
-		DL: { adivasiShare: 0.4, densityIndex: 12, elevation: 0.18 },
-		MH: { adivasiShare: 9.4, densityIndex: 71, elevation: 0.82 },
-		KA: { adivasiShare: 6.9, densityIndex: 63, elevation: 0.76 },
-		RJ: { adivasiShare: 13.5, densityIndex: 55, elevation: 0.68 },
-		HR: { adivasiShare: 0.0, densityIndex: 21, elevation: 0.22 }
+	const seccStateCodeByIso: Record<string, string> = {
+		UP: '09',
+		WB: '19',
+		BR: '10',
+		DL: '07',
+		MH: '27',
+		KA: '29',
+		RJ: '08',
+		HR: '06'
 	};
+
+	const fallbackMetrics: Record<string, RegionMetric> = {
+		UP: { adivasiShare: 0.9, scShare: 21.1, densityIndex: 24, households: 0, population: 0, elevation: 0.26 },
+		WB: { adivasiShare: 5.8, scShare: 23.5, densityIndex: 37, households: 0, population: 0, elevation: 0.48 },
+		BR: { adivasiShare: 1.3, scShare: 16.3, densityIndex: 52, households: 0, population: 0, elevation: 0.58 },
+		DL: { adivasiShare: 0.4, scShare: 18.0, densityIndex: 12, households: 0, population: 0, elevation: 0.18 },
+		MH: { adivasiShare: 9.4, scShare: 12.3, densityIndex: 71, households: 0, population: 0, elevation: 0.82 },
+		KA: { adivasiShare: 6.9, scShare: 17.2, densityIndex: 63, households: 0, population: 0, elevation: 0.76 },
+		RJ: { adivasiShare: 13.5, scShare: 17.8, densityIndex: 55, households: 0, population: 0, elevation: 0.68 },
+		HR: { adivasiShare: 0.0, scShare: 24.7, densityIndex: 21, households: 0, population: 0, elevation: 0.22 }
+	};
+
+	let seccCombined = $state<Record<string, SeccStateMetric> | null>(null);
 
 	let hoveredRegionId = $state<string | null>(null);
 	let selectedRegionId = $state<string | null>(null);
@@ -70,9 +95,85 @@
 		return null;
 	});
 
+	let regionMetrics = $derived.by<Record<string, RegionMetric>>(() => {
+		const activeRegionIds = regions.map((region) => region.id);
+		if (!seccCombined) {
+			return activeRegionIds.reduce<Record<string, RegionMetric>>((acc, regionId) => {
+				acc[regionId] = fallbackMetrics[regionId] ?? {
+					adivasiShare: 0,
+					scShare: 0,
+					densityIndex: 20,
+					households: 0,
+					population: 0,
+					elevation: 0.2
+				};
+				return acc;
+			}, {});
+		}
+
+		const stateRows = activeRegionIds
+			.map((regionId) => {
+				const seccCode = seccStateCodeByIso[regionId];
+				return seccCode ? seccCombined[seccCode] : null;
+			})
+			.filter((row): row is SeccStateMetric => Boolean(row));
+
+		const maxPopulation = Math.max(1, ...stateRows.map((row) => row.population));
+
+		return activeRegionIds.reduce<Record<string, RegionMetric>>((acc, regionId) => {
+			const seccCode = seccStateCodeByIso[regionId];
+			const row = seccCode ? seccCombined[seccCode] : undefined;
+			if (!row) {
+				acc[regionId] = fallbackMetrics[regionId] ?? {
+					adivasiShare: 0,
+					scShare: 0,
+					densityIndex: 20,
+					households: 0,
+					population: 0,
+					elevation: 0.2
+				};
+				return acc;
+			}
+
+			const adivasiShare = row.stShare * 100;
+			const scShare = row.scShare * 100;
+			const densityIndex = Math.round((row.population / maxPopulation) * 100);
+			const elevation = Math.min(1, Math.max(0.2, row.stShare * 1.25));
+
+			acc[regionId] = {
+				adivasiShare,
+				scShare,
+				densityIndex,
+				households: row.households,
+				population: row.population,
+				elevation
+			};
+			return acc;
+		}, {});
+	});
+
 	let activeMetric = $derived.by<RegionMetric | null>(() => {
 		if (!activeRegion) return null;
 		return regionMetrics[activeRegion.id] ?? null;
+	});
+
+	$effect(() => {
+		if (!browser) return;
+
+		let cancelled = false;
+		fetch('/data/secc_state_summary.json')
+			.then((response) => (response.ok ? response.json() : null))
+			.then((payload) => {
+				if (cancelled || !payload?.states?.combined) return;
+				seccCombined = payload.states.combined as Record<string, SeccStateMetric>;
+			})
+			.catch(() => {
+				// Keep fallback metrics when data file is unavailable.
+			});
+
+		return () => {
+			cancelled = true;
+		};
 	});
 
 	$effect(() => {
@@ -147,7 +248,9 @@
 					<span style={`height:${Math.max(8, activeMetric.densityIndex * 0.65)}%`}></span>
 				</div>
 				<p class="hud-value">Adivasi {activeMetric.adivasiShare.toFixed(1)}%</p>
+				<p class="hud-value">SC {activeMetric.scShare.toFixed(1)}%</p>
 				<p class="hud-value">Density {activeMetric.densityIndex}</p>
+				<p class="hud-value">Pop {activeMetric.population.toLocaleString('en-IN')}</p>
 			</div>
 
 			<div class="region-dock">

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { reveal } from '$lib/actions/reveal';
 	import { indiaMap } from '$lib/actions/india-map';
 	import { projects } from '$data/projects';
@@ -10,9 +11,39 @@
 		projects: Array<{ title: string; slug: string; blurb: string; year: string; categories: string[] }>;
 	};
 
+	type SeccStateMetric = {
+		households: number;
+		population: number;
+		scPopulation: number;
+		stPopulation: number;
+		scShare: number;
+		stShare: number;
+	};
+
+	type RegionMetric = {
+		scShare: number;
+		stShare: number;
+		households: number;
+		population: number;
+		densityIndex: number;
+		elevation: number;
+	};
+
 	let selectedRegion = $state<Region | null>(null);
 	let hoveredRegionId = $state<string | null>(null);
 	let searchQuery = $state('');
+	let seccCombined = $state<Record<string, SeccStateMetric> | null>(null);
+
+	const seccStateCodeByIso: Record<string, string> = {
+		UP: '09',
+		WB: '19',
+		BR: '10',
+		DL: '07',
+		MH: '27',
+		KA: '29',
+		RJ: '08',
+		HR: '06'
+	};
 
 	// Build regions list directly from project metadata.
 	// Each project's `regions` field is the source of truth for geography.
@@ -57,6 +88,49 @@
 		);
 	});
 
+	let regionMetrics = $derived.by<Record<string, RegionMetric>>(() => {
+		if (!seccCombined) return {};
+
+		const rows = regions
+			.map((region) => seccCombined[seccStateCodeByIso[region.id]])
+			.filter((row): row is SeccStateMetric => Boolean(row));
+		const maxPopulation = Math.max(1, ...rows.map((row) => row.population));
+
+		return regions.reduce<Record<string, RegionMetric>>((acc, region) => {
+			const row = seccCombined[seccStateCodeByIso[region.id]];
+			if (!row) return acc;
+
+			acc[region.id] = {
+				scShare: row.scShare * 100,
+				stShare: row.stShare * 100,
+				households: row.households,
+				population: row.population,
+				densityIndex: Math.round((row.population / maxPopulation) * 100),
+				elevation: Math.min(1, Math.max(0.2, row.stShare * 1.25))
+			};
+			return acc;
+		}, {});
+	});
+
+	$effect(() => {
+		if (!browser) return;
+		let cancelled = false;
+
+		fetch('/data/secc_state_summary.json')
+			.then((response) => (response.ok ? response.json() : null))
+			.then((payload) => {
+				if (cancelled || !payload?.states?.combined) return;
+				seccCombined = payload.states.combined as Record<string, SeccStateMetric>;
+			})
+			.catch(() => {
+				// Keep map usable even if summary file is absent.
+			});
+
+		return () => {
+			cancelled = true;
+		};
+	});
+
 	function getRegionName(regionId: string): string {
 		const names: Record<string, string> = {
 			'UP': 'Uttar Pradesh',
@@ -88,6 +162,10 @@
 
 	function navigateToProject(slug: string) {
 		goto(`/work/${slug}`);
+	}
+
+	function getRegionElevation(regionId: string): number {
+		return regionMetrics[regionId]?.elevation ?? 0.2;
 	}
 </script>
 
@@ -144,7 +222,13 @@
 				class="india-map"
 				role="img"
 				aria-label="India map with clickable regions"
-				use:indiaMap={{ regions, svgUrl: '/assets/india.svg', onRegionClick: handleRegionClick, onRegionHover: handleRegionHover }}
+				use:indiaMap={{
+					regions,
+					svgUrl: '/assets/india.svg',
+					onRegionClick: handleRegionClick,
+					onRegionHover: handleRegionHover,
+					getRegionElevation
+				}}
 				></div>
 			</div>
 
@@ -178,6 +262,10 @@
 					<p class="region-count">
 						{selectedRegion.projects.length} project{selectedRegion.projects.length !== 1 ? 's' : ''}
 					</p>
+					{#if regionMetrics[selectedRegion.id]}
+						<p class="region-count">ST {regionMetrics[selectedRegion.id].stShare.toFixed(1)}% · SC {regionMetrics[selectedRegion.id].scShare.toFixed(1)}%</p>
+						<p class="region-count">Pop {regionMetrics[selectedRegion.id].population.toLocaleString('en-IN')}</p>
+					{/if}
 
 					<ul class="region-projects">
 						{#each selectedRegion.projects as project}
@@ -212,6 +300,9 @@
 						<p class="preview-count">
 							{hoveredRegion.projects.length} project{hoveredRegion.projects.length !== 1 ? 's' : ''}
 						</p>
+						{#if regionMetrics[hoveredRegion.id]}
+							<p class="preview-count">ST {regionMetrics[hoveredRegion.id].stShare.toFixed(1)}%</p>
+						{/if}
 						{#if hoveredRegion.projects.length > 0}
 							<p class="preview-projects">
 								{hoveredRegion.projects.map(p => p.title).join(', ')}

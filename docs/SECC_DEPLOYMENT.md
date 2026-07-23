@@ -60,6 +60,16 @@ If Netlify builds from GitHub and cannot access local CSVs, choose one:
 
 For this repository's current setup, option 1 is simpler.
 
+### CI-safe checklist (recommended)
+
+When deploying from GitHub (for example Netlify auto-build):
+
+1. Run `npm run data:prepare` locally after updating raw CSVs.
+2. Commit `static/data/secc_state_summary.json` to the repository.
+3. Push and let CI run `npm run build`.
+
+Because raw CSVs are gitignored, CI cannot regenerate this file by itself unless you also provide external data access.
+
 ## License and attribution note
 
 SHRUG data includes licensing terms in the dataset README. If you publish derived outputs, keep source attribution and usage constraints visible in your project docs.
