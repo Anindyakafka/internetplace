@@ -46,6 +46,8 @@
 	let hoveredRegionId = $state<string | null>(null);
 	let selectedRegionId = $state<string | null>(null);
 	let mapScale = $state(2.2);
+	let mapShiftX = $state(0);
+	let mapShiftY = $state(0);
 
 	let regions = $derived.by<Region[]>(() => {
 		const ids = new Set<string>();
@@ -77,7 +79,9 @@
 		const onScroll = () => {
 			const max = window.innerHeight * 1.35;
 			const progress = Math.max(0, Math.min(1, window.scrollY / max));
-			mapScale = 2.25 - progress * 1.25;
+			mapScale = 2.7 - progress * 1.7;
+			mapShiftX = -18 + progress * 18;
+			mapShiftY = 10 - progress * 10;
 		};
 
 		onScroll();
@@ -114,7 +118,10 @@
 	<div class="map-sticky">
 		<h1 class="landing-name">Anindya Singh</h1>
 
-		<div class="map-zoom-shell" style={`--map-scale: ${mapScale};`}>
+		<div
+			class="map-zoom-shell"
+			style={`--map-scale: ${mapScale}; --map-shift-x: ${mapShiftX}%; --map-shift-y: ${mapShiftY}%;`}
+		>
 			<div
 				class="india-map"
 				role="img"
@@ -139,8 +146,8 @@
 					<span style={`height:${Math.max(8, activeMetric.densityIndex * 0.74)}%`}></span>
 					<span style={`height:${Math.max(8, activeMetric.densityIndex * 0.65)}%`}></span>
 				</div>
-				<p class="hud-value">Adivasi share {activeMetric.adivasiShare.toFixed(1)}%</p>
-				<p class="hud-value">Terrain density {activeMetric.densityIndex}</p>
+				<p class="hud-value">Adivasi {activeMetric.adivasiShare.toFixed(1)}%</p>
+				<p class="hud-value">Density {activeMetric.densityIndex}</p>
 			</div>
 
 			<div class="region-dock">
@@ -163,6 +170,7 @@
 			radial-gradient(circle at 15% 10%, color-mix(in srgb, var(--color-accent-soft) 36%, transparent), transparent 45%),
 			radial-gradient(circle at 88% 84%, color-mix(in srgb, var(--color-accent-soft) 28%, transparent), transparent 34%),
 			var(--color-bg);
+		margin-top: -64px;
 	}
 
 	.map-sticky {
@@ -176,7 +184,7 @@
 
 	.landing-name {
 		position: absolute;
-		top: clamp(1.4rem, 3.4vw, 2.6rem);
+		top: clamp(1.9rem, 5.5vw, 3rem);
 		left: 50%;
 		transform: translateX(-50%);
 		font-family: var(--font-serif);
@@ -184,6 +192,7 @@
 		font-size: clamp(1.5rem, 3.4vw, 2.6rem);
 		letter-spacing: -0.02em;
 		z-index: 8;
+		text-shadow: 0 6px 28px rgba(0, 0, 0, 0.34);
 	}
 
 	.map-zoom-shell {
@@ -195,9 +204,10 @@
 
 	.india-map {
 		width: min(72rem, 96vw);
-		transform: scale(var(--map-scale));
-		transform-origin: 50% 56%;
+		transform: translate(var(--map-shift-x), var(--map-shift-y)) scale(var(--map-scale));
+		transform-origin: 52% 56%;
 		transition: transform 140ms linear;
+		filter: drop-shadow(0 16px 36px rgba(0, 0, 0, 0.28));
 	}
 
 	.hover-hud {
@@ -250,7 +260,7 @@
 		flex-wrap: wrap;
 		justify-content: center;
 		gap: 0.5rem;
-		max-width: min(66rem, 92vw);
+		max-width: min(72rem, 94vw);
 		z-index: 11;
 	}
 
@@ -281,6 +291,7 @@
 	@media (max-width: 900px) {
 		.map-stage {
 			height: 220vh;
+			margin-top: -64px;
 		}
 
 		.map-zoom-shell {
@@ -289,7 +300,7 @@
 		}
 
 		.india-map {
-			transform-origin: 50% 58%;
+			transform-origin: 50% 60%;
 		}
 
 		.hover-hud {

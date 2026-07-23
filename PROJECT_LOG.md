@@ -293,6 +293,25 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 
 **Consequence / next step:** Landing now behaves as an exploratory map object first and a text page second. Next step when data is available: replace placeholder adivasi/density values with real state-level datasets and tune elevation scale with a calibrated legend mode.
 
+---
+
+### 2026-07-23 — Live deploy QA correction pass (anindyasingh.netlify.app)
+
+**Decision:** Refine the interaction-first landing after reviewing the actual deployed rendering. Remove prototype-looking header artifacts and adjust map framing so the zoom narrative feels intentional on real viewport constraints.
+
+**Context:** A direct live-site check showed that the previous pass, while functionally correct, still felt visually off from intent: the placeholder mark and sticky header divider weakened the “map is the interface” statement, and the zoom focal region needed stronger compositional control.
+
+**What changed:**
+- `src/routes/+layout.svelte`
+  - Added route-conditional homepage header: floating theme toggle only (no placeholder logo mark or header bar weight).
+  - Preserved a compact sticky header for inner pages with a minimal home mark.
+- `src/routes/+page.svelte`
+  - Reworked scroll interpolation to control both map scale and map translation.
+  - Updated zoom path from wide zoom-in/out only to a guided focal transition (shift + scale) for stronger cinematic entry.
+  - Tuned name placement, drop-shadow, and interaction chip spacing for better readability against dark map surfaces.
+
+**Consequence / next step:** The homepage now reads closer to a full-bleed interactive stage rather than a conventional page shell. Remaining optional pass: calibrate exact initial focal coordinates after final logo insertion and desktop/mobile visual review.
+
 **Consequence / next step:** Build the Map page component, wire navigation, and provide clear instructions for where to place the India SVG. Once SVG is in `static/images/india-map.svg`, the page will render correctly. May need to adjust path IDs and coordinate systems based on the actual SVG structure.
 
 ---
