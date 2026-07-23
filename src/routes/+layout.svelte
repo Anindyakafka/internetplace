@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
+	import { page } from '$app/stores';
 	import type { Snippet } from 'svelte';
 	import '../lib/styles/global.css';
 
@@ -51,9 +52,7 @@
 <div class="site">
 	<header class="site-header" class:scrolled>
 		<div class="header-inner">
-			<a href="/" class="site-id">
-				<span class="site-name">Anindya Singh</span>
-			</a>
+			<div class="site-mark" aria-label="Logo placeholder"></div>
 
 			<button
 				class="theme-toggle"
@@ -85,29 +84,31 @@
 		{@render children()}
 	</main>
 
-	<footer class="site-footer">
-		<div class="footer-inner">
-			<div class="footer-col">
-				<a class="footer-label" href="/colophon">Colophon</a>
-				<p class="footer-text">
-					Built with <a href="https://kit.svelte.dev" target="_blank" rel="noopener">SvelteKit</a>.
-					Set in Inter &amp; Newsreader.
-				</p>
-			</div>
-			<div class="footer-col">
-				<p class="footer-label">Elsewhere</p>
-				<div class="footer-links">
-					<a href="https://github.com/Anindyakafka" target="_blank" rel="noopener">GitHub</a>
-					<a href="mailto:hello@anindyasingh.dev">Email</a>
+	{#if $page.url.pathname !== '/'}
+		<footer class="site-footer">
+			<div class="footer-inner">
+				<div class="footer-col">
+					<a class="footer-label" href="/colophon">Colophon</a>
+					<p class="footer-text">
+						Built with <a href="https://kit.svelte.dev" target="_blank" rel="noopener">SvelteKit</a>.
+						Set in Inter &amp; Newsreader.
+					</p>
+				</div>
+				<div class="footer-col">
+					<p class="footer-label">Elsewhere</p>
+					<div class="footer-links">
+						<a href="https://github.com/Anindyakafka" target="_blank" rel="noopener">GitHub</a>
+						<a href="mailto:hello@anindyasingh.dev">Email</a>
+					</div>
+				</div>
+				<div class="footer-col">
+					<p class="footer-label">Location</p>
+					<p class="footer-text">Delhi NCR, India</p>
 				</div>
 			</div>
-			<div class="footer-col">
-				<p class="footer-label">Location</p>
-				<p class="footer-text">Delhi NCR, India</p>
-			</div>
-		</div>
-		<p class="footer-copy">© {new Date().getFullYear()} Anindya Singh</p>
-	</footer>
+			<p class="footer-copy">© {new Date().getFullYear()} Anindya Singh</p>
+		</footer>
+	{/if}
 </div>
 
 <style>
@@ -146,18 +147,12 @@
 		gap: var(--space-l);
 	}
 
-	/* ── Site identity ── */
-	.site-id {
-		display: flex;
-		align-items: center;
-		gap: var(--space-2xs);
-		text-decoration: none;
-		color: var(--color-text);
-		font-family: var(--font-sans);
-		font-weight: 600;
-		font-size: var(--step-0);
-		letter-spacing: -0.01em;
-		white-space: nowrap;
+	.site-mark {
+		width: 36px;
+		height: 36px;
+		border: 1px dashed var(--color-border-strong);
+		border-radius: 999px;
+		opacity: 0.7;
 	}
 
 	/* ── Theme toggle ── */

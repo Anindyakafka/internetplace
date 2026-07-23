@@ -248,6 +248,51 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 
 **Consequence / next step:** Navigation now reads as place-based exploration from first load. Next polish pass can tune card positioning and map scale after visual QA on desktop + mobile.
 
+---
+
+### 2026-07-23 — Bold map interaction mode + enriched project pages
+
+**Decision:** Shift the landing from a content-forward map composition to an interaction-first map stage: no explanatory copy, no header name text, and scroll-driven zoom from close-in map view to full India context. Simultaneously replace generic project detail placeholders with structured, source-informed content blocks.
+
+**Context:** User feedback asked for a cleaner but bolder front door where the map itself is the interface. The prior landing still contained textual framing and looked editorial. Also, individual work pages had thin placeholder prose despite strong project links and repository context.
+
+**What changed:**
+
+1. **Global layout (`src/routes/+layout.svelte`)**
+  - Removed visible header name text and replaced it with a neutral logo placeholder mark.
+  - Kept theme toggle.
+  - Hid global footer on `/` so the landing remains text-minimal and map-dominant.
+
+2. **Landing page (`src/routes/+page.svelte`)**
+  - Rebuilt as a sticky full-viewport map stage with tall scroll track.
+  - Added scroll-based map scale interpolation: initial zoomed-in map progressively zooms out while scrolling.
+  - Retained only one static text element on landing: centered top name.
+  - Added interaction-only overlays:
+    - region HUD on hover/selection,
+    - project/page dock links revealed only through map interaction.
+  - Added placeholder adivasi-share and density metrics per region for prototype interactions.
+
+3. **Map rendering action (`src/lib/actions/india-map.ts`)**
+  - Added optional `getRegionElevation(regionId)` parameter.
+  - Applied pseudo-3D relief styling per region using elevation-driven transform and drop-shadow.
+  - Kept behavior backward-compatible for pages that do not pass elevation.
+
+4. **Project details content (`src/data/project-details.ts`, `src/routes/work/[slug]/+page.svelte`)**
+  - Added new data module with per-project sections:
+    - overview,
+    - data and sources,
+    - workflow,
+    - outputs,
+    - editorial note.
+  - Updated detail route to render these sections instead of generic placeholder paragraphs.
+  - Content grounded in linked project pages/repositories (CBFC, Dadri Forecast, electoral-roll workflows, MGNREGA, name models, netCDF utilities).
+
+**Alternatives considered:**
+- *Keep explanatory text and static nav cards on landing* — rejected; conflicts with “map is the thing” requirement.
+- *Wait for real population data before prototyping density interactions* — rejected; placeholder metric model now allows rapid swap-in once real data arrives.
+
+**Consequence / next step:** Landing now behaves as an exploratory map object first and a text page second. Next step when data is available: replace placeholder adivasi/density values with real state-level datasets and tune elevation scale with a calibrated legend mode.
+
 **Consequence / next step:** Build the Map page component, wire navigation, and provide clear instructions for where to place the India SVG. Once SVG is in `static/images/india-map.svg`, the page will render correctly. May need to adjust path IDs and coordinate systems based on the actual SVG structure.
 
 ---

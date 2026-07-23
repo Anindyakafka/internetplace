@@ -1,393 +1,309 @@
-﻿<script lang="ts">
-     import { projects, featuredProjects } from '$data/projects';
-     import { reveal } from '$lib/actions/reveal';
-     import { indiaMap } from '$lib/actions/india-map';
+<script lang="ts">
+	import { projects } from '$data/projects';
+	import { indiaMap } from '$lib/actions/india-map';
 
-     type RegionProject = {
-          title: string;
-          slug: string;
-          year: number | string;
-     };
+	type RegionProject = {
+		title: string;
+		slug: string;
+		year: number | string;
+	};
 
-     type Region = {
-          id: string;
-          name: string;
-          projects: RegionProject[];
-     };
+	type Region = {
+		id: string;
+		name: string;
+		projects: RegionProject[];
+	};
 
-     const regionNames: Record<string, string> = {
-          UP: 'Uttar Pradesh',
-          WB: 'West Bengal',
-          BR: 'Bihar',
-          DL: 'Delhi',
-          MH: 'Maharashtra',
-          KA: 'Karnataka',
-          RJ: 'Rajasthan',
-          HR: 'Haryana'
-     };
+	type RegionMetric = {
+		adivasiShare: number;
+		densityIndex: number;
+		elevation: number;
+	};
 
-     let hoveredRegionId = $state<string | null>(null);
-     let selectedRegionId = $state<string | null>(null);
+	const regionNames: Record<string, string> = {
+		UP: 'Uttar Pradesh',
+		WB: 'West Bengal',
+		BR: 'Bihar',
+		DL: 'Delhi',
+		MH: 'Maharashtra',
+		KA: 'Karnataka',
+		RJ: 'Rajasthan',
+		HR: 'Haryana'
+	};
 
-     let regions = $derived.by<Region[]>(() => {
-          const ids = new Set<string>();
-          projects.forEach((project) => project.regions?.forEach((id) => ids.add(id)));
+	// Placeholder values for interactive prototype until real data is provided.
+	const regionMetrics: Record<string, RegionMetric> = {
+		UP: { adivasiShare: 0.9, densityIndex: 24, elevation: 0.26 },
+		WB: { adivasiShare: 5.8, densityIndex: 37, elevation: 0.48 },
+		BR: { adivasiShare: 1.3, densityIndex: 52, elevation: 0.58 },
+		DL: { adivasiShare: 0.4, densityIndex: 12, elevation: 0.18 },
+		MH: { adivasiShare: 9.4, densityIndex: 71, elevation: 0.82 },
+		KA: { adivasiShare: 6.9, densityIndex: 63, elevation: 0.76 },
+		RJ: { adivasiShare: 13.5, densityIndex: 55, elevation: 0.68 },
+		HR: { adivasiShare: 0.0, densityIndex: 21, elevation: 0.22 }
+	};
 
-          return Array.from(ids)
-               .map((id) => ({
-                    id,
-                    name: regionNames[id] ?? id,
-                    projects: projects
-                         .filter((project) => project.regions?.includes(id))
-                         .map((project) => ({ title: project.title, slug: project.slug, year: project.year }))
-               }))
-               .sort((a, b) => b.projects.length - a.projects.length);
-     });
+	let hoveredRegionId = $state<string | null>(null);
+	let selectedRegionId = $state<string | null>(null);
+	let mapScale = $state(2.2);
 
-     let activeRegion = $derived.by<Region | null>(() => {
-          if (selectedRegionId) return regions.find((region) => region.id === selectedRegionId) ?? null;
-          if (hoveredRegionId) return regions.find((region) => region.id === hoveredRegionId) ?? null;
-          return null;
-     });
+	let regions = $derived.by<Region[]>(() => {
+		const ids = new Set<string>();
+		projects.forEach((project) => project.regions?.forEach((id) => ids.add(id)));
 
-     function handleRegionClick(regionId: string) {
-          selectedRegionId = selectedRegionId === regionId ? null : regionId;
-     }
+		return Array.from(ids)
+			.map((id) => ({
+				id,
+				name: regionNames[id] ?? id,
+				projects: projects
+					.filter((project) => project.regions?.includes(id))
+					.map((project) => ({ title: project.title, slug: project.slug, year: project.year }))
+			}))
+			.sort((a, b) => b.projects.length - a.projects.length);
+	});
 
-     function handleRegionHover(regionId: string | null) {
-          hoveredRegionId = regionId;
-     }
+	let activeRegion = $derived.by<Region | null>(() => {
+		if (selectedRegionId) return regions.find((region) => region.id === selectedRegionId) ?? null;
+		if (hoveredRegionId) return regions.find((region) => region.id === hoveredRegionId) ?? null;
+		return null;
+	});
+
+	let activeMetric = $derived.by<RegionMetric | null>(() => {
+		if (!activeRegion) return null;
+		return regionMetrics[activeRegion.id] ?? null;
+	});
+
+	$effect(() => {
+		const onScroll = () => {
+			const max = window.innerHeight * 1.35;
+			const progress = Math.max(0, Math.min(1, window.scrollY / max));
+			mapScale = 2.25 - progress * 1.25;
+		};
+
+		onScroll();
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		return () => {
+			window.removeEventListener('scroll', onScroll);
+			window.removeEventListener('resize', onScroll);
+		};
+	});
+
+	function handleRegionClick(regionId: string) {
+		selectedRegionId = selectedRegionId === regionId ? null : regionId;
+	}
+
+	function handleRegionHover(regionId: string | null) {
+		hoveredRegionId = regionId;
+	}
+
+	function getRegionElevation(regionId: string) {
+		return regionMetrics[regionId]?.elevation ?? 0.2;
+	}
 </script>
 
 <svelte:head>
-     <title>Anindya Singh — Researcher, Data Scientist, Writer</title>
-     <meta
-          name="description"
-          content="Map-based landing for Anindya Singh's work, writing, and research across India."
-     />
-     <meta name="author" content="Anindya Singh" />
-     <meta property="og:title" content="Anindya Singh — Researcher, Data Scientist, Writer" />
-     <meta
-          property="og:description"
-          content="Explore projects, writing, and background through a map-centered landing page."
-     />
-     <meta property="og:type" content="website" />
+	<title>Anindya Singh</title>
+	<meta
+		name="description"
+		content="Interactive map landing for research, writing, and projects by Anindya Singh."
+	/>
 </svelte:head>
 
-<section class="landing" use:reveal>
-     <header class="landing-header">
-          <p class="kicker">Field Notes and Coordinates</p>
-          <h1>
-               A map-led index into research, writing, and tools.
-          </h1>
-          <p class="intro">
-               This is not a dashboard. It is a terrain to wander: enter through regions, then drift into
-               projects, essays, and background.
-          </p>
-     </header>
+<section class="map-stage">
+	<div class="map-sticky">
+		<h1 class="landing-name">Anindya Singh</h1>
 
-     <div class="exploration-canvas" use:reveal={{ delay: 70 }}>
-          <a class="orbit-link orbit-link--about" href="/about">
-               <span class="orbit-label">About</span>
-               <span class="orbit-copy">who I am and where the work comes from</span>
-          </a>
+		<div class="map-zoom-shell" style={`--map-scale: ${mapScale};`}>
+			<div
+				class="india-map"
+				role="img"
+				aria-label="Interactive India map"
+				use:indiaMap={{
+					regions,
+					svgUrl: '/assets/india.svg',
+					onRegionClick: handleRegionClick,
+					onRegionHover: handleRegionHover,
+					getRegionElevation
+				}}
+			></div>
+		</div>
 
-          <a class="orbit-link orbit-link--work" href="/work">
-               <span class="orbit-label">Work</span>
-               <span class="orbit-copy">all projects, pipelines, and case studies</span>
-          </a>
+		{#if activeRegion && activeMetric}
+			<div class="hover-hud" aria-live="polite">
+				<p class="hud-region">{activeRegion.name}</p>
+				<div class="hud-bars" aria-hidden="true">
+					<span style={`height:${Math.max(8, activeMetric.densityIndex * 0.8)}%`}></span>
+					<span style={`height:${Math.max(8, activeMetric.densityIndex * 0.9)}%`}></span>
+					<span style={`height:${Math.max(8, activeMetric.densityIndex)}%`}></span>
+					<span style={`height:${Math.max(8, activeMetric.densityIndex * 0.74)}%`}></span>
+					<span style={`height:${Math.max(8, activeMetric.densityIndex * 0.65)}%`}></span>
+				</div>
+				<p class="hud-value">Adivasi share {activeMetric.adivasiShare.toFixed(1)}%</p>
+				<p class="hud-value">Terrain density {activeMetric.densityIndex}</p>
+			</div>
 
-          <a class="orbit-link orbit-link--writing" href="/writing">
-               <span class="orbit-label">Writing</span>
-               <span class="orbit-copy">essays, methods, and long-form notes</span>
-          </a>
-
-          <a class="orbit-link orbit-link--colophon" href="/colophon">
-               <span class="orbit-label">Colophon</span>
-               <span class="orbit-copy">stack, type, and design references</span>
-          </a>
-
-          <div class="map-center">
-               <div class="map-shell">
-                    <div
-                         class="india-map"
-                         role="img"
-                         aria-label="India map with active regions"
-                         use:indiaMap={{
-                              regions,
-                              svgUrl: '/assets/india.svg',
-                              onRegionClick: handleRegionClick,
-                              onRegionHover: handleRegionHover
-                         }}
-                    ></div>
-               </div>
-          </div>
-     </div>
-
-     <section class="region-panel" use:reveal={{ delay: 110 }}>
-          {#if activeRegion}
-               <p class="region-meta">{activeRegion.name} · {activeRegion.projects.length} project{activeRegion.projects.length > 1 ? 's' : ''}</p>
-               <ul class="region-links" role="list">
-                    {#each activeRegion.projects as project}
-                         <li>
-                              <a href={`/work/${project.slug}`}>{project.title} <span>{project.year}</span></a>
-                         </li>
-                    {/each}
-               </ul>
-          {:else}
-               <p class="region-meta">Choose or hover a region on the map to reveal the trail.</p>
-          {/if}
-     </section>
-
-     <section class="featured-strip" use:reveal={{ delay: 140 }}>
-          <p class="strip-label">Featured Coordinates</p>
-          <div class="strip-items">
-               {#each featuredProjects.slice(0, 3) as project}
-                    <a class="strip-item" href={`/work/${project.slug}`}>
-                         <span class="strip-year">{project.year}</span>
-                         <span class="strip-title">{project.title}</span>
-                    </a>
-               {/each}
-          </div>
-     </section>
-
-     <p class="contact-note">
-          Open to collaborations and commissions: <a href="mailto:hello@anindyasingh.dev">hello@anindyasingh.dev</a>
-     </p>
+			<div class="region-dock">
+				{#each activeRegion.projects as project}
+					<a class="dock-link" href={`/work/${project.slug}`}>{project.title}</a>
+				{/each}
+				<a class="dock-link dock-link--ghost" href="/work">Work</a>
+				<a class="dock-link dock-link--ghost" href="/writing">Writing</a>
+				<a class="dock-link dock-link--ghost" href="/about">About</a>
+				<a class="dock-link dock-link--ghost" href="/colophon">Colophon</a>
+			</div>
+		{/if}
+	</div>
 </section>
 
 <style>
-     .landing {
-          max-width: var(--max-width);
-          margin: 0 auto;
-          padding: var(--space-3xl) var(--space-l);
-     }
+	.map-stage {
+		height: 240vh;
+		background:
+			radial-gradient(circle at 15% 10%, color-mix(in srgb, var(--color-accent-soft) 36%, transparent), transparent 45%),
+			radial-gradient(circle at 88% 84%, color-mix(in srgb, var(--color-accent-soft) 28%, transparent), transparent 34%),
+			var(--color-bg);
+	}
 
-     .landing-header {
-          max-width: 50rem;
-          margin-bottom: var(--space-xl);
-     }
+	.map-sticky {
+		position: sticky;
+		top: 0;
+		height: 100vh;
+		overflow: hidden;
+		display: grid;
+		place-items: center;
+	}
 
-     .kicker {
-          font-family: var(--font-mono);
-          font-size: var(--step--1);
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          color: var(--color-text-muted);
-          margin-bottom: var(--space-s);
-     }
+	.landing-name {
+		position: absolute;
+		top: clamp(1.4rem, 3.4vw, 2.6rem);
+		left: 50%;
+		transform: translateX(-50%);
+		font-family: var(--font-serif);
+		font-weight: 500;
+		font-size: clamp(1.5rem, 3.4vw, 2.6rem);
+		letter-spacing: -0.02em;
+		z-index: 8;
+	}
 
-     .landing-header h1 {
-          font-size: clamp(2rem, 4.8vw, 3.6rem);
-          line-height: 1.08;
-          font-weight: 500;
-          margin-bottom: var(--space-m);
-     }
+	.map-zoom-shell {
+		width: min(94vw, 78rem);
+		height: min(86vh, 52rem);
+		display: grid;
+		place-items: center;
+	}
 
-     .intro {
-          font-family: var(--font-serif);
-          font-size: var(--step-1);
-          line-height: 1.55;
-          color: var(--color-text-secondary);
-     }
+	.india-map {
+		width: min(72rem, 96vw);
+		transform: scale(var(--map-scale));
+		transform-origin: 50% 56%;
+		transition: transform 140ms linear;
+	}
 
-     .exploration-canvas {
-          position: relative;
-          min-height: 38rem;
-          border: 1px solid var(--color-border);
-          border-radius: var(--radius-lg);
-          background:
-               radial-gradient(circle at 20% 20%, color-mix(in srgb, var(--color-accent-soft) 36%, transparent), transparent 35%),
-               radial-gradient(circle at 80% 80%, color-mix(in srgb, var(--color-accent-soft) 28%, transparent), transparent 32%),
-               var(--color-surface);
-          overflow: hidden;
-     }
+	.hover-hud {
+		position: absolute;
+		top: clamp(5.5rem, 10vw, 7.6rem);
+		right: clamp(0.9rem, 2vw, 1.7rem);
+		width: min(15rem, 44vw);
+		padding: var(--space-s);
+		border: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
+		border-radius: var(--radius-lg);
+		background: color-mix(in srgb, var(--color-surface) 90%, transparent);
+		backdrop-filter: blur(5px);
+		z-index: 10;
+	}
 
-     .map-center {
-          position: absolute;
-          inset: 0;
-          display: grid;
-          place-items: center;
-          padding: var(--space-l);
-     }
+	.hud-region {
+		font-family: var(--font-mono);
+		font-size: var(--step--1);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		margin-bottom: 0.45rem;
+	}
 
-     .map-shell {
-          width: min(28rem, 85vw);
-          aspect-ratio: 1 / 1;
-          border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
-          border-radius: 50%;
-          background: color-mix(in srgb, var(--color-bg) 70%, var(--color-surface));
-          box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-border) 50%, transparent);
-          display: grid;
-          place-items: center;
-          padding: var(--space-l);
-     }
+	.hud-bars {
+		height: 3.8rem;
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		align-items: end;
+		gap: 0.35rem;
+		margin-bottom: 0.5rem;
+	}
 
-     .india-map {
-          width: 100%;
-          max-width: 20rem;
-     }
+	.hud-bars span {
+		display: block;
+		border-radius: 0.35rem 0.35rem 0 0;
+		background: color-mix(in srgb, var(--color-accent) 64%, transparent);
+	}
 
-     .orbit-link {
-          position: absolute;
-          display: flex;
-          flex-direction: column;
-          gap: 0.25rem;
-          padding: var(--space-s) var(--space-m);
-          border: 1px solid var(--color-border);
-          border-radius: var(--radius-lg);
-          background: color-mix(in srgb, var(--color-surface) 84%, transparent);
-          backdrop-filter: blur(3px);
-          text-decoration: none;
-          max-width: 16rem;
-          transition: transform var(--transition), border-color var(--transition), background var(--transition);
-     }
+	.hud-value {
+		font-size: var(--step--1);
+		color: var(--color-text-muted);
+	}
 
-     .orbit-link:hover {
-          transform: translateY(-2px);
-          border-color: var(--color-border-strong);
-          background: var(--color-surface-raised);
-     }
+	.region-dock {
+		position: absolute;
+		bottom: clamp(0.8rem, 2.4vw, 1.8rem);
+		left: 50%;
+		transform: translateX(-50%);
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.5rem;
+		max-width: min(66rem, 92vw);
+		z-index: 11;
+	}
 
-     .orbit-label {
-          font-family: var(--font-mono);
-          font-size: var(--step--1);
-          text-transform: uppercase;
-          letter-spacing: 0.07em;
-          color: var(--color-text);
-     }
+	.dock-link {
+		padding: 0.55rem 0.85rem;
+		border: 1px solid color-mix(in srgb, var(--color-border) 66%, transparent);
+		border-radius: 999px;
+		text-decoration: none;
+		font-family: var(--font-sans);
+		font-size: var(--step--1);
+		line-height: 1.2;
+		background: color-mix(in srgb, var(--color-surface) 87%, transparent);
+		color: var(--color-text);
+		transition: transform var(--transition), border-color var(--transition);
+	}
 
-     .orbit-copy {
-          font-size: var(--step--1);
-          line-height: 1.45;
-          color: var(--color-text-muted);
-     }
+	.dock-link--ghost {
+		font-family: var(--font-mono);
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
 
-     .orbit-link--about { top: 8%; left: 4%; }
-     .orbit-link--work { top: 10%; right: 4%; }
-     .orbit-link--writing { bottom: 10%; left: 4%; }
-     .orbit-link--colophon { bottom: 8%; right: 4%; }
+	.dock-link:hover {
+		transform: translateY(-2px);
+		border-color: var(--color-border-strong);
+	}
 
-     .region-panel {
-          margin-top: var(--space-l);
-          border: 1px solid var(--color-border);
-          border-radius: var(--radius-lg);
-          padding: var(--space-m);
-          background: var(--color-surface);
-     }
+	@media (max-width: 900px) {
+		.map-stage {
+			height: 220vh;
+		}
 
-     .region-meta {
-          font-family: var(--font-mono);
-          font-size: var(--step--1);
-          color: var(--color-text-muted);
-     }
+		.map-zoom-shell {
+			width: 100vw;
+			height: 72vh;
+		}
 
-     .region-links {
-          list-style: none;
-          margin-top: var(--space-s);
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-          gap: var(--space-s);
-     }
+		.india-map {
+			transform-origin: 50% 58%;
+		}
 
-     .region-links a {
-          display: flex;
-          justify-content: space-between;
-          gap: var(--space-s);
-          padding: 0.7rem 0.9rem;
-          border: 1px solid var(--color-border);
-          border-radius: var(--radius);
-          text-decoration: none;
-          font-family: var(--font-serif);
-          color: var(--color-text);
-     }
+		.hover-hud {
+			top: auto;
+			bottom: 4.2rem;
+			right: 0.8rem;
+			width: min(13rem, 56vw);
+		}
+	}
 
-     .region-links a span {
-          font-family: var(--font-mono);
-          font-size: var(--step--2);
-          color: var(--color-text-muted);
-     }
-
-     .featured-strip {
-          margin-top: var(--space-l);
-     }
-
-     .strip-label {
-          font-family: var(--font-mono);
-          font-size: var(--step--1);
-          letter-spacing: 0.05em;
-          text-transform: uppercase;
-          color: var(--color-text-muted);
-          margin-bottom: var(--space-xs);
-     }
-
-     .strip-items {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-          gap: var(--space-s);
-     }
-
-     .strip-item {
-          display: grid;
-          grid-template-columns: auto 1fr;
-          gap: var(--space-s);
-          align-items: baseline;
-          padding: 0.8rem 0.9rem;
-          text-decoration: none;
-          border: 1px solid var(--color-border);
-          border-radius: var(--radius);
-          background: var(--color-surface);
-     }
-
-     .strip-year {
-          font-family: var(--font-mono);
-          font-size: var(--step--2);
-          color: var(--color-text-muted);
-     }
-
-     .strip-title {
-          font-family: var(--font-serif);
-          font-size: var(--step-0);
-          color: var(--color-text);
-     }
-
-     .contact-note {
-          margin-top: var(--space-xl);
-          font-size: var(--step-0);
-          color: var(--color-text-secondary);
-     }
-
-     @media (max-width: 900px) {
-          .exploration-canvas {
-               min-height: auto;
-               padding: var(--space-l);
-               display: grid;
-               grid-template-columns: 1fr;
-               gap: var(--space-s);
-          }
-
-          .map-center,
-          .orbit-link {
-               position: static;
-          }
-
-          .map-center {
-               order: -1;
-               padding: 0;
-          }
-
-          .map-shell {
-               margin: 0 auto var(--space-xs);
-          }
-
-          .orbit-link {
-               max-width: none;
-          }
-     }
-
-     @media (prefers-reduced-motion: reduce) {
-          .orbit-link {
-               transition: none;
-          }
-     }
+	@media (prefers-reduced-motion: reduce) {
+		.india-map,
+		.dock-link {
+			transition: none;
+		}
+	}
 </style>

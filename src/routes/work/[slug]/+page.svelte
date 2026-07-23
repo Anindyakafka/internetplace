@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { page } from '$app/stores';
 	import { projects } from '$data/projects';
+	import { projectDetails } from '$data/project-details';
 
 	let { data } = $props();
 
@@ -17,6 +17,8 @@
 		external: 'External',
 		planned: 'Planned'
 	};
+
+	const detail = $derived(projectDetails[project.slug]);
 </script>
 
 <svelte:head>
@@ -82,15 +84,49 @@
 		{/if}
 
 		<div class="project-body">
-			<h2>Overview</h2>
-			<p>
-				{project.title} is a project that began in {project.year}. It operates at the intersection
-				of {project.categories.join(', ')}.
-			</p>
-			<p>
-				More detailed documentation for this project will be available here as it develops. For now,
-				you can explore the live project or the source code via the links above.
-			</p>
+			{#if detail}
+				<section class="detail-section">
+					<h2>Overview</h2>
+					<p>{detail.overview}</p>
+				</section>
+
+				<section class="detail-section">
+					<h2>Data and Sources</h2>
+					<ul>
+						{#each detail.dataAndSources as item}
+							<li>{item}</li>
+						{/each}
+					</ul>
+				</section>
+
+				<section class="detail-section">
+					<h2>Workflow</h2>
+					<ul>
+						{#each detail.workflow as item}
+							<li>{item}</li>
+						{/each}
+					</ul>
+				</section>
+
+				<section class="detail-section">
+					<h2>Outputs</h2>
+					<ul>
+						{#each detail.outputs as item}
+							<li>{item}</li>
+						{/each}
+					</ul>
+				</section>
+
+				<aside class="detail-note">
+					<p>{detail.note}</p>
+				</aside>
+			{:else}
+				<h2>Overview</h2>
+				<p>
+					{project.title} is a project that began in {project.year}. It operates at the intersection
+					of {project.categories.join(', ')}.
+				</p>
+			{/if}
 		</div>
 	</article>
 
@@ -268,6 +304,39 @@
 		font-size: var(--step-1);
 		line-height: 1.6;
 		margin-bottom: var(--space-m);
+	}
+
+	.detail-section + .detail-section {
+		margin-top: var(--space-xl);
+	}
+
+	.detail-section ul {
+		padding-left: var(--space-m);
+		margin-bottom: var(--space-m);
+		display: grid;
+		gap: var(--space-xs);
+	}
+
+	.detail-section li {
+		font-family: var(--font-serif);
+		font-size: var(--step-1);
+		line-height: 1.55;
+		color: var(--color-text-secondary);
+	}
+
+	.detail-note {
+		margin-top: var(--space-xl);
+		padding: var(--space-m);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+		background: var(--color-surface);
+	}
+
+	.detail-note p {
+		font-size: var(--step-0);
+		line-height: 1.6;
+		margin: 0;
+		color: var(--color-text-muted);
 	}
 
 	.project-nav {

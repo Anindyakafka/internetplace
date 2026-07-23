@@ -22,6 +22,7 @@ export interface IndiaMapParameters {
 	svgUrl: string;
 	onRegionClick: (regionId: string) => void;
 	onRegionHover: (regionId: string | null) => void;
+	getRegionElevation?: (regionId: string) => number;
 }
 
 export function indiaMap(node: HTMLElement, params: IndiaMapParameters) {
@@ -108,7 +109,8 @@ export function indiaMap(node: HTMLElement, params: IndiaMapParameters) {
 				if (!code) return;
 
 				const isActive = activeIds.has(code);
-				applyStateStyle(path, isActive, false);
+				const elevation = currentParams.getRegionElevation?.(code) ?? 0;
+				applyStateStyle(path, isActive, false, elevation);
 
 				if (!isActive) {
 					path.style.pointerEvents = 'none';
@@ -135,11 +137,11 @@ export function indiaMap(node: HTMLElement, params: IndiaMapParameters) {
 					}
 				};
 				const onEnter = () => {
-					applyStateStyle(path, true, true);
+					applyStateStyle(path, true, true, elevation);
 					currentParams.onRegionHover(code);
 				};
 				const onLeave = () => {
-					applyStateStyle(path, true, false);
+					applyStateStyle(path, true, false, elevation);
 					currentParams.onRegionHover(null);
 				};
 
@@ -170,27 +172,40 @@ export function indiaMap(node: HTMLElement, params: IndiaMapParameters) {
 	 * Apply visual state to a path.
 	 * Reads CSS custom properties so it respects the site theme.
 	 */
-	function applyStateStyle(path: SVGPathElement, isActive: boolean, isHovered: boolean) {
+	function applyStateStyle(
+		path: SVGPathElement,
+		isActive: boolean,
+		isHovered: boolean,
+		elevation: number
+	) {
 		const styles = getComputedStyle(node);
 		const accent = styles.getPropertyValue('--color-accent').trim() || '#3b82f6';
 		const accentSoft = styles.getPropertyValue('--color-accent-soft').trim() || 'rgba(59,130,246,0.2)';
 		const border = styles.getPropertyValue('--color-border').trim() || '#e5e7eb';
 		const stroke = styles.getPropertyValue('--color-text').trim() || '#1f2937';
+		const weight = Math.max(0, Math.min(1, elevation));
 
 		if (isActive) {
 			path.style.fill = isHovered ? accent : accentSoft;
-			path.style.fillOpacity = isHovered ? '0.85' : '0.55';
+			path.style.fillOpacity = (0.45 + weight * 0.35 + (isHovered ? 0.15 : 0)).toFixed(2);
 			path.style.stroke = accent;
-			path.style.strokeWidth = isHovered ? '1.2' : '0.6';
+			path.style.strokeWidth = (0.6 + weight * 0.6 + (isHovered ? 0.3 : 0)).toFixed(2);
+			path.style.transformBox = 'fill-box';
+			path.style.transformOrigin = 'center';
+			path.style.transform = `translateY(${-1 * (weight * 7 + (isHovered ? 3 : 0))}px) scale(${1 + weight * 0.04 + (isHovered ? 0.02 : 0)})`;
+			path.style.filter = `drop-shadow(0 ${2 + weight * 6}px ${4 + weight * 8}px rgba(0, 0, 0, ${0.08 + weight * 0.18}))`;
 		} else {
 			path.style.fill = border;
 			path.style.fillOpacity = '0.25';
 			path.style.stroke = stroke;
 			path.style.strokeWidth = '0.4';
 			path.style.strokeOpacity = '0.4';
+			path.style.transform = 'none';
+			path.style.filter = 'none';
 		}
+		path.style.willChange = 'transform, filter, fill-opacity';
 		path.style.transition =
-			'fill 0.18s ease, fill-opacity 0.18s ease, stroke 0.18s ease, stroke-width 0.18s ease';
+			'fill 0.18s ease, fill-opacity 0.18s ease, stroke 0.18s ease, stroke-width 0.18s ease, transform 0.22s ease, filter 0.22s ease';
 	}
 
 	render();
