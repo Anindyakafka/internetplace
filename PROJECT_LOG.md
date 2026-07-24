@@ -500,3 +500,29 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 **Consequence / next step:**
 - Homepage interaction now avoids 3D flicker and follows the full-background story transition pattern requested by the user.
 - Next tuning pass can be purely visual (fine-grain map scale endpoints by device) if further framing adjustments are needed.
+
+---
+
+### 2026-07-24 — Full-map visibility bug fixed (scroll normalization)
+
+**Decision:** Replace viewport-based scroll normalization with section-relative normalization so homepage map zoom progress always reaches completion by the end of the sticky map stage.
+
+**Context:** User reported that the full map still could not be seen while scrolling. Root cause was progress being computed against `window.innerHeight * 2.8`, while actual max scrollable distance of the page is smaller; this capped progress below 1.0 and prevented full zoom-out.
+
+**What changed:**
+- `src/routes/+page.svelte`
+  - Added `bind:this` on `.map-stage` and computed progress from:
+    - section top offset,
+    - section height,
+    - effective scroll span (`sectionHeight - viewportHeight`).
+  - Updated map scale interpolation to complete within real section scroll distance.
+  - Increased mobile map shell height (`72vh` → `86vh`) to reduce visual clipping on smaller screens.
+
+**Validation:**
+- `get_errors` reports no errors in `src/routes/+page.svelte`.
+- `npm run build` passed successfully.
+- Existing non-blocking warning in `src/routes/map/+page.svelte` remains unchanged (unused `.region-grid-section`).
+
+**Consequence / next step:**
+- Full map frame is now reachable by scrolling through the map section.
+- If needed, next pass can calibrate start/end scale per breakpoint for perfect framing on specific devices.

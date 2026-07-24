@@ -100,6 +100,7 @@
 	let mapScale = $state(2.2);
 	let mapShiftX = $state(0);
 	let mapShiftY = $state(0);
+	let mapStageEl: HTMLElement | null = $state(null);
 
 	let regions = $derived.by<Region[]>(() => {
 		const ids = new Set<string>();
@@ -218,9 +219,12 @@
 
 	$effect(() => {
 		const onScroll = () => {
-			const max = window.innerHeight * 2.8;
-			const progress = Math.max(0, Math.min(1, window.scrollY / max));
-			mapScale = 2.08 - progress * 1.53;
+			const stageTop = mapStageEl?.offsetTop ?? 0;
+			const stageHeight = mapStageEl?.offsetHeight ?? window.innerHeight * 3;
+			const scrollSpan = Math.max(1, stageHeight - window.innerHeight);
+			const withinStage = window.scrollY - stageTop;
+			const progress = Math.max(0, Math.min(1, withinStage / scrollSpan));
+			mapScale = 2.08 - progress * 1.62;
 			mapShiftX = -12 + progress * 12;
 			mapShiftY = 7 - progress * 7;
 		};
@@ -255,7 +259,7 @@
 	/>
 </svelte:head>
 
-<section class="map-stage">
+<section class="map-stage" bind:this={mapStageEl}>
 	<div class="map-sticky">
 		<h1 class="landing-name">Anindya Singh</h1>
 
@@ -518,7 +522,7 @@
 
 		.map-zoom-shell {
 			width: 100vw;
-			height: 72vh;
+			height: 86vh;
 		}
 
 		.india-map {
