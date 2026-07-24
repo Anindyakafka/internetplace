@@ -224,9 +224,15 @@
 			const scrollSpan = Math.max(1, stageHeight - window.innerHeight);
 			const withinStage = window.scrollY - stageTop;
 			const progress = Math.max(0, Math.min(1, withinStage / scrollSpan));
-			mapScale = 2.08 - progress * 1.62;
-			mapShiftX = -12 + progress * 12;
-			mapShiftY = 7 - progress * 7;
+
+			// Keep the map large through the whole sequence: only moderate zoom delta.
+			const startScale = 1.72;
+			const endScale = 0.98;
+			mapScale = startScale + (endScale - startScale) * progress;
+
+			// Gentle drift to preserve cinematic motion without pushing the map off frame.
+			mapShiftX = -6 + progress * 6;
+			mapShiftY = 4 + progress * -6;
 		};
 
 		onScroll();
@@ -352,7 +358,7 @@
 
 	.map-zoom-shell {
 		width: min(94vw, 78rem);
-		height: min(94vh, 56rem);
+		height: min(96vh, 58rem);
 		display: grid;
 		place-items: center;
 	}
@@ -522,7 +528,7 @@
 
 		.map-zoom-shell {
 			width: 100vw;
-			height: 86vh;
+			height: 90vh;
 		}
 
 		.india-map {
