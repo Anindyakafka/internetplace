@@ -23,6 +23,7 @@ export interface IndiaMapParameters {
 	onRegionClick: (regionId: string) => void;
 	onRegionHover: (regionId: string | null) => void;
 	getRegionElevation?: (regionId: string) => number;
+	interactiveAll?: boolean;
 }
 
 export function indiaMap(node: HTMLElement, params: IndiaMapParameters) {
@@ -101,6 +102,18 @@ export function indiaMap(node: HTMLElement, params: IndiaMapParameters) {
 			node.appendChild(svgEl);
 
 			const activeIds = new Set(currentParams.regions.map((r) => r.id.toUpperCase()));
+			const interactiveAll = currentParams.interactiveAll === true;
+			const interactiveEntries: Array<{ path: SVGPathElement; code: string; isKnown: boolean; elevation: number }> = [];
+
+			const applyFocusState = (focusCode: string | null) => {
+				const hasFocus = Boolean(focusCode);
+				for (const entry of interactiveEntries) {
+					applyStateStyle(entry.path, true, focusCode === entry.code, entry.elevation, {
+						dimmed: hasFocus && focusCode !== entry.code,
+						neutral: interactiveAll && !entry.isKnown
+					});
+				}
+			};
 
 			// Style + wire every state path.
 			const paths = svgEl.querySelectorAll<SVGPathElement>('path[id]');
@@ -109,13 +122,18 @@ export function indiaMap(node: HTMLElement, params: IndiaMapParameters) {
 				if (!code) return;
 
 				const isActive = activeIds.has(code);
+				const isInteractive = interactiveAll || isActive;
 				const elevation = currentParams.getRegionElevation?.(code) ?? 0;
-				applyStateStyle(path, isActive, false, elevation);
+				applyStateStyle(path, isInteractive, false, elevation, {
+					neutral: interactiveAll && !isActive
+				});
 
-				if (!isActive) {
+				if (!isInteractive) {
 					path.style.pointerEvents = 'none';
 					return;
 				}
+
+				interactiveEntries.push({ path, code, isKnown: isActive, elevation });
 
 				path.style.cursor = 'pointer';
 				path.setAttribute('role', 'button');
@@ -137,11 +155,11 @@ export function indiaMap(node: HTMLElement, params: IndiaMapParameters) {
 					}
 				};
 				const onEnter = () => {
-					applyStateStyle(path, true, true, elevation);
+					applyFocusState(code);
 					currentParams.onRegionHover(code);
 				};
 				const onLeave = () => {
-					applyStateStyle(path, true, false, elevation);
+					applyFocusState(null);
 					currentParams.onRegionHover(null);
 				};
 
@@ -161,6 +179,8 @@ export function indiaMap(node: HTMLElement, params: IndiaMapParameters) {
 					path.removeEventListener('blur', onLeave);
 				});
 			});
+
+			applyFocusState(null);
 		} catch (err) {
 			if ((err as Error).name !== 'AbortError') {
 				console.error('[indiaMap] Error loading SVG:', err);
@@ -176,7 +196,8 @@ export function indiaMap(node: HTMLElement, params: IndiaMapParameters) {
 		path: SVGPathElement,
 		isActive: boolean,
 		isHovered: boolean,
-		elevation: number
+		elevation: number,
+		options?: { dimmed?: boolean; neutral?: boolean }
 	) {
 		const styles = getComputedStyle(node);
 		const accent = styles.getPropertyValue('--color-accent').trim() || '#3b82f6';
@@ -184,16 +205,24 @@ export function indiaMap(node: HTMLElement, params: IndiaMapParameters) {
 		const border = styles.getPropertyValue('--color-border').trim() || '#e5e7eb';
 		const stroke = styles.getPropertyValue('--color-text').trim() || '#1f2937';
 		const weight = Math.max(0, Math.min(1, elevation));
+		const dimmed = options?.dimmed === true;
+		const neutral = options?.neutral === true;
 
 		if (isActive) {
-			path.style.fill = isHovered ? accent : accentSoft;
-			path.style.fillOpacity = (0.45 + weight * 0.35 + (isHovered ? 0.15 : 0)).toFixed(2);
-			path.style.stroke = accent;
+			path.style.fill = isHovered ? accent : neutral ? colorMix(accentSoft, border, 0.52) : accentSoft;
+			path.style.fillOpacity = dimmed
+				? '0.2'
+				: (0.45 + weight * 0.35 + (isHovered ? 0.15 : 0)).toFixed(2);
+			path.style.stroke = neutral ? colorMix(accent, stroke, 0.65) : accent;
 			path.style.strokeWidth = (0.6 + weight * 0.6 + (isHovered ? 0.3 : 0)).toFixed(2);
 			path.style.transformBox = 'fill-box';
 			path.style.transformOrigin = 'center';
-			path.style.transform = `translateY(${-1 * (weight * 7 + (isHovered ? 3 : 0))}px) scale(${1 + weight * 0.04 + (isHovered ? 0.02 : 0)})`;
-			path.style.filter = `drop-shadow(0 ${2 + weight * 6}px ${4 + weight * 8}px rgba(0, 0, 0, ${0.08 + weight * 0.18}))`;
+			path.style.transform = dimmed
+				? 'translateY(0px) scale(0.986)'
+				: `translateY(${-1 * (weight * 7 + (isHovered ? 3 : 0))}px) scale(${1 + weight * 0.04 + (isHovered ? 0.02 : 0)})`;
+			path.style.filter = dimmed
+				? 'blur(1.6px) saturate(0.72)'
+				: `drop-shadow(0 ${2 + weight * 6}px ${4 + weight * 8}px rgba(0, 0, 0, ${0.08 + weight * 0.18}))`;
 		} else {
 			path.style.fill = border;
 			path.style.fillOpacity = '0.25';
@@ -206,6 +235,34 @@ export function indiaMap(node: HTMLElement, params: IndiaMapParameters) {
 		path.style.willChange = 'transform, filter, fill-opacity';
 		path.style.transition =
 			'fill 0.18s ease, fill-opacity 0.18s ease, stroke 0.18s ease, stroke-width 0.18s ease, transform 0.22s ease, filter 0.22s ease';
+	}
+
+	function colorMix(colorA: string, colorB: string, weightA: number) {
+		const a = Math.max(0, Math.min(1, weightA));
+		const b = 1 - a;
+		// Fallback-safe lightweight blend for hex/rgb-like strings by returning colorA when parsing is uncertain.
+		if (!colorA.startsWith('#') || !colorB.startsWith('#')) return colorA;
+
+		const parseHex = (hex: string) => {
+			const clean = hex.replace('#', '').trim();
+			if (clean.length !== 6) return null;
+			const num = Number.parseInt(clean, 16);
+			if (Number.isNaN(num)) return null;
+			return {
+				r: (num >> 16) & 255,
+				g: (num >> 8) & 255,
+				b: num & 255
+			};
+		};
+
+		const va = parseHex(colorA);
+		const vb = parseHex(colorB);
+		if (!va || !vb) return colorA;
+
+		const r = Math.round(va.r * a + vb.r * b);
+		const g = Math.round(va.g * a + vb.g * b);
+		const bl = Math.round(va.b * a + vb.b * b);
+		return `rgb(${r}, ${g}, ${bl})`;
 	}
 
 	render();

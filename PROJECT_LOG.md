@@ -420,3 +420,50 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 **Consequence / next step:**
 - Map interactions are now data-backed in production as long as the derived JSON is present.
 - Next pass can add legends/tooltips that explicitly explain ST/SC share semantics and source timestamp (`generatedAt`).
+
+---
+
+### 2026-07-24 — Homepage map UX correction + MP story overlay
+
+**Decision:** Implement the requested interaction model directly on the homepage map: full-state interactivity with hover spotlight/blur, removal of bottom bubble dock links, improved scroll zoom framing so the full map can be seen, and click-to-open Madhya Pradesh story overlay with Barwani visual and CV-grounded field details.
+
+**Context:** User feedback identified four concrete issues: map visibility felt stuck during scroll, bottom bubble links were distracting, hover should spotlight one state while others fade, and clicking Madhya Pradesh should smoothly open a narrative panel tied to “Building Resilience through MGNREGA Assets.”
+
+**What changed:**
+
+1. **Map action enhancement (`src/lib/actions/india-map.ts`)**
+  - Added `interactiveAll` mode so all India states can participate in hover/click interactions even if not mapped to a project.
+  - Added shared focus-state renderer: hovered state stays crisp/elevated while non-focused states are dimmed/soft-blurred.
+  - Extended style system with `neutral` and `dimmed` behavior so non-project states remain interactive without competing visually.
+  - Kept backward compatibility for existing pages by making the new behavior opt-in.
+
+2. **Homepage interaction and layout (`src/routes/+page.svelte`)**
+  - Enabled `interactiveAll: true` for the landing map.
+  - Added Madhya Pradesh (`MP`) to region naming, SECC code mapping, and fallback metrics to ensure coherent hover HUD values.
+  - Removed the bottom `region-dock` bubble links entirely.
+  - Revised scroll interpolation and map-stage sizing so zoom-out progression reaches full-map visibility more reliably.
+  - Switched HUD driving logic from project-only active region objects to active region IDs/names, so all hovered states can display metrics.
+
+3. **MP click narrative overlay (`src/routes/+page.svelte`)**
+  - Added state-story model and MP entry with:
+    - title: *Building Resilience through MGNREGA Assets*
+    - source context: Inclusion Economics India Centre (under Inclusion Economics at Yale University)
+    - location: Barwani, Madhya Pradesh
+    - visual: `/images/states/barwani-map.svg`
+    - bullets derived from the CV extraction work completed earlier in session.
+  - Added animated modal/backdrop UI with close controls and responsive mobile behavior.
+
+**Validation:**
+- `get_errors` reports no errors in changed files:
+  - `src/routes/+page.svelte`
+  - `src/lib/actions/india-map.ts`
+- `npm run build` passed successfully.
+- Existing non-blocking warning remains in `src/routes/map/+page.svelte` for an unused selector (`.region-grid-section`).
+
+**Alternatives considered:**
+- Keeping project-only interactivity in map action and faking non-project hover in page CSS (rejected: brittle and inconsistent).
+- Adding MP content as a separate route instead of in-map overlay (rejected for now: user asked for immediate smooth click/touch reveal on map stage).
+
+**Consequence / next step:**
+- Homepage now aligns with the requested interaction-first behavior and MP deep-dive transition.
+- Natural continuation is to extend similar state-story overlays for other states as requested (“other states accordingly”) while keeping data and narrative sources explicit.
