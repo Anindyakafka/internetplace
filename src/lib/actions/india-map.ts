@@ -204,25 +204,17 @@ export function indiaMap(node: HTMLElement, params: IndiaMapParameters) {
 		const accentSoft = styles.getPropertyValue('--color-accent-soft').trim() || 'rgba(59,130,246,0.2)';
 		const border = styles.getPropertyValue('--color-border').trim() || '#e5e7eb';
 		const stroke = styles.getPropertyValue('--color-text').trim() || '#1f2937';
-		const weight = Math.max(0, Math.min(1, elevation));
 		const dimmed = options?.dimmed === true;
 		const neutral = options?.neutral === true;
 
 		if (isActive) {
 			path.style.fill = isHovered ? accent : neutral ? colorMix(accentSoft, border, 0.52) : accentSoft;
-			path.style.fillOpacity = dimmed
-				? '0.2'
-				: (0.45 + weight * 0.35 + (isHovered ? 0.15 : 0)).toFixed(2);
+			path.style.fillOpacity = dimmed ? '0.16' : isHovered ? '0.86' : neutral ? '0.36' : '0.62';
 			path.style.stroke = neutral ? colorMix(accent, stroke, 0.65) : accent;
-			path.style.strokeWidth = (0.6 + weight * 0.6 + (isHovered ? 0.3 : 0)).toFixed(2);
-			path.style.transformBox = 'fill-box';
-			path.style.transformOrigin = 'center';
-			path.style.transform = dimmed
-				? 'translateY(0px) scale(0.986)'
-				: `translateY(${-1 * (weight * 7 + (isHovered ? 3 : 0))}px) scale(${1 + weight * 0.04 + (isHovered ? 0.02 : 0)})`;
-			path.style.filter = dimmed
-				? 'blur(1.6px) saturate(0.72)'
-				: `drop-shadow(0 ${2 + weight * 6}px ${4 + weight * 8}px rgba(0, 0, 0, ${0.08 + weight * 0.18}))`;
+			path.style.strokeWidth = isHovered ? '1.25' : neutral ? '0.72' : '0.96';
+			path.style.strokeOpacity = dimmed ? '0.35' : '0.86';
+			path.style.transform = 'none';
+			path.style.filter = 'none';
 		} else {
 			path.style.fill = border;
 			path.style.fillOpacity = '0.25';
@@ -232,9 +224,9 @@ export function indiaMap(node: HTMLElement, params: IndiaMapParameters) {
 			path.style.transform = 'none';
 			path.style.filter = 'none';
 		}
-		path.style.willChange = 'transform, filter, fill-opacity';
+		path.style.willChange = 'fill, fill-opacity, stroke, stroke-width';
 		path.style.transition =
-			'fill 0.18s ease, fill-opacity 0.18s ease, stroke 0.18s ease, stroke-width 0.18s ease, transform 0.22s ease, filter 0.22s ease';
+			'fill 0.18s ease, fill-opacity 0.18s ease, stroke 0.18s ease, stroke-width 0.18s ease, stroke-opacity 0.18s ease';
 	}
 
 	function colorMix(colorA: string, colorB: string, weightA: number) {

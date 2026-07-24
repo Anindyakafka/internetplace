@@ -218,11 +218,11 @@
 
 	$effect(() => {
 		const onScroll = () => {
-			const max = window.innerHeight * 2.1;
+			const max = window.innerHeight * 2.8;
 			const progress = Math.max(0, Math.min(1, window.scrollY / max));
-			mapScale = 2.45 - progress * 1.7;
-			mapShiftX = -14 + progress * 14;
-			mapShiftY = 8 - progress * 8;
+			mapScale = 2.08 - progress * 1.53;
+			mapShiftX = -12 + progress * 12;
+			mapShiftY = 7 - progress * 7;
 		};
 
 		onScroll();
@@ -240,10 +240,6 @@
 
 	function handleRegionHover(regionId: string | null) {
 		hoveredRegionId = regionId;
-	}
-
-	function getRegionElevation(regionId: string) {
-		return regionMetrics[regionId]?.elevation ?? 0.2;
 	}
 
 	function closeStory() {
@@ -276,7 +272,6 @@
 					svgUrl: '/assets/india.svg',
 					onRegionClick: handleRegionClick,
 					onRegionHover: handleRegionHover,
-					getRegionElevation,
 					interactiveAll: true
 				}}
 			></div>
@@ -300,13 +295,10 @@
 		{/if}
 
 		{#if selectedStory}
-			<div class="state-story-backdrop" role="presentation" onclick={closeStory}></div>
-			<article class="state-story" aria-label={`${selectedStory.location} field story`}>
-				<button class="story-close" type="button" aria-label="Close" onclick={closeStory}>×</button>
-				<div class="story-media">
-					<img src={selectedStory.imageUrl} alt={`Field map for ${selectedStory.location}`} loading="lazy" />
-				</div>
-				<div class="story-content">
+			<div class="state-story-scene" style={`--story-image: url(${selectedStory.imageUrl});`}>
+				<div class="state-story-scrim"></div>
+				<article class="state-story-content" aria-label={`${selectedStory.location} field story`}>
+					<button class="story-close" type="button" aria-label="Close" onclick={closeStory}>×</button>
 					<p class="story-kicker">Inclusion Economics India Centre</p>
 					<h2>{selectedStory.title}</h2>
 					<p class="story-subtitle">{selectedStory.subtitle}</p>
@@ -316,15 +308,15 @@
 							<li>{bullet}</li>
 						{/each}
 					</ul>
-				</div>
-			</article>
+				</article>
+			</div>
 		{/if}
 	</div>
 </section>
 
 <style>
 	.map-stage {
-		height: 265vh;
+		height: 295vh;
 		background:
 			radial-gradient(circle at 15% 10%, color-mix(in srgb, var(--color-accent-soft) 36%, transparent), transparent 45%),
 			radial-gradient(circle at 88% 84%, color-mix(in srgb, var(--color-accent-soft) 28%, transparent), transparent 34%),
@@ -356,13 +348,13 @@
 
 	.map-zoom-shell {
 		width: min(94vw, 78rem);
-		height: min(92vh, 54rem);
+		height: min(94vh, 56rem);
 		display: grid;
 		place-items: center;
 	}
 
 	.india-map {
-		width: min(72rem, 96vw);
+		width: min(69rem, 95vw);
 		transform: translate(var(--map-shift-x), var(--map-shift-y)) scale(var(--map-scale));
 		transform-origin: 52% 56%;
 		transition: transform 140ms linear;
@@ -410,37 +402,50 @@
 		color: var(--color-text-muted);
 	}
 
-	.state-story-backdrop {
+	.state-story-scene {
 		position: absolute;
 		inset: 0;
-		background: rgba(0, 0, 0, 0.48);
-		backdrop-filter: blur(6px);
+		background-image: var(--story-image);
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
 		z-index: 15;
 		animation: fadeIn 220ms ease forwards;
 	}
 
-	.state-story {
+	.state-story-scrim {
 		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		width: min(82rem, 94vw);
-		height: min(84vh, 54rem);
-		display: grid;
-		grid-template-columns: 1.2fr 1fr;
-		border-radius: var(--radius-xl);
-		overflow: hidden;
-		background: color-mix(in srgb, var(--color-surface) 96%, transparent);
+		inset: 0;
+		background:
+			radial-gradient(circle at 12% 16%, rgba(0, 0, 0, 0.18), transparent 44%),
+			radial-gradient(circle at 88% 86%, rgba(0, 0, 0, 0.26), transparent 40%),
+			rgba(0, 0, 0, 0.34);
+	}
+
+	.state-story-content {
+		position: absolute;
+		right: clamp(0.85rem, 2.4vw, 2rem);
+		top: clamp(4.7rem, 10vh, 6.2rem);
+		width: min(40rem, 48vw);
+		max-height: calc(100vh - 7.4rem);
+		padding: clamp(0.95rem, 2vw, 1.45rem);
+		overflow: auto;
+		border-radius: var(--radius-lg);
+		background: color-mix(in srgb, var(--color-surface) 72%, transparent);
+		backdrop-filter: blur(10px) saturate(110%);
 		border: 1px solid color-mix(in srgb, var(--color-border) 72%, transparent);
-		box-shadow: 0 24px 72px rgba(0, 0, 0, 0.35);
+		box-shadow: 0 18px 44px rgba(0, 0, 0, 0.32);
 		z-index: 16;
 		animation: riseIn 300ms ease forwards;
+		display: grid;
+		align-content: start;
+		gap: 0.55rem;
 	}
 
 	.story-close {
 		position: absolute;
-		top: 0.75rem;
-		right: 0.85rem;
+		top: 0.62rem;
+		right: 0.62rem;
 		width: 2rem;
 		height: 2rem;
 		border-radius: 999px;
@@ -453,27 +458,6 @@
 		z-index: 2;
 	}
 
-	.story-media {
-		position: relative;
-		overflow: hidden;
-		background: #0b0d11;
-	}
-
-	.story-media img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		display: block;
-	}
-
-	.story-content {
-		padding: clamp(1rem, 2vw, 1.6rem);
-		overflow: auto;
-		display: grid;
-		align-content: start;
-		gap: 0.6rem;
-	}
-
 	.story-kicker {
 		font-family: var(--font-mono);
 		font-size: var(--step--1);
@@ -482,7 +466,7 @@
 		color: var(--color-text-muted);
 	}
 
-	.story-content h2 {
+	.state-story-content h2 {
 		font-family: var(--font-serif);
 		font-size: clamp(1.3rem, 2.2vw, 1.9rem);
 		line-height: 1.18;
@@ -494,14 +478,14 @@
 		color: var(--color-text-muted);
 	}
 
-	.story-content ul {
+	.state-story-content ul {
 		margin: 0.35rem 0 0;
 		padding-left: 1rem;
 		display: grid;
 		gap: 0.52rem;
 	}
 
-	.story-content li {
+	.state-story-content li {
 		font-size: var(--step--1);
 		line-height: 1.45;
 	}
@@ -518,17 +502,17 @@
 	@keyframes riseIn {
 		from {
 			opacity: 0;
-			transform: translate(-50%, -46%);
+			transform: translateY(12px);
 		}
 		to {
 			opacity: 1;
-			transform: translate(-50%, -50%);
+			transform: translateY(0px);
 		}
 	}
 
 	@media (max-width: 900px) {
 		.map-stage {
-			height: 245vh;
+			height: 270vh;
 			margin-top: -64px;
 		}
 
@@ -548,13 +532,14 @@
 			width: min(13rem, 56vw);
 		}
 
-		.state-story {
-			grid-template-columns: 1fr;
-			height: min(90vh, 42rem);
-		}
-
-		.story-media {
-			height: 38%;
+		.state-story-content {
+			left: 50%;
+			right: auto;
+			top: auto;
+			bottom: 1rem;
+			transform: translateX(-50%);
+			width: min(94vw, 34rem);
+			max-height: 63vh;
 		}
 	}
 
@@ -563,8 +548,8 @@
 			transition: none;
 		}
 
-		.state-story,
-		.state-story-backdrop {
+		.state-story-content,
+		.state-story-scene {
 			animation: none;
 		}
 	}

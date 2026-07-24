@@ -467,3 +467,36 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 **Consequence / next step:**
 - Homepage now aligns with the requested interaction-first behavior and MP deep-dive transition.
 - Natural continuation is to extend similar state-story overlays for other states as requested (“other states accordingly”) while keeping data and narrative sources explicit.
+
+---
+
+### 2026-07-24 — Flicker removal + full-bleed MP state scene
+
+**Decision:** Remove per-state 3D/elevation motion effects from the India map interaction layer, adjust scroll zoom framing so the full map can be reached reliably, and replace the MP modal window with a full-background state scene plus blurred text overlay.
+
+**Context:** User reported that the 3D state behavior flickered and did not feel stable, map visibility still felt constrained during scroll, and the MP click result should not open as a separate popup window.
+
+**What changed:**
+
+1. **Map action flattening (`src/lib/actions/india-map.ts`)**
+  - Removed per-path transform and drop-shadow logic used for pseudo-3D elevation.
+  - Kept interaction readable via fill/stroke/opacity changes only.
+  - Updated transitions to color/stroke channels, reducing animation-induced flicker risk.
+
+2. **Homepage scroll framing (`src/routes/+page.svelte`)**
+  - Increased scroll interpolation range and tuned map scale/translation progression to allow a clearer full-map zoom-out state.
+  - Slightly adjusted stage and shell sizing to improve map visibility across viewport sizes.
+
+3. **MP click transition redesign (`src/routes/+page.svelte`)**
+  - Replaced modal card + media split layout with a full-bleed background image scene using `barwani-map.svg`.
+  - Added a translucent blurred content panel for the text narrative overlay.
+  - Preserved close control and responsive behavior for smaller screens.
+
+**Validation:**
+- `get_errors` reports no errors in the changed files.
+- `npm run build` passed successfully.
+- Existing non-blocking warning remains in `src/routes/map/+page.svelte` for unused `.region-grid-section` selectors.
+
+**Consequence / next step:**
+- Homepage interaction now avoids 3D flicker and follows the full-background story transition pattern requested by the user.
+- Next tuning pass can be purely visual (fine-grain map scale endpoints by device) if further framing adjustments are needed.
