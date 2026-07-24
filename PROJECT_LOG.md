@@ -554,3 +554,27 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 **Consequence / next step:**
 - Scroll behavior now preserves a large map presence with only slight edge cropping at sequence extremes, matching the requested feel.
 - Next optional pass: device-specific breakpoint presets for exact visual parity across common laptop resolutions.
+
+---
+
+### 2026-07-24 — MP transition synchronized (image + text appear together)
+
+**Decision:** Gate MP story scene opening on background image preload so the full-bleed image and overlay text animate in at the same moment.
+
+**Context:** User observed text appearing before the MP background image, producing a staggered/jerky transition. Requirement was a smooth, simultaneous appearance.
+
+**What changed (`src/routes/+page.svelte`):**
+- Converted `handleRegionClick` to async.
+- Added image preloading helper (`preloadImage`) using `Image()` + `decode()` fallback.
+- Added load-token race protection so rapid clicks do not reveal stale story state.
+- Story opens (`selectedRegionId` set) only after image readiness.
+- Added a subtle `Loading field view…` indicator during preload to avoid dead-click feel.
+
+**Validation:**
+- `get_errors` reports no errors in `src/routes/+page.svelte`.
+- `npm run build` passed successfully.
+- Existing unrelated warning remains in `src/routes/map/+page.svelte` (unused selector).
+
+**Consequence / next step:**
+- MP click transition now appears as one cohesive reveal rather than text-first/image-later.
+- Same preload-gated pattern can be reused for additional state stories.
