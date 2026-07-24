@@ -97,6 +97,8 @@
 
 	let hoveredRegionId = $state<string | null>(null);
 	let selectedRegionId = $state<string | null>(null);
+	let storyLoadToken = 0;
+	let storyIsLoading = $state(false);
 	let mapScale = $state(2.2);
 	let mapShiftX = $state(0);
 	let mapShiftY = $state(0);
@@ -244,8 +246,25 @@
 		};
 	});
 
-	function handleRegionClick(regionId: string) {
-		selectedRegionId = selectedRegionId === regionId ? null : regionId;
+	async function handleRegionClick(regionId: string) {
+		if (selectedRegionId === regionId) {
+			closeStory();
+			return;
+		}
+
+		const story = stateStories[regionId];
+		if (!story) {
+			selectedRegionId = regionId;
+			return;
+		}
+
+		const token = ++storyLoadToken;
+		storyIsLoading = true;
+		await preloadImage(story.imageUrl);
+
+		if (token !== storyLoadToken) return;
+		selectedRegionId = regionId;
+		storyIsLoading = false;
 	}
 
 	function handleRegionHover(regionId: string | null) {
@@ -253,7 +272,29 @@
 	}
 
 	function closeStory() {
+		storyLoadToken += 1;
+		storyIsLoading = false;
 		selectedRegionId = null;
+	}
+
+	function preloadImage(src: string) {
+		return new Promise<void>((resolve) => {
+			let done = false;
+			const finish = () => {
+				if (done) return;
+				done = true;
+				resolve();
+			};
+
+			const img = new Image();
+			img.onload = finish;
+			img.onerror = finish;
+			img.src = src;
+
+			if (img.decode) {
+				img.decode().then(finish).catch(finish);
+			}
+		});
 	}
 </script>
 
@@ -271,6 +312,7 @@
 
 		<div
 			class="map-zoom-shell"
+			class:loading-story={storyIsLoading}
 			style={`--map-scale: ${mapScale}; --map-shift-x: ${mapShiftX}%; --map-shift-y: ${mapShiftY}%;`}
 		>
 			<div
@@ -321,6 +363,10 @@
 				</article>
 			</div>
 		{/if}
+
+		{#if storyIsLoading}
+			<div class="story-loading" aria-live="polite">Loading field view…</div>
+		{/if}
 	</div>
 </section>
 
@@ -361,6 +407,10 @@
 		height: min(96vh, 58rem);
 		display: grid;
 		place-items: center;
+	}
+
+	.map-zoom-shell.loading-story {
+		cursor: progress;
 	}
 
 	.india-map {
@@ -498,6 +548,24 @@
 	.state-story-content li {
 		font-size: var(--step--1);
 		line-height: 1.45;
+	}
+
+	.story-loading {
+		position: absolute;
+		bottom: 1.1rem;
+		left: 50%;
+		transform: translateX(-50%);
+		padding: 0.5rem 0.8rem;
+		border-radius: 999px;
+		font-family: var(--font-mono);
+		font-size: var(--step--2);
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		background: color-mix(in srgb, var(--color-surface) 82%, transparent);
+		border: 1px solid color-mix(in srgb, var(--color-border) 64%, transparent);
+		color: var(--color-text-muted);
+		backdrop-filter: blur(5px);
+		z-index: 20;
 	}
 
 	@keyframes fadeIn {

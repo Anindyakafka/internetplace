@@ -526,3 +526,31 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 **Consequence / next step:**
 - Full map frame is now reachable by scrolling through the map section.
 - If needed, next pass can calibrate start/end scale per breakpoint for perfect framing on specific devices.
+
+---
+
+### 2026-07-24 — Map kept large during scroll (anti-miniaturization retune)
+
+**Decision:** Reduce zoom delta and soften translation on the homepage map sequence so the map does not become too small while scrolling.
+
+**Context:** After fixing scroll normalization, user feedback indicated the map still shrank too much and drifted visually under the viewport, even though full zoom completion was technically reachable.
+
+**What changed (`src/routes/+page.svelte`):**
+- Replaced aggressive scale endpoint with moderate interpolation:
+  - `startScale = 1.72`
+  - `endScale = 0.98`
+- Reduced drift amplitude:
+  - `mapShiftX`: `-6` to `0`
+  - `mapShiftY`: `4` to `-2`
+- Increased map viewport container sizing:
+  - desktop shell height: `min(96vh, 58rem)`
+  - mobile shell height: `90vh`
+
+**Validation:**
+- `get_errors` reports no errors for `src/routes/+page.svelte`.
+- `npm run build` passed successfully.
+- Existing non-blocking warnings remain in `src/routes/map/+page.svelte` (unused selectors).
+
+**Consequence / next step:**
+- Scroll behavior now preserves a large map presence with only slight edge cropping at sequence extremes, matching the requested feel.
+- Next optional pass: device-specific breakpoint presets for exact visual parity across common laptop resolutions.
