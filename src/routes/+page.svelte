@@ -85,8 +85,7 @@
 			title: 'Building Resilience through MGNREGA Assets',
 			subtitle: 'Inclusion Economics India Centre (under Inclusion Economics at Yale University)',
 			location: 'Barwani, Madhya Pradesh',
-			imageUrl: '/images/states/barwani-map.svg',
-			fallbackImageUrl: '/images/states/barwani-map-lite.svg',
+			imageUrl: '/images/states/barwani-map.webp',
 			bullets: [
 				'Directed a daily field team of 8 surveyors, 2 supervisors, 2 asset auditors, and 1 field manager across two states, running the operation independently with minimal supervision.',
 				'Conducted high-frequency checks every day, reducing human and data-entry errors and keeping data quality strong for downstream causal analysis.',
@@ -99,8 +98,7 @@
 			title: 'West Bengal Electoral Rolls Data (2002 & 2026 SIR)',
 			subtitle: 'Independent Research',
 			location: 'West Bengal, India',
-			imageUrl: '/images/states/west_bengal.svg',
-			fallbackImageUrl: '/images/states/west_bengal-lite.svg',
+			imageUrl: '/images/states/west_bengal.webp',
 			bullets: [
 				'Built two end-to-end scraping pipelines; covering 2002-style booth-level electoral rolls and the 2026 Special Intensive Revision (SIR)/ASD rolls, converting tens of thousands of scattered booth-level PDFs into structured, analyzable electoral data for West Bengal.',
 				'Delivered the structured dataset for use in the Bengal Biennale 2026, providing the data backbone for a public exhibition on the state\'s electoral history.',
@@ -294,25 +292,14 @@
 		const token = ++storyLoadToken;
 		storyIsLoading = true;
 
-		// Open immediately with the best guaranteed-available image.
-		selectedStoryImageUrl = story.fallbackImageUrl ?? story.imageUrl;
+		// WebP maps are ~1 MB — small enough to show directly.
+		selectedStoryImageUrl = story.imageUrl;
 		storySceneVisible = false;
 		selectedRegionId = regionId;
 		await nextFrame();
 		if (token !== storyLoadToken) return;
 		storySceneVisible = true;
 		storyIsLoading = false;
-
-		// Upgrade to original silently when it becomes available.
-		if (story.fallbackImageUrl) {
-			void (async () => {
-				const originalOk = await preloadImage(story.imageUrl, 5000);
-				if (token !== storyLoadToken) return;
-				if (originalOk) {
-					selectedStoryImageUrl = story.imageUrl;
-				}
-			})();
-		}
 	}
 
 	function handleRegionHover(regionId: string | null) {
