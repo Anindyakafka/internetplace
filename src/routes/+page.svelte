@@ -239,6 +239,14 @@
 		};
 	});
 
+	// Preload all state story images on page mount so the first click feels instant.
+	$effect(() => {
+		if (!browser) return;
+		for (const id in stateStories) {
+			void preloadImage(stateStories[id].imageUrl);
+		}
+	});
+
 	$effect(() => {
 		const onScroll = () => {
 			const doc = document.documentElement;
@@ -309,6 +317,9 @@
 
 	function handleRegionHover(regionId: string | null) {
 		hoveredRegionId = regionId;
+		if (regionId && stateStories[regionId]?.imageUrl) {
+			void preloadImage(stateStories[regionId].imageUrl);
+		}
 	}
 
 	function closeStory() {
@@ -413,7 +424,7 @@
 					src={selectedStoryImageUrl ?? selectedStory.imageUrl}
 					alt=""
 					aria-hidden="true"
-					decoding="sync"
+					decoding="async"
 				/>
 				<div class="state-story-scrim"></div>
 				<article class="state-story-content" aria-label={`${selectedStory.location} field story`}>
