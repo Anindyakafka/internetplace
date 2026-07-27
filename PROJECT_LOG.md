@@ -642,3 +642,27 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 **Consequence / next step:**
 - Homepage now matches the earlier preferred zoom character while allowing full progression and includes requested geographic identity annotations.
 - Next optional pass: fine-tune arrow anchor coordinates after a live visual check on the deployed site.
+
+---
+
+### 2026-07-27 — Arrow anchors corrected from live SVG geometry
+
+**Decision:** Reposition both annotation arrows using measured state coordinates from the live inlined India SVG instead of approximate hand placement.
+
+**Context:** User reported both arrows were pointing to wrong places. The previous coordinates were estimated and missed target states.
+
+**What changed (`src/routes/+page.svelte`):**
+- Measured state centers on live map:
+  - West Bengal (`INWB`) center ≈ `(638, 450)`
+  - Delhi (`INDL`) center ≈ `(344, 321)`
+- Updated annotation paths and arrowheads to terminate at those coordinates.
+- Adjusted label positions/rotations so the text follows the new arrow directions.
+
+**Validation:**
+- `get_errors` reports no errors in `src/routes/+page.svelte`.
+- `npm run build` completed successfully.
+- Existing unrelated warnings persist in `src/routes/map/+page.svelte` for unused selectors.
+
+**Consequence / next step:**
+- Arrow intent now maps to actual target states in the SVG coordinate system.
+- After deploy, only minor aesthetic nudges (if any) should be needed.

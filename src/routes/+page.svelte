@@ -334,13 +334,13 @@
 			></div>
 
 			<svg class="map-annotations" viewBox="0 0 1000 1000" aria-hidden="true">
-				<path d="M 495 110 C 620 145, 690 205, 742 258" class="arrow-stroke" />
-				<path d="M 742 258 L 725 255 M 742 258 L 735 272" class="arrow-head" />
-				<text x="612" y="122" class="arrow-label" transform="rotate(9 612 122)">I am from</text>
+				<path d="M 512 112 C 590 150, 642 250, 638 450" class="arrow-stroke" />
+				<path d="M 638 450 L 627 435 M 638 450 L 649 435" class="arrow-head" />
+				<text x="572" y="160" class="arrow-label" transform="rotate(17 572 160)">I am from</text>
 
-				<path d="M 500 118 C 470 150, 450 190, 428 228" class="arrow-stroke" />
-				<path d="M 428 228 L 437 214 M 428 228 L 445 230" class="arrow-head" />
-				<text x="362" y="150" class="arrow-label" transform="rotate(-18 362 150)">I live in</text>
+				<path d="M 486 116 C 438 154, 384 230, 344 321" class="arrow-stroke" />
+				<path d="M 344 321 L 356 307 M 344 321 L 360 322" class="arrow-head" />
+				<text x="344" y="174" class="arrow-label" transform="rotate(-22 344 174)">I live in</text>
 			</svg>
 		</div>
 
