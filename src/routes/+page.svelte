@@ -20,6 +20,7 @@
 		subtitle: string;
 		location: string;
 		imageUrl: string;
+		fallbackImageUrl?: string;
 		bullets: string[];
 		repoUrl?: string;
 		repoLabel?: string;
@@ -85,6 +86,7 @@
 			subtitle: 'Inclusion Economics India Centre (under Inclusion Economics at Yale University)',
 			location: 'Barwani, Madhya Pradesh',
 			imageUrl: '/images/states/barwani-map.svg',
+			fallbackImageUrl: '/images/states/barwani-map-lite.svg',
 			bullets: [
 				'Directed a daily field team of 8 surveyors, 2 supervisors, 2 asset auditors, and 1 field manager across two states, running the operation independently with minimal supervision.',
 				'Conducted high-frequency checks every day, reducing human and data-entry errors and keeping data quality strong for downstream causal analysis.',
@@ -98,6 +100,7 @@
 			subtitle: 'Independent Research',
 			location: 'West Bengal, India',
 			imageUrl: '/images/states/west_bengal.svg',
+			fallbackImageUrl: '/images/states/west_bengal-lite.svg',
 			bullets: [
 				'Built two end-to-end scraping pipelines; covering 2002-style booth-level electoral rolls and the 2026 Special Intensive Revision (SIR)/ASD rolls, converting tens of thousands of scattered booth-level PDFs into structured, analyzable electoral data for West Bengal.',
 				'Delivered the structured dataset for use in the Bengal Biennale 2026, providing the data backbone for a public exhibition on the state\'s electoral history.',
@@ -114,6 +117,7 @@
 	let selectedRegionId = $state<string | null>(null);
 	let storyLoadToken = 0;
 	let storyIsLoading = $state(false);
+	let selectedStoryImageUrl = $state<string | null>(null);
 	let mapScale = $state(2.2);
 	let mapShiftX = $state(0);
 	let mapShiftY = $state(0);
@@ -280,9 +284,10 @@
 
 		const token = ++storyLoadToken;
 		storyIsLoading = true;
-		await preloadImage(story.imageUrl);
+		const loadedUrl = await resolveStoryImage(story);
 
 		if (token !== storyLoadToken) return;
+		selectedStoryImageUrl = loadedUrl;
 		selectedRegionId = regionId;
 		storyIsLoading = false;
 	}
@@ -294,27 +299,42 @@
 	function closeStory() {
 		storyLoadToken += 1;
 		storyIsLoading = false;
+		selectedStoryImageUrl = null;
 		selectedRegionId = null;
 	}
 
 	function preloadImage(src: string) {
-		return new Promise<void>((resolve) => {
+		return new Promise<boolean>((resolve) => {
 			let done = false;
-			const finish = () => {
+			const finish = (ok: boolean) => {
 				if (done) return;
 				done = true;
-				resolve();
+				resolve(ok);
 			};
 
 			const img = new Image();
-			img.onload = finish;
-			img.onerror = finish;
+			img.onload = () => finish(true);
+			img.onerror = () => finish(false);
 			img.src = src;
 
 			if (img.decode) {
-				img.decode().then(finish).catch(finish);
+				img.decode().then(() => finish(true)).catch(() => {
+					// Keep waiting for onload/onerror when decode is unsupported for this asset.
+				});
 			}
 		});
+	}
+
+	async function resolveStoryImage(story: StateStory) {
+		const originalOk = await preloadImage(story.imageUrl);
+		if (originalOk) return story.imageUrl;
+
+		if (story.fallbackImageUrl) {
+			const fallbackOk = await preloadImage(story.fallbackImageUrl);
+			if (fallbackOk) return story.fallbackImageUrl;
+		}
+
+		return story.imageUrl;
 	}
 </script>
 
@@ -368,7 +388,7 @@
 		{/if}
 
 		{#if selectedStory}
-			<div class="state-story-scene" style={`--story-image: url(${selectedStory.imageUrl});`}>
+			<div class="state-story-scene" style={`--story-image: url(${selectedStoryImageUrl ?? selectedStory.imageUrl});`}>
 				<div class="state-story-scrim"></div>
 				<article class="state-story-content" aria-label={`${selectedStory.location} field story`}>
 					<button class="story-close" type="button" aria-label="Close" onclick={closeStory}>×</button>

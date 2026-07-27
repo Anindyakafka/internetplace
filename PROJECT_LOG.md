@@ -749,3 +749,30 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 **Consequence / next step:**
 - Local/runtime story visuals now use the original state assets again.
 - Sync strategy for heavy originals remains a separate concern (ignored local-only vs tracked/LFS) depending on deploy workflow.
+
+---
+
+### 2026-07-27 — Original-first with deploy fallback for state images
+
+**Decision:** Keep story configuration pointed to original state SVGs, but add runtime fallback to `-lite` images when originals are unavailable (e.g., ignored/untracked on Git-based deploy).
+
+**Context:** Live check showed both original URLs returning 404 on Netlify while lite files returned 200. User wanted the same practical behavior as earlier Barwani flow while avoiding sync of very large files.
+
+**What changed (`src/routes/+page.svelte`):**
+- Extended `StateStory` with `fallbackImageUrl`.
+- Added fallback paths:
+  - MP: original `/images/states/barwani-map.svg` with fallback `/images/states/barwani-map-lite.svg`
+  - WB: original `/images/states/west_bengal.svg` with fallback `/images/states/west_bengal-lite.svg`
+- Added async image-resolution flow:
+  - try preloading original first,
+  - if it fails, try fallback,
+  - then open story scene with the resolved URL.
+- Added state variable for resolved image URL so overlay always uses loaded asset.
+
+**Validation:**
+- `get_errors` reports no errors in `src/routes/+page.svelte`.
+- `npm run build` completed (only existing unrelated map-page selector warnings).
+
+**Consequence / next step:**
+- Locally, originals load when present.
+- On deploys where originals are not synced, story still renders via lite fallback instead of showing broken/blank backgrounds.
