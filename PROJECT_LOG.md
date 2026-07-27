@@ -822,3 +822,28 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 **Consequence / next step:**
 - Once pushed/deployed, Netlify should serve original background URLs for both MP and WB (matching the older Barwani behavior).
 - Tradeoff: pushes will be heavier due to large file sizes.
+
+---
+
+### 2026-07-27 — Atomic story reveal (background + text together)
+
+**Decision:** Switch the state-story scene to an atomic reveal where image and text fade in together, eliminating text-first appearance while background catches up.
+
+**Context:** User reported visible delay between overlay text and background image appearance. Even with preload/fallback logic, CSS background rendering could lag visually on large assets.
+
+**What changed (`src/routes/+page.svelte`):**
+- Replaced CSS-only background image binding with an explicit scene image layer (`<img class="state-story-image">`).
+- Added `storySceneVisible` state and one-frame reveal gate:
+  - set story payload,
+  - mount scene,
+  - reveal on next animation frame.
+- Scene now fades as a single unit (`.state-story-scene.revealed`), so text and background appear simultaneously.
+- Kept preload + fallback mechanics intact.
+
+**Validation:**
+- `get_errors` reports no errors in `src/routes/+page.svelte`.
+- Build command executed after patch.
+
+**Consequence / next step:**
+- User-perceived transition should now be coherent: no text-first lag against background.
+- If needed, reveal duration can be tuned further for slower devices.

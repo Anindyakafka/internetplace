@@ -118,6 +118,7 @@
 	let storyLoadToken = 0;
 	let storyIsLoading = $state(false);
 	let selectedStoryImageUrl = $state<string | null>(null);
+	let storySceneVisible = $state(false);
 	let mapScale = $state(2.2);
 	let mapShiftX = $state(0);
 	let mapShiftY = $state(0);
@@ -288,7 +289,11 @@
 
 		if (token !== storyLoadToken) return;
 		selectedStoryImageUrl = loadedUrl;
+		storySceneVisible = false;
 		selectedRegionId = regionId;
+		await nextFrame();
+		if (token !== storyLoadToken) return;
+		storySceneVisible = true;
 		storyIsLoading = false;
 	}
 
@@ -299,8 +304,15 @@
 	function closeStory() {
 		storyLoadToken += 1;
 		storyIsLoading = false;
+		storySceneVisible = false;
 		selectedStoryImageUrl = null;
 		selectedRegionId = null;
+	}
+
+	function nextFrame() {
+		return new Promise<void>((resolve) => {
+			requestAnimationFrame(() => resolve());
+		});
 	}
 
 	function preloadImage(src: string, timeoutMs = 7000) {
@@ -396,7 +408,14 @@
 		{/if}
 
 		{#if selectedStory}
-			<div class="state-story-scene" style={`--story-image: url(${selectedStoryImageUrl ?? selectedStory.imageUrl});`}>
+			<div class="state-story-scene" class:revealed={storySceneVisible}>
+				<img
+					class="state-story-image"
+					src={selectedStoryImageUrl ?? selectedStory.imageUrl}
+					alt=""
+					aria-hidden="true"
+					decoding="sync"
+				/>
 				<div class="state-story-scrim"></div>
 				<article class="state-story-content" aria-label={`${selectedStory.location} field story`}>
 					<button class="story-close" type="button" aria-label="Close" onclick={closeStory}>×</button>
@@ -549,12 +568,22 @@
 	.state-story-scene {
 		position: absolute;
 		inset: 0;
-		background-image: var(--story-image);
-		background-size: cover;
-		background-position: center;
-		background-repeat: no-repeat;
+		opacity: 0;
+		transition: opacity 220ms ease;
 		z-index: 15;
-		animation: fadeIn 220ms ease forwards;
+	}
+
+	.state-story-scene.revealed {
+		opacity: 1;
+	}
+
+	.state-story-image {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
 	}
 
 	.state-story-scrim {
@@ -733,9 +762,12 @@
 			transition: none;
 		}
 
-		.state-story-content,
-		.state-story-scene {
+		.state-story-content {
 			animation: none;
+		}
+
+		.state-story-scene {
+			transition: none;
 		}
 	}
 </style>
