@@ -84,7 +84,7 @@
 			title: 'Building Resilience through MGNREGA Assets',
 			subtitle: 'Inclusion Economics India Centre (under Inclusion Economics at Yale University)',
 			location: 'Barwani, Madhya Pradesh',
-			imageUrl: '/images/states/barwani-map-lite.svg',
+			imageUrl: '/images/states/barwani-map.svg',
 			bullets: [
 				'Directed a daily field team of 8 surveyors, 2 supervisors, 2 asset auditors, and 1 field manager across two states, running the operation independently with minimal supervision.',
 				'Conducted high-frequency checks every day, reducing human and data-entry errors and keeping data quality strong for downstream causal analysis.',
@@ -97,7 +97,7 @@
 			title: 'West Bengal Electoral Rolls Data (2002 & 2026 SIR)',
 			subtitle: 'Independent Research',
 			location: 'West Bengal, India',
-			imageUrl: '/images/states/west_bengal-lite.svg',
+			imageUrl: '/images/states/west_bengal.svg',
 			bullets: [
 				'Built two end-to-end scraping pipelines; covering 2002-style booth-level electoral rolls and the 2026 Special Intensive Revision (SIR)/ASD rolls, converting tens of thousands of scattered booth-level PDFs into structured, analyzable electoral data for West Bengal.',
 				'Delivered the structured dataset for use in the Bengal Biennale 2026, providing the data backbone for a public exhibition on the state\'s electoral history.',

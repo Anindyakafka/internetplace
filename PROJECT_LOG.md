@@ -727,3 +727,25 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 **Consequence / next step:**
 - Future pushes/sync are significantly lighter and more reliable while preserving visual behavior.
 - Heavy originals remain local-only and can be reintroduced later if an optimized pipeline (e.g., pre-exported compressed PNG/WebP or Git LFS) is adopted.
+
+---
+
+### 2026-07-27 — Reverted stories to original state SVGs (no lite visuals)
+
+**Decision:** Keep story backgrounds on the original uploaded state SVGs instead of `-lite` versions, per user preference for full-detail visuals.
+
+**Context:** User requested that images should not use lite variants, and asked to treat West Bengal the same way as Barwani.
+
+**What changed (`src/routes/+page.svelte`):**
+- MP story image path reverted to:
+  - `/images/states/barwani-map.svg`
+- WB story image path reverted to:
+  - `/images/states/west_bengal.svg`
+
+**Validation:**
+- `get_errors` reports no errors in `src/routes/+page.svelte`.
+- Build command executed after path reversion.
+
+**Consequence / next step:**
+- Local/runtime story visuals now use the original state assets again.
+- Sync strategy for heavy originals remains a separate concern (ignored local-only vs tracked/LFS) depending on deploy workflow.
