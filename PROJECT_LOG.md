@@ -799,3 +799,26 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 **Consequence / next step:**
 - Story scene should no longer get stuck without a background when originals are slow/missing.
 - If needed, next pass can tune timeout thresholds separately for desktop/mobile network conditions.
+
+---
+
+### 2026-07-27 — Restored earlier Barwani pattern (track original SVGs)
+
+**Decision:** Revert to the original Barwani-era deployment pattern by tracking original state SVGs in git, so deployed URLs exist directly instead of relying on local-only originals.
+
+**Context:** User asked how it worked before for Barwani and requested the same approach. The actual reason Barwani worked earlier was that its original file path existed in deploy output. Current 404s were caused by originals being ignored/untracked while page config referenced those original URLs.
+
+**What changed:**
+- Removed ignore rules for original state images from `.gitignore`.
+- Re-added original files to version control:
+  - `static/images/states/barwani-map.svg`
+  - `static/images/states/west_bengal.svg`
+- Verified tracked list now includes both original and lite files.
+
+**Validation:**
+- `git ls-files static/images/states/*` confirms originals are tracked.
+- Build command executed after re-tracking originals.
+
+**Consequence / next step:**
+- Once pushed/deployed, Netlify should serve original background URLs for both MP and WB (matching the older Barwani behavior).
+- Tradeoff: pushes will be heavier due to large file sizes.
