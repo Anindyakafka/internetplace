@@ -608,3 +608,37 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 **Consequence / next step:**
 - Scroll progression is now guaranteed to continue across the full page range, addressing the observed mid-scroll freeze pattern.
 - After deploy, re-check live viewport behavior and, if needed, apply a final per-breakpoint end-scale table for exact device framing.
+
+---
+
+### 2026-07-27 — Restored prior zoom feel + longer scroll runway + location arrows
+
+**Decision:** Restore the earlier zoomed-in visual behavior and only extend effective scroll completion, while adding two hand-drawn-style annotations from the name area to West Bengal and New Delhi.
+
+**Context:** User preferred the prior cinematic zoom look and asked specifically to avoid the newer flatter framing changes; they wanted the same style but with enough scroll to complete. They also requested identity annotations: “I am from” (West Bengal) and “I live in” (New Delhi).
+
+**What changed (`src/routes/+page.svelte`):**
+- Reintroduced section-aware scroll progression with a robust effective span:
+  - computes section span,
+  - computes remaining page span,
+  - uses `effectiveSpan = min(sectionSpan, remainingPageSpan)` to avoid truncation.
+- Restored prior zoom profile:
+  - scale `1.72 -> 0.98`
+  - shift X `-6 -> 0`
+  - shift Y `4 -> -2`
+- Increased map stage height for more runway:
+  - desktop `340vh`
+  - mobile `305vh`
+- Added SVG overlay annotation layer (non-interactive) transformed with the map so arrows stay aligned through zoom/shift.
+  - label 1: “I am from” (toward West Bengal)
+  - label 2: “I live in” (toward New Delhi)
+- Kept click/wait instruction and synchronized story preload behavior from prior pass.
+
+**Validation:**
+- `get_errors` reports no errors in `src/routes/+page.svelte`.
+- `npm run build` completed successfully.
+- Existing unrelated warnings remain in `src/routes/map/+page.svelte` (unused selectors).
+
+**Consequence / next step:**
+- Homepage now matches the earlier preferred zoom character while allowing full progression and includes requested geographic identity annotations.
+- Next optional pass: fine-tune arrow anchor coordinates after a live visual check on the deployed site.

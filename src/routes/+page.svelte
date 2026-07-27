@@ -102,6 +102,7 @@
 	let mapScale = $state(2.2);
 	let mapShiftX = $state(0);
 	let mapShiftY = $state(0);
+	let mapStageEl: HTMLElement | null = $state(null);
 
 	let regions = $derived.by<Region[]>(() => {
 		const ids = new Set<string>();
@@ -221,17 +222,24 @@
 	$effect(() => {
 		const onScroll = () => {
 			const doc = document.documentElement;
-			const maxScroll = Math.max(1, doc.scrollHeight - window.innerHeight);
-			const progress = Math.max(0, Math.min(1, window.scrollY / maxScroll));
+			const stageTop = mapStageEl?.offsetTop ?? 0;
+			const stageHeight = mapStageEl?.offsetHeight ?? window.innerHeight * 3.4;
 
-			// Keep the map large while ensuring a near-full frame by the scroll end.
-			const startScale = 1.78;
-			const endScale = 1.06;
+			const stageSpan = Math.max(1, stageHeight - window.innerHeight);
+			const totalSpan = Math.max(1, doc.scrollHeight - window.innerHeight);
+			const remainingPageSpan = Math.max(1, totalSpan - stageTop);
+			const effectiveSpan = Math.min(stageSpan, remainingPageSpan);
+
+			const withinStage = window.scrollY - stageTop;
+			const progress = Math.max(0, Math.min(1, withinStage / effectiveSpan));
+
+			// Keep the prior zoomed-in feel while allowing enough scroll to finish.
+			const startScale = 1.72;
+			const endScale = 0.98;
 			mapScale = startScale + (endScale - startScale) * progress;
 
-			// Drift remains subtle and recenters at the end so the full map is visible.
-			mapShiftX = -5 + progress * 5;
-			mapShiftY = 3.5 + progress * -3.5;
+			mapShiftX = -6 + progress * 6;
+			mapShiftY = 4 + progress * -6;
 		};
 
 		onScroll();
@@ -303,7 +311,7 @@
 	/>
 </svelte:head>
 
-<section class="map-stage">
+<section class="map-stage" bind:this={mapStageEl}>
 	<div class="map-sticky">
 		<h1 class="landing-name">Anindya Singh</h1>
 
@@ -324,6 +332,16 @@
 					interactiveAll: true
 				}}
 			></div>
+
+			<svg class="map-annotations" viewBox="0 0 1000 1000" aria-hidden="true">
+				<path d="M 495 110 C 620 145, 690 205, 742 258" class="arrow-stroke" />
+				<path d="M 742 258 L 725 255 M 742 258 L 735 272" class="arrow-head" />
+				<text x="612" y="122" class="arrow-label" transform="rotate(9 612 122)">I am from</text>
+
+				<path d="M 500 118 C 470 150, 450 190, 428 228" class="arrow-stroke" />
+				<path d="M 428 228 L 437 214 M 428 228 L 445 230" class="arrow-head" />
+				<text x="362" y="150" class="arrow-label" transform="rotate(-18 362 150)">I live in</text>
+			</svg>
 		</div>
 
 		{#if activeRegionName && activeMetric}
@@ -373,7 +391,7 @@
 
 <style>
 	.map-stage {
-		height: 295vh;
+		height: 340vh;
 		background:
 			radial-gradient(circle at 15% 10%, color-mix(in srgb, var(--color-accent-soft) 36%, transparent), transparent 45%),
 			radial-gradient(circle at 88% 84%, color-mix(in srgb, var(--color-accent-soft) 28%, transparent), transparent 34%),
@@ -415,11 +433,50 @@
 	}
 
 	.india-map {
-		width: min(69rem, 95vw, 90vh);
+		width: min(69rem, 95vw);
 		transform: translate(var(--map-shift-x), var(--map-shift-y)) scale(var(--map-scale));
 		transform-origin: 52% 56%;
 		transition: transform 140ms linear;
 		filter: drop-shadow(0 16px 36px rgba(0, 0, 0, 0.28));
+	}
+
+	.map-annotations {
+		position: absolute;
+		width: min(69rem, 95vw);
+		aspect-ratio: 1 / 1;
+		transform: translate(var(--map-shift-x), var(--map-shift-y)) scale(var(--map-scale));
+		transform-origin: 52% 56%;
+		pointer-events: none;
+		z-index: 7;
+	}
+
+	.arrow-stroke {
+		fill: none;
+		stroke: color-mix(in srgb, var(--color-accent) 72%, var(--color-text) 28%);
+		stroke-width: 3.2;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+		stroke-dasharray: 2 6;
+		opacity: 0.86;
+	}
+
+	.arrow-head {
+		fill: none;
+		stroke: color-mix(in srgb, var(--color-accent) 72%, var(--color-text) 28%);
+		stroke-width: 3;
+		stroke-linecap: round;
+		opacity: 0.86;
+	}
+
+	.arrow-label {
+		font-family: var(--font-serif);
+		font-size: 33px;
+		font-style: italic;
+		letter-spacing: 0.01em;
+		fill: color-mix(in srgb, var(--color-text) 82%, var(--color-accent) 18%);
+		paint-order: stroke;
+		stroke: color-mix(in srgb, var(--color-bg) 82%, transparent);
+		stroke-width: 3;
 	}
 
 	.hover-hud {
@@ -609,13 +666,21 @@
 
 	@media (max-width: 900px) {
 		.map-stage {
-			height: 270vh;
+			height: 305vh;
 			margin-top: -64px;
 		}
 
 		.map-zoom-shell {
 			width: 100vw;
 			height: 90vh;
+		}
+
+		.map-annotations {
+			width: 100vw;
+		}
+
+		.arrow-label {
+			font-size: 26px;
 		}
 
 		.india-map {
