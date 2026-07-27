@@ -35,3 +35,7 @@ src/data/shrug-secc-parsed-urban-csv/
 # Local workspace artifacts
 file_list.txt
 temp_build_output.txt
+
+# Large uploaded state images kept local only (use lightweight *-lite.svg in repo)
+static/images/states/west_bengal.svg
+static/images/states/barwani-map.svg

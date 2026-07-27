@@ -21,6 +21,8 @@
 		location: string;
 		imageUrl: string;
 		bullets: string[];
+		repoUrl?: string;
+		repoLabel?: string;
 	};
 
 	type RegionMetric = {
@@ -82,7 +84,7 @@
 			title: 'Building Resilience through MGNREGA Assets',
 			subtitle: 'Inclusion Economics India Centre (under Inclusion Economics at Yale University)',
 			location: 'Barwani, Madhya Pradesh',
-			imageUrl: '/images/states/barwani-map.svg',
+			imageUrl: '/images/states/barwani-map-lite.svg',
 			bullets: [
 				'Directed a daily field team of 8 surveyors, 2 supervisors, 2 asset auditors, and 1 field manager across two states, running the operation independently with minimal supervision.',
 				'Conducted high-frequency checks every day, reducing human and data-entry errors and keeping data quality strong for downstream causal analysis.',
@@ -90,6 +92,19 @@
 				'Secured Letters of Support from district administration through direct stakeholder engagement and built durable relationships beyond the pilot.',
 				'Built field operations from the ground up: CTO forms, protocols, hiring, and training; delivered pilot documentation that informed future evaluations of climate resilience outcomes.'
 			]
+		},
+		WB: {
+			title: 'West Bengal Electoral Rolls Data (2002 & 2026 SIR)',
+			subtitle: 'Independent Research',
+			location: 'West Bengal, India',
+			imageUrl: '/images/states/west_bengal-lite.svg',
+			bullets: [
+				'Built two end-to-end scraping pipelines; covering 2002-style booth-level electoral rolls and the 2026 Special Intensive Revision (SIR)/ASD rolls, converting tens of thousands of scattered booth-level PDFs into structured, analyzable electoral data for West Bengal.',
+				'Delivered the structured dataset for use in the Bengal Biennale 2026, providing the data backbone for a public exhibition on the state\'s electoral history.',
+				'Engineered the pipeline to survive real-world constraints, automatic retries, checksum-verified chunked releases, and resumable downloads, making a dataset too large for standard version control fully reusable for other researchers.'
+			],
+			repoUrl: 'https://github.com/Anindyakafka/Electoral-Rolls-West-Bengal-2002',
+			repoLabel: 'Open GitHub repository'
 		}
 	};
 
@@ -333,15 +348,6 @@
 				}}
 			></div>
 
-			<svg class="map-annotations" viewBox="0 0 1000 1000" aria-hidden="true">
-				<path d="M 512 112 C 590 150, 642 250, 638 450" class="arrow-stroke" />
-				<path d="M 638 450 L 627 435 M 638 450 L 649 435" class="arrow-head" />
-				<text x="572" y="160" class="arrow-label" transform="rotate(17 572 160)">I am from</text>
-
-				<path d="M 486 116 C 438 154, 384 230, 344 321" class="arrow-stroke" />
-				<path d="M 344 321 L 356 307 M 344 321 L 360 322" class="arrow-head" />
-				<text x="344" y="174" class="arrow-label" transform="rotate(-22 344 174)">I live in</text>
-			</svg>
 		</div>
 
 		{#if activeRegionName && activeMetric}
@@ -375,6 +381,13 @@
 							<li>{bullet}</li>
 						{/each}
 					</ul>
+					{#if selectedStory.repoUrl}
+						<p class="story-repo">
+							<a href={selectedStory.repoUrl} target="_blank" rel="noreferrer noopener">
+								{selectedStory.repoLabel ?? 'Repository'}
+							</a>
+						</p>
+					{/if}
 				</article>
 			</div>
 		{/if}
@@ -440,43 +453,28 @@
 		filter: drop-shadow(0 16px 36px rgba(0, 0, 0, 0.28));
 	}
 
-	.map-annotations {
-		position: absolute;
-		width: min(69rem, 95vw);
-		aspect-ratio: 1 / 1;
-		transform: translate(var(--map-shift-x), var(--map-shift-y)) scale(var(--map-scale));
-		transform-origin: 52% 56%;
-		pointer-events: none;
-		z-index: 7;
+	.story-repo {
+		margin-top: 0.45rem;
 	}
 
-	.arrow-stroke {
-		fill: none;
-		stroke: color-mix(in srgb, var(--color-accent) 72%, var(--color-text) 28%);
-		stroke-width: 3.2;
-		stroke-linecap: round;
-		stroke-linejoin: round;
-		stroke-dasharray: 2 6;
-		opacity: 0.86;
+	.story-repo a {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.3rem;
+		padding: 0.4rem 0.65rem;
+		border-radius: 999px;
+		text-decoration: none;
+		font-family: var(--font-mono);
+		font-size: var(--step--2);
+		letter-spacing: 0.03em;
+		text-transform: uppercase;
+		color: var(--color-text);
+		border: 1px solid color-mix(in srgb, var(--color-border) 66%, transparent);
+		background: color-mix(in srgb, var(--color-surface) 64%, transparent);
 	}
 
-	.arrow-head {
-		fill: none;
-		stroke: color-mix(in srgb, var(--color-accent) 72%, var(--color-text) 28%);
-		stroke-width: 3;
-		stroke-linecap: round;
-		opacity: 0.86;
-	}
-
-	.arrow-label {
-		font-family: var(--font-serif);
-		font-size: 33px;
-		font-style: italic;
-		letter-spacing: 0.01em;
-		fill: color-mix(in srgb, var(--color-text) 82%, var(--color-accent) 18%);
-		paint-order: stroke;
-		stroke: color-mix(in srgb, var(--color-bg) 82%, transparent);
-		stroke-width: 3;
+	.story-repo a:hover {
+		border-color: var(--color-border-strong);
 	}
 
 	.hover-hud {
@@ -673,14 +671,6 @@
 		.map-zoom-shell {
 			width: 100vw;
 			height: 90vh;
-		}
-
-		.map-annotations {
-			width: 100vw;
-		}
-
-		.arrow-label {
-			font-size: 26px;
 		}
 
 		.india-map {

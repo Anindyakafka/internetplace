@@ -666,3 +666,64 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 **Consequence / next step:**
 - Arrow intent now maps to actual target states in the SVG coordinate system.
 - After deploy, only minor aesthetic nudges (if any) should be needed.
+
+---
+
+### 2026-07-27 — Arrows disabled + West Bengal click story added
+
+**Decision:** Disable the arrow annotation layer for now and implement a dedicated West Bengal state story using CV text plus repository link.
+
+**Context:** User requested to pause arrow work entirely and proceed with the West Bengal click experience. Content needed to come from CV lines describing the electoral rolls pipeline and include the public GitHub repo.
+
+**What changed (`src/routes/+page.svelte`):**
+- Removed arrow annotation SVG markup and corresponding CSS classes.
+- Extended `StateStory` shape with optional repository metadata (`repoUrl`, `repoLabel`).
+- Added `WB` story entry:
+  - title: *West Bengal Electoral Rolls Data (2002 & 2026 SIR)*
+  - subtitle: *Independent Research*
+  - location: *West Bengal, India*
+  - image: `/images/states/west_bengal.svg`
+  - bullets sourced from CV text extraction (scraping pipelines, Bengal Biennale dataset, resilient chunked/resumable delivery constraints).
+  - repo link: `https://github.com/Anindyakafka/Electoral-Rolls-West-Bengal-2002`
+- Added repository CTA rendering inside the story overlay when `repoUrl` is present.
+
+**Asset structure note:**
+- West Bengal state image is kept at `static/images/states/west_bengal.svg`.
+- MP/Barwani image remains at `static/images/states/barwani-map.svg`.
+- This keeps all state-specific imagery consolidated under `static/images/states/`.
+
+**Validation:**
+- `get_errors` reports no errors in `src/routes/+page.svelte`.
+- `npm run build` completed successfully.
+- Existing unrelated warnings remain in `src/routes/map/+page.svelte` (unused selectors).
+
+**Consequence / next step:**
+- West Bengal now has its own click-to-story experience with CV-backed narrative and direct repo access.
+- Additional state stories can now reuse the same typed pattern with optional repository CTA.
+
+---
+
+### 2026-07-27 — Git sync fix for oversized state images
+
+**Decision:** Replace tracked heavyweight uploaded state SVGs with lightweight `-lite` variants and ignore the large originals locally.
+
+**Context:** Sync/push failures were traced to very large image assets in `static/images/states/` (`west_bengal.svg` ~35.5 MB, `barwani-map.svg` ~25.9 MB). Although not ignored, these are expensive to sync and were the likely source of git transfer instability.
+
+**What changed:**
+- Generated lightweight derivatives by preserving only the first visual layer from each uploaded SVG:
+  - `static/images/states/west_bengal-lite.svg` (~188 KB)
+  - `static/images/states/barwani-map-lite.svg` (~188 KB)
+- Switched homepage state stories to use the `-lite` files in `src/routes/+page.svelte`.
+- Added ignore rules for heavy originals in `.gitignore`:
+  - `static/images/states/west_bengal.svg`
+  - `static/images/states/barwani-map.svg`
+- Repository state now uses lightweight tracked images and drops heavyweight originals from versioned sync path.
+
+**Validation:**
+- `get_errors` reports no errors in `src/routes/+page.svelte`.
+- `npm run build` completed successfully.
+- Existing unrelated warnings remain in `src/routes/map/+page.svelte` (unused selectors).
+
+**Consequence / next step:**
+- Future pushes/sync are significantly lighter and more reliable while preserving visual behavior.
+- Heavy originals remain local-only and can be reintroduced later if an optimized pipeline (e.g., pre-exported compressed PNG/WebP or Git LFS) is adopted.
