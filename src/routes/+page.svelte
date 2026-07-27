@@ -285,16 +285,26 @@
 
 		const token = ++storyLoadToken;
 		storyIsLoading = true;
-		const loadedUrl = await resolveStoryImage(story);
 
-		if (token !== storyLoadToken) return;
-		selectedStoryImageUrl = loadedUrl;
+		// Open immediately with the best guaranteed-available image.
+		selectedStoryImageUrl = story.fallbackImageUrl ?? story.imageUrl;
 		storySceneVisible = false;
 		selectedRegionId = regionId;
 		await nextFrame();
 		if (token !== storyLoadToken) return;
 		storySceneVisible = true;
 		storyIsLoading = false;
+
+		// Upgrade to original silently when it becomes available.
+		if (story.fallbackImageUrl) {
+			void (async () => {
+				const originalOk = await preloadImage(story.imageUrl, 5000);
+				if (token !== storyLoadToken) return;
+				if (originalOk) {
+					selectedStoryImageUrl = story.imageUrl;
+				}
+			})();
+		}
 	}
 
 	function handleRegionHover(regionId: string | null) {
@@ -345,17 +355,6 @@
 		});
 	}
 
-	async function resolveStoryImage(story: StateStory) {
-		const originalOk = await preloadImage(story.imageUrl, 2200);
-		if (originalOk) return story.imageUrl;
-
-		if (story.fallbackImageUrl) {
-			const fallbackOk = await preloadImage(story.fallbackImageUrl, 5000);
-			if (fallbackOk) return story.fallbackImageUrl;
-		}
-
-		return story.imageUrl;
-	}
 </script>
 
 <svelte:head>

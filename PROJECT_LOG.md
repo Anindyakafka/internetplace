@@ -847,3 +847,28 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 **Consequence / next step:**
 - User-perceived transition should now be coherent: no text-first lag against background.
 - If needed, reveal duration can be tuned further for slower devices.
+
+---
+
+### 2026-07-27 — First-click responsiveness fix (open immediately, upgrade image later)
+
+**Decision:** Remove preload-gated opening behavior and switch to instant scene open on first click using a guaranteed-available image path, then upgrade to original in the background.
+
+**Context:** User still observed delayed opening and cases where scene did not open on first click. Root cause was waiting for image resolution before mounting story scene.
+
+**What changed (`src/routes/+page.svelte`):**
+- `handleRegionClick` now opens story immediately:
+  - sets `selectedRegionId` right away,
+  - uses fallback URL (`-lite`) first when available,
+  - reveals the scene on next animation frame.
+- Original high-detail image is preloaded asynchronously after scene is visible.
+- If original finishes loading, scene image source is upgraded in place.
+- Removed blocking `resolveStoryImage` gate from open path.
+
+**Validation:**
+- `get_errors` reports no errors in `src/routes/+page.svelte`.
+- `npm run build` completed successfully (existing unrelated warnings only).
+
+**Consequence / next step:**
+- Story opens on first click without waiting on heavy image IO.
+- Visual quality still converges to original where available, preserving original-first preference without interaction delay.
