@@ -102,7 +102,6 @@
 	let mapScale = $state(2.2);
 	let mapShiftX = $state(0);
 	let mapShiftY = $state(0);
-	let mapStageEl: HTMLElement | null = $state(null);
 
 	let regions = $derived.by<Region[]>(() => {
 		const ids = new Set<string>();
@@ -221,20 +220,18 @@
 
 	$effect(() => {
 		const onScroll = () => {
-			const stageTop = mapStageEl?.offsetTop ?? 0;
-			const stageHeight = mapStageEl?.offsetHeight ?? window.innerHeight * 3;
-			const scrollSpan = Math.max(1, stageHeight - window.innerHeight);
-			const withinStage = window.scrollY - stageTop;
-			const progress = Math.max(0, Math.min(1, withinStage / scrollSpan));
+			const doc = document.documentElement;
+			const maxScroll = Math.max(1, doc.scrollHeight - window.innerHeight);
+			const progress = Math.max(0, Math.min(1, window.scrollY / maxScroll));
 
-			// Keep the map large through the whole sequence: only moderate zoom delta.
-			const startScale = 1.72;
-			const endScale = 0.98;
+			// Keep the map large while ensuring a near-full frame by the scroll end.
+			const startScale = 1.78;
+			const endScale = 1.06;
 			mapScale = startScale + (endScale - startScale) * progress;
 
-			// Gentle drift to preserve cinematic motion without pushing the map off frame.
-			mapShiftX = -6 + progress * 6;
-			mapShiftY = 4 + progress * -6;
+			// Drift remains subtle and recenters at the end so the full map is visible.
+			mapShiftX = -5 + progress * 5;
+			mapShiftY = 3.5 + progress * -3.5;
 		};
 
 		onScroll();
@@ -306,7 +303,7 @@
 	/>
 </svelte:head>
 
-<section class="map-stage" bind:this={mapStageEl}>
+<section class="map-stage">
 	<div class="map-sticky">
 		<h1 class="landing-name">Anindya Singh</h1>
 
@@ -367,6 +364,10 @@
 		{#if storyIsLoading}
 			<div class="story-loading" aria-live="polite">Loading field view…</div>
 		{/if}
+
+		{#if !selectedStory && !storyIsLoading}
+			<p class="map-instruction">Click a state and wait a moment for its story to load.</p>
+		{/if}
 	</div>
 </section>
 
@@ -414,7 +415,7 @@
 	}
 
 	.india-map {
-		width: min(69rem, 95vw);
+		width: min(69rem, 95vw, 90vh);
 		transform: translate(var(--map-shift-x), var(--map-shift-y)) scale(var(--map-scale));
 		transform-origin: 52% 56%;
 		transition: transform 140ms linear;
@@ -568,6 +569,24 @@
 		z-index: 20;
 	}
 
+	.map-instruction {
+		position: absolute;
+		bottom: 1.1rem;
+		left: 50%;
+		transform: translateX(-50%);
+		padding: 0.5rem 0.85rem;
+		border-radius: 999px;
+		font-size: var(--step--2);
+		font-family: var(--font-mono);
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		color: var(--color-text-muted);
+		background: color-mix(in srgb, var(--color-surface) 84%, transparent);
+		border: 1px solid color-mix(in srgb, var(--color-border) 62%, transparent);
+		backdrop-filter: blur(5px);
+		z-index: 9;
+	}
+
 	@keyframes fadeIn {
 		from {
 			opacity: 0;
@@ -618,6 +637,11 @@
 			transform: translateX(-50%);
 			width: min(94vw, 34rem);
 			max-height: 63vh;
+		}
+
+		.map-instruction {
+			max-width: 92vw;
+			text-align: center;
 		}
 	}
 

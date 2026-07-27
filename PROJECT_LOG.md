@@ -578,3 +578,33 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 **Consequence / next step:**
 - MP click transition now appears as one cohesive reveal rather than text-first/image-later.
 - Same preload-gated pattern can be reused for additional state stories.
+
+---
+
+### 2026-07-27 — Live scroll ceiling fix + click/wait instruction
+
+**Decision:** Rebase homepage map animation progress on total page scroll span (instead of section-local calculations) and add a small persistent instruction telling users to click and wait for story loading.
+
+**Context:** Live QA on `anindyasingh.netlify.app` showed the map transform freezing around mid-scroll on the deployed page, which prevented reaching the intended final framing state. User also requested explicit micro-guidance that state content can take a moment to load after click.
+
+**What changed (`src/routes/+page.svelte`):**
+- Scroll progress now uses:
+  - `maxScroll = document.documentElement.scrollHeight - window.innerHeight`
+  - `progress = window.scrollY / maxScroll` (clamped)
+- Retuned endpoints to keep map visually large while still opening enough at scroll end:
+  - scale: `1.78 -> 1.06`
+  - shift X: `-5 -> 0`
+  - shift Y: `3.5 -> 0`
+- Added full-time instruction chip (hidden while story is open/loading):
+  - “Click a state and wait a moment for its story to load.”
+- Added height-aware width cap for better final fit:
+  - `.india-map { width: min(69rem, 95vw, 90vh); }`
+- Cleaned minor state by removing unused map-stage element binding from script/markup.
+
+**Validation:**
+- `get_errors` reports no errors in `src/routes/+page.svelte`.
+- Build verification through automation was intermittently interrupted by terminal-session cancellation prompts; no code diagnostics indicate compile issues in changed file.
+
+**Consequence / next step:**
+- Scroll progression is now guaranteed to continue across the full page range, addressing the observed mid-scroll freeze pattern.
+- After deploy, re-check live viewport behavior and, if needed, apply a final per-breakpoint end-scale table for exact device framing.
