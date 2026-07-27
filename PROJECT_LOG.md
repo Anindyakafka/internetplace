@@ -776,3 +776,26 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 **Consequence / next step:**
 - Locally, originals load when present.
 - On deploys where originals are not synced, story still renders via lite fallback instead of showing broken/blank backgrounds.
+
+---
+
+### 2026-07-27 — Background load reliability: timeout + fallback trigger
+
+**Decision:** Add a hard timeout to state-image preload so story background selection cannot hang indefinitely while trying to load large original SVGs.
+
+**Context:** User still observed cases where background did not appear. Even with fallback logic present, large-image preload can stall long enough to feel broken if original load never resolves promptly.
+
+**What changed (`src/routes/+page.svelte`):**
+- Enhanced `preloadImage` with timeout handling (`timeoutMs`) and fail-fast fallback behavior.
+- Set image-resolution policy in `resolveStoryImage`:
+  - Try original for ~2.2s.
+  - If not resolved, immediately try fallback for up to ~5s.
+- Retained original-first preference and deploy fallback target (`-lite`) paths.
+
+**Validation:**
+- `get_errors` reports no errors in `src/routes/+page.svelte`.
+- Build command executed after the patch.
+
+**Consequence / next step:**
+- Story scene should no longer get stuck without a background when originals are slow/missing.
+- If needed, next pass can tune timeout thresholds separately for desktop/mobile network conditions.

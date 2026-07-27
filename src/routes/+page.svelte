@@ -303,7 +303,7 @@
 		selectedRegionId = null;
 	}
 
-	function preloadImage(src: string) {
+	function preloadImage(src: string, timeoutMs = 7000) {
 		return new Promise<boolean>((resolve) => {
 			let done = false;
 			const finish = (ok: boolean) => {
@@ -312,9 +312,17 @@
 				resolve(ok);
 			};
 
+			const timeoutId = setTimeout(() => finish(false), timeoutMs);
+
 			const img = new Image();
-			img.onload = () => finish(true);
-			img.onerror = () => finish(false);
+			img.onload = () => {
+				clearTimeout(timeoutId);
+				finish(true);
+			};
+			img.onerror = () => {
+				clearTimeout(timeoutId);
+				finish(false);
+			};
 			img.src = src;
 
 			if (img.decode) {
@@ -326,11 +334,11 @@
 	}
 
 	async function resolveStoryImage(story: StateStory) {
-		const originalOk = await preloadImage(story.imageUrl);
+		const originalOk = await preloadImage(story.imageUrl, 2200);
 		if (originalOk) return story.imageUrl;
 
 		if (story.fallbackImageUrl) {
-			const fallbackOk = await preloadImage(story.fallbackImageUrl);
+			const fallbackOk = await preloadImage(story.fallbackImageUrl, 5000);
 			if (fallbackOk) return story.fallbackImageUrl;
 		}
 
