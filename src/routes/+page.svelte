@@ -24,7 +24,8 @@
 		bullets: string[];
 		repoUrl?: string;
 		repoLabel?: string;
-    kicker?: string;
+		kicker?: string;
+	};
 
 	type RegionMetric = {
 		adivasiShare: number;
