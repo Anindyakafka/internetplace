@@ -872,3 +872,38 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 **Consequence / next step:**
 - Story opens on first click without waiting on heavy image IO.
 - Visual quality still converges to original where available, preserving original-first preference without interaction delay.
+
+---
+
+## Entry 34 — Uttar Pradesh / Dadri Forecast state story added
+
+**Date:** 2025-07-06
+
+**What changed in `src/routes/+page.svelte`:**
+
+1. **`StateStory` type extended** (line 28) — Added optional `kicker?: string` field so individual state stories can override the default kicker label ("Inclusion Economics India Centre"). MP and WB stories omit this field and fall back to the default; UP supplies its own.
+
+2. **UP state story object inserted** (lines 108–126) — New entry in the `stateStories` lookup with:
+   - Title: "Dadri Forecast"
+   - Subtitle: "Militant research on land, ecology, and extractive development"
+   - Location: "Dadri, Gautam Buddha Nagar, Uttar Pradesh"
+   - Image: `/images/states/dadri.svg`
+   - Kicker: "Khandera Art Space"
+   - Four bullets sourced from project-details.ts, the Dadri Forecast website (khanderartspace.netlify.app), and the dadri-methodology essay
+   - `repoUrl` → `https://khanderartspace.netlify.app/dadri-forecast`
+   - `repoLabel` → "Visit Dadri Forecast"
+
+3. **Dynamic kicker in template** (line 433) — Hardcoded kicker text replaced with `{selectedStory.kicker ?? 'Inclusion Economics India Centre'}` so each story can optionally supply its own kicker.
+
+**Pre-existing entries (unchanged):**
+- `regionNames.UP: 'Uttar Pradesh'`
+- `seccStateCodeByIso.UP: '09'`
+- `fallbackMetrics.UP: { adivasiShare: 0.9, scShare: 21.1, densityIndex: 24, households: 0, population: 0, elevation: 0.26 }`
+
+**Validation:**
+- `get_errors` reports no errors in `src/routes/+page.svelte`.
+- Five independent verification calls confirmed all three edits (type field, UP story object, dynamic kicker template).
+- `dadri.svg` confirmed present at `static/images/states/dadri.svg`.
+
+**Notes:**
+- CV PDF (`Singh_Anindyya_Resume.pdf`) could not be read (binary hex); content sourced from project-details.ts, website fetch, and dadri-methodology essay instead.

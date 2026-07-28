@@ -24,7 +24,7 @@
 		bullets: string[];
 		repoUrl?: string;
 		repoLabel?: string;
-	};
+    kicker?: string;
 
 	type RegionMetric = {
 		adivasiShare: number;
@@ -106,7 +106,21 @@
 			],
 			repoUrl: 'https://github.com/Anindyakafka/Electoral-Rolls-West-Bengal-2002',
 			repoLabel: 'Open GitHub repository'
-		}
+    },
+    UP: {
+        title: 'Dadri Forecast',
+        subtitle: 'Militant research on land, ecology, and extractive development',
+        location: 'Dadri, Gautam Buddha Nagar, Uttar Pradesh',
+        imageUrl: '/images/states/dadri.svg',
+        kicker: 'Khandera Art Space',
+        bullets: [
+            'A militant-research initiative rooted in Gautam Buddha Nagar, examining land transformation, ecological collapse, and caste and communal violence in the shadow of extractive development.',
+            'Fieldwork across seven villages combined household surveys, oral histories, and spatial analysis of satellite imagery from 2003 to 2023 — revealing agricultural land decline from roughly 71% to 53% over two decades.',
+            'An archive and organizing space built as a counter-narrative against developmental modernity, producing zines, reports, and visual pedagogical material from field-grounded community documentation.',
+            'An evolving platform linking artistic, activist, and research practice to forecast the consequences of extractive growth and build collective political imagination from the ground up.'
+        ],
+        repoUrl: 'https://khanderartspace.netlify.app/dadri-forecast',
+        repoLabel: 'Visit Dadri Forecast'
 	};
 
 	let seccCombined = $state<Record<string, SeccStateMetric> | null>(null);
@@ -416,7 +430,7 @@
 				<div class="state-story-scrim"></div>
 				<article class="state-story-content" aria-label={`${selectedStory.location} field story`}>
 					<button class="story-close" type="button" aria-label="Close" onclick={closeStory}>×</button>
-					<p class="story-kicker">Inclusion Economics India Centre</p>
+					<p class="story-kicker">{selectedStory.kicker ?? 'Inclusion Economics India Centre'}</p>
 					<h2>{selectedStory.title}</h2>
 					<p class="story-subtitle">{selectedStory.subtitle}</p>
 					<p class="story-location">{selectedStory.location}</p>
