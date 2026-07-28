@@ -122,6 +122,7 @@
         ],
         repoUrl: 'https://khanderartspace.netlify.app/dadri-forecast',
         repoLabel: 'Visit Dadri Forecast'
+    }
 	};
 
 	let seccCombined = $state<Record<string, SeccStateMetric> | null>(null);
