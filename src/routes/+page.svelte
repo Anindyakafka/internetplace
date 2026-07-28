@@ -84,7 +84,7 @@
 	const stateStories: Partial<Record<string, StateStory>> = {
 		MP: {
 			title: 'Building Resilience through MGNREGA Assets',
-			subtitle: 'Inclusion Economics India Centre (under Inclusion Economics at Yale University)',
+			subtitle: 'Field Research',
 			location: 'Barwani, Madhya Pradesh',
 			imageUrl: '/images/states/barwani-map.webp',
 			bullets: [
@@ -432,7 +432,7 @@
 				<div class="state-story-scrim"></div>
 				<article class="state-story-content" aria-label={`${selectedStory.location} field story`}>
 					<button class="story-close" type="button" aria-label="Close" onclick={closeStory}>×</button>
-					<p class="story-kicker">{selectedStory.kicker ?? 'Inclusion Economics India Centre'}</p>
+					{#if selectedStory.kicker}<p class="story-kicker">{selectedStory.kicker}</p>{/if}
 					<h2>{selectedStory.title}</h2>
 					<p class="story-subtitle">{selectedStory.subtitle}</p>
 					<p class="story-location">{selectedStory.location}</p>
