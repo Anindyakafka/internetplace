@@ -927,3 +927,22 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - Keep SVG for Dadri while using WebP for others — rejected to avoid mixed heavy/light asset behavior and inconsistent performance.
 
 **Consequence / next step:** State story backgrounds are now consistent and lightweight across MP/WB/UP. Next visual pass can focus on crop/art-direction tuning if any composition feels off on mobile.
+
+---
+
+### 2026-08-03 — Expanded State Story Coverage
+
+**Decision:** Extend the homepage state-story system to cover Bihar, Delhi, Maharashtra, Meghalaya, and Tamil Nadu, and surface a visible Adivasi share line on every selected story.
+
+**Context:** The user wanted the Bihar story to mirror the Madhya Pradesh MGNREGA field-research treatment, then wanted Tamil Nadu, Maharashtra, and Meghalaya to reuse the Google X / climate-resilient decision-support scoping-visit copy from the uploaded DOCX with location names adjusted to Shillong, Chennai + Ramanathapuram, and Nandurbar. Delhi needed the name-ethnicity-detector project and repo link. The existing SHURG/SECC summary already provided the Adivasi statistics used by the hover HUD, so the story card now shows that metric as well.
+
+**Changes made:**
+- Added story entries for Bihar, Delhi, Maharashtra, Meghalaya, and Tamil Nadu in `src/routes/+page.svelte`.
+- Added `TN` and `ME` to the map region metadata so those new stories can be selected.
+- Displayed an Adivasi share line inside the state-story panel using the loaded SHURG/SECC summary.
+- Wired Bihar to the uploaded `bihar.webp` image and Delhi to the uploaded `delhi.png` image.
+
+**Alternatives considered:**
+- Keep the new story copy only in the hover HUD and leave the story cards unchanged — rejected because the user explicitly asked to place the stats in every state story.
+
+**Consequence / next step:** The homepage now has state-story coverage for all requested states. If needed, the next refinement is to split the Google X copy into a dedicated content file so those long paragraphs live outside the page component.

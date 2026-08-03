@@ -52,6 +52,8 @@
 		BR: 'Bihar',
 		DL: 'Delhi',
 		MH: 'Maharashtra',
+		ME: 'Meghalaya',
+		TN: 'Tamil Nadu',
 		KA: 'Karnataka',
 		RJ: 'Rajasthan',
 		HR: 'Haryana'
@@ -64,6 +66,8 @@
 		BR: '10',
 		DL: '07',
 		MH: '27',
+		ME: '17',
+		TN: '33',
 		KA: '29',
 		RJ: '08',
 		HR: '06'
@@ -76,6 +80,8 @@
 		BR: { adivasiShare: 1.3, scShare: 16.3, densityIndex: 52, households: 0, population: 0, elevation: 0.58 },
 		DL: { adivasiShare: 0.4, scShare: 18.0, densityIndex: 12, households: 0, population: 0, elevation: 0.18 },
 		MH: { adivasiShare: 9.4, scShare: 12.3, densityIndex: 71, households: 0, population: 0, elevation: 0.82 },
+		ME: { adivasiShare: 90.8, scShare: 1.0, densityIndex: 18, households: 0, population: 0, elevation: 0.9 },
+		TN: { adivasiShare: 0.9, scShare: 17.9, densityIndex: 68, households: 0, population: 0, elevation: 0.2 },
 		KA: { adivasiShare: 6.9, scShare: 17.2, densityIndex: 63, households: 0, population: 0, elevation: 0.76 },
 		RJ: { adivasiShare: 13.5, scShare: 17.8, densityIndex: 55, households: 0, population: 0, elevation: 0.68 },
 		HR: { adivasiShare: 0.0, scShare: 24.7, densityIndex: 21, households: 0, population: 0, elevation: 0.22 }
@@ -95,6 +101,21 @@
 				'Built field operations from the ground up: CTO forms, protocols, hiring, and training; delivered pilot documentation that informed future evaluations of climate resilience outcomes.'
 			]
 		},
+		BR: {
+			title: 'Building Resilience through MGNREGA Assets',
+			subtitle: 'Field Research',
+			location: 'Bihar, India',
+			imageUrl: '/images/states/bihar.webp',
+			bullets: [
+				'Directed a daily field team of 8 surveyors, 2 supervisors, 2 asset auditors, and 1 field manager across two states, running the operation independently with minimal supervision.',
+				'Conducted high-frequency checks every day, reducing human and data-entry errors and keeping data quality strong for downstream causal analysis.',
+				'Turned slow manual scraping into efficient, reusable pipelines transferable across systems and users, sharply reducing analysis turnaround time.',
+				'Secured Letters of Support from district administration through direct stakeholder engagement and built durable relationships beyond the pilot.',
+				'Built field operations from the ground up: CTO forms, protocols, hiring, and training; delivered pilot documentation that informed future evaluations of climate resilience outcomes.'
+			],
+			repoUrl: 'https://github.com/Anindyakafka/MGNREGA_assets',
+			repoLabel: 'Open GitHub repository'
+		},
 		WB: {
 			title: 'West Bengal Electoral Rolls Data (2002 & 2026 SIR)',
 			subtitle: 'Independent Research',
@@ -107,22 +128,71 @@
 			],
 			repoUrl: 'https://github.com/Anindyakafka/Electoral-Rolls-West-Bengal-2002',
 			repoLabel: 'Open GitHub repository'
-    },
-    UP: {
-        title: 'Dadri Forecast',
-        subtitle: 'Militant research on land, ecology, and extractive development',
-        location: 'Dadri, Gautam Buddha Nagar, Uttar Pradesh',
-		imageUrl: '/images/states/dadri.webp',
-        kicker: 'Khandera Art Space',
-        bullets: [
-            'A militant-research initiative rooted in Gautam Buddha Nagar, examining land transformation, ecological collapse, and caste and communal violence in the shadow of extractive development.',
-            'Fieldwork across seven villages combined household surveys, oral histories, and spatial analysis of satellite imagery from 2003 to 2023 — revealing agricultural land decline from roughly 71% to 53% over two decades.',
-            'An archive and organizing space built as a counter-narrative against developmental modernity, producing zines, reports, and visual pedagogical material from field-grounded community documentation.',
-            'An evolving platform linking artistic, activist, and research practice to forecast the consequences of extractive growth and build collective political imagination from the ground up.'
-        ],
-        repoUrl: 'https://khanderartspace.netlify.app/dadri-forecast',
-        repoLabel: 'Visit Dadri Forecast'
-    }
+		},
+		DL: {
+			title: 'Name Ethnicity Detector',
+			subtitle: 'Research Tooling',
+			location: 'Delhi',
+			imageUrl: '/images/states/delhi.png',
+			bullets: [
+				'PyTorch name→ethnicity classifier with nine model configurations, up to 99% accuracy on single-country splits.',
+				'Supports batch and single-name inference with optional probability distributions and CSV outputs.',
+				'Built for research and audit workflows where direct demographic labels are unavailable, with caution around interpretability and misuse risks.'
+			],
+			repoUrl: 'https://github.com/Anindyakafka/name-ethnicity-detector',
+			repoLabel: 'Open GitHub repository'
+		},
+		MH: {
+			title: 'Climate Resilient Decision Support',
+			subtitle: 'X Moonshot Factory scoping visit',
+			location: 'Nandurbar, Maharashtra',
+			imageUrl: '/images/states/maharashtra.webp',
+			bullets: [
+				'The Nandurbar discussions focused on watershed management and reducing out-migration through asset generation.',
+				'Political and operational realities in district planning often push visible, labour-intensive works over long-term climate resilience investments.',
+				'The team emphasized the need for work allocation, resource allocation, and district-level decision support to help district collectors spend limited funds and manpower efficiently.',
+				'Nandurbar was framed as a priority district, with emphasis on water management and climate shocks.'
+			]
+		},
+		ME: {
+			title: 'Climate Resilient Decision Support',
+			subtitle: 'X Moonshot Factory scoping visit',
+			location: 'Shillong, Meghalaya',
+			imageUrl: '/images/states/meghalaya.webp',
+			bullets: [
+				'The meetings focused on demonstrating a tool that integrates fragmented departmental data to help decision-makers, primarily district collectors, plan for climate risks like floods, droughts, and landslides.',
+				'In Meghalaya, the discussions centered on East Khasi Hills and West Garo Hills, alongside state officials in Shillong, with emphasis on data sovereignty and keeping government data under direct government control.',
+				'The scoping visit also identified a proactive planning gap: there is currently no structured system or policy framework to help administrators anticipate and plan for climate shocks.',
+				'Priority districts for piloting included East Khasi Hills and West Garo Hills.'
+			]
+		},
+		TN: {
+			title: 'Climate Resilient Decision Support',
+			subtitle: 'X Moonshot Factory scoping visit',
+			location: 'Chennai and Ramanathapuram, Tamil Nadu',
+			imageUrl: '/images/states/tamil_nadu.webp',
+			bullets: [
+				'The Tamil Nadu meetings explored how a prototype AI-based tool could support district-level budgeting and help decision-makers plan for climate-resilient investments.',
+				'In Chennai and Ramanathapuram, the discussions connected departmental data, local climate risk, and the need for evidence-based justification for funding climate investments.',
+				'The review highlighted Payment for Ecosystem Services (PES) and island restoration as two concrete planning directions for Tamil Nadu districts.',
+				'The project framed the tool as a way to make district-level climate planning more legible, defensible, and operational.'
+			]
+		},
+		UP: {
+			title: 'Dadri Forecast',
+			subtitle: 'Militant research on land, ecology, and extractive development',
+			location: 'Dadri, Gautam Buddha Nagar, Uttar Pradesh',
+			imageUrl: '/images/states/dadri.webp',
+			kicker: 'Khandera Art Space',
+			bullets: [
+				'A militant-research initiative rooted in Gautam Buddha Nagar, examining land transformation, ecological collapse, and caste and communal violence in the shadow of extractive development.',
+				'Fieldwork across seven villages combined household surveys, oral histories, and spatial analysis of satellite imagery from 2003 to 2023 — revealing agricultural land decline from roughly 71% to 53% over two decades.',
+				'An archive and organizing space built as a counter-narrative against developmental modernity, producing zines, reports, and visual pedagogical material from field-grounded community documentation.',
+				'An evolving platform linking artistic, activist, and research practice to forecast the consequences of extractive growth and build collective political imagination from the ground up.'
+			],
+			repoUrl: 'https://khanderartspace.netlify.app/dadri-forecast',
+			repoLabel: 'Visit Dadri Forecast'
+		}
 	};
 
 	let seccCombined = $state<Record<string, SeccStateMetric> | null>(null);
@@ -141,6 +211,8 @@
 	let regions = $derived.by<Region[]>(() => {
 		const ids = new Set<string>();
 		ids.add('MP');
+		ids.add('TN');
+		ids.add('ME');
 		projects.forEach((project) => project.regions?.forEach((id) => ids.add(id)));
 
 		return Array.from(ids)
@@ -436,6 +508,7 @@
 					<h2>{selectedStory.title}</h2>
 					<p class="story-subtitle">{selectedStory.subtitle}</p>
 					<p class="story-location">{selectedStory.location}</p>
+					<p class="story-stats">Adivasi share {activeMetric ? activeMetric.adivasiShare.toFixed(1) : '—'}%</p>
 					<ul>
 						{#each selectedStory.bullets as bullet}
 							<li>{bullet}</li>
@@ -659,7 +732,8 @@
 	}
 
 	.story-subtitle,
-	.story-location {
+	.story-location,
+	.story-stats {
 		font-size: var(--step--1);
 		color: var(--color-text-muted);
 	}
