@@ -977,3 +977,19 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - Increased the scroll runway further so the sticky map stays active long enough to navigate to Tamil Nadu.
 
 **Consequence / next step:** Meghalaya now opens on the live map, Odisha shows hover stats without a story card, and the page should have more room to scroll before the sticky map releases.
+
+---
+
+### 2026-08-03 — Full Map Hover Coverage
+
+**Decision:** Treat the SVG map as the source of truth for hover coverage and populate region metadata for every visible map code so the Adivasi/SC stats appear across the whole map, not only on project-linked states.
+
+**Context:** The user checked the deployed site and still saw hover stats only on some states. That meant the problem was not the SECC summary itself but the region list feeding the hover HUD. The sticky scroll section also still felt too short in the deployed build.
+
+**Changes made:**
+- Expanded the region-name and SECC lookup tables to include the visible state/UT codes from the India SVG map.
+- Let `regions` start from the full map-code set instead of only project-linked states.
+- Kept Odisha hover-only with no story card, while still showing its hover stats.
+- Extended the map stage height again so the sticky map stays on screen longer and lower states are easier to reach.
+
+**Consequence / next step:** The live map should now show hover stats on every visible state, even when no story exists, and the scroll runway should be long enough to reach Tamil Nadu more comfortably.

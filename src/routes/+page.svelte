@@ -46,33 +46,83 @@
 	};
 
 	const regionNames: Record<string, string> = {
-		MP: 'Madhya Pradesh',
-		UP: 'Uttar Pradesh',
-		WB: 'West Bengal',
+		AN: 'Andaman and Nicobar Islands',
+		AP: 'Andhra Pradesh',
+		AR: 'Arunachal Pradesh',
+		AS: 'Assam',
 		BR: 'Bihar',
+		CH: 'Chandigarh',
+		CT: 'Chhattisgarh',
+		DH: 'Dadra and Nagar Haveli and Daman and Diu',
 		DL: 'Delhi',
+		GA: 'Goa',
+		GJ: 'Gujarat',
+		HP: 'Himachal Pradesh',
+		HR: 'Haryana',
+		JH: 'Jharkhand',
+		JK: 'Jammu and Kashmir',
+		KA: 'Karnataka',
+		KL: 'Kerala',
+		LA: 'Ladakh',
+		LD: 'Lakshadweep',
 		MH: 'Maharashtra',
 		ML: 'Meghalaya',
+		MN: 'Manipur',
+		MP: 'Madhya Pradesh',
+		MZ: 'Mizoram',
+		NL: 'Nagaland',
 		OR: 'Odisha',
-		TN: 'Tamil Nadu',
-		KA: 'Karnataka',
+		PB: 'Punjab',
+		PY: 'Puducherry',
 		RJ: 'Rajasthan',
-		HR: 'Haryana'
+		SK: 'Sikkim',
+		TG: 'Telangana',
+		TN: 'Tamil Nadu',
+		TR: 'Tripura',
+		UA: 'Uttarakhand',
+		UT: 'Uttarakhand',
+		UP: 'Uttar Pradesh',
+		WB: 'West Bengal'
 	};
 
 	const seccStateCodeByIso: Record<string, string> = {
-		MP: '23',
-		UP: '09',
-		WB: '19',
+		AN: '35',
+		AP: '28',
+		AR: '12',
+		AS: '18',
 		BR: '10',
+		CH: '04',
+		CT: '22',
+		DH: '26',
 		DL: '07',
+		GA: '30',
+		GJ: '24',
+		HP: '02',
+		HR: '06',
+		JH: '20',
+		JK: '01',
+		KA: '29',
+		KL: '32',
+		LA: '38',
+		LD: '31',
 		MH: '27',
 		ML: '17',
+		MN: '14',
+		MP: '23',
+		MZ: '15',
+		NL: '13',
 		OR: '21',
-		TN: '33',
-		KA: '29',
+		PB: '03',
+		PY: '34',
 		RJ: '08',
-		HR: '06'
+		SK: '11',
+		TG: '36',
+		TN: '33',
+		TR: '16',
+		UT: '05',
+		UA: '05',
+		UP: '09',
+		WB: '19'
 	};
 
 	const fallbackMetrics: Record<string, RegionMetric> = {
@@ -82,12 +132,35 @@
 		BR: { adivasiShare: 1.3, scShare: 16.3, densityIndex: 52, households: 0, population: 0, elevation: 0.58 },
 		DL: { adivasiShare: 0.4, scShare: 18.0, densityIndex: 12, households: 0, population: 0, elevation: 0.18 },
 		MH: { adivasiShare: 9.4, scShare: 12.3, densityIndex: 71, households: 0, population: 0, elevation: 0.82 },
-		ME: { adivasiShare: 90.8, scShare: 1.0, densityIndex: 18, households: 0, population: 0, elevation: 0.9 },
 		ML: { adivasiShare: 90.8, scShare: 1.0, densityIndex: 18, households: 0, population: 0, elevation: 0.9 },
 		OR: { adivasiShare: 22.9, scShare: 17.3, densityIndex: 49, households: 0, population: 0, elevation: 0.42 },
+		AN: { adivasiShare: 8.6, scShare: 0.8, densityIndex: 14, households: 0, population: 0, elevation: 0.24 },
+		AP: { adivasiShare: 6.6, scShare: 16.4, densityIndex: 58, households: 0, population: 0, elevation: 0.52 },
+		AR: { adivasiShare: 68.8, scShare: 0.2, densityIndex: 11, households: 0, population: 0, elevation: 0.92 },
+		AS: { adivasiShare: 12.4, scShare: 7.2, densityIndex: 47, households: 0, population: 0, elevation: 0.41 },
+		CH: { adivasiShare: 0.0, scShare: 17.2, densityIndex: 8, households: 0, population: 0, elevation: 0.18 },
+		CT: { adivasiShare: 31.8, scShare: 12.9, densityIndex: 43, households: 0, population: 0, elevation: 0.61 },
+		DH: { adivasiShare: 61.9, scShare: 1.7, densityIndex: 9, households: 0, population: 0, elevation: 0.46 },
+		GA: { adivasiShare: 9.1, scShare: 1.7, densityIndex: 16, households: 0, population: 0, elevation: 0.22 },
+		GJ: { adivasiShare: 14.8, scShare: 6.7, densityIndex: 61, households: 0, population: 0, elevation: 0.54 },
+		HP: { adivasiShare: 5.4, scShare: 25.2, densityIndex: 26, households: 0, population: 0, elevation: 0.33 },
+		JH: { adivasiShare: 26.2, scShare: 11.8, densityIndex: 46, households: 0, population: 0, elevation: 0.63 },
+		JK: { adivasiShare: 10.8, scShare: 7.4, densityIndex: 19, households: 0, population: 0, elevation: 0.31 },
+		KL: { adivasiShare: 1.4, scShare: 9.2, densityIndex: 54, households: 0, population: 0, elevation: 0.2 },
+		LA: { adivasiShare: 2.0, scShare: 1.6, densityIndex: 5, households: 0, population: 0, elevation: 0.27 },
+		LD: { adivasiShare: 94.8, scShare: 0.0, densityIndex: 2, households: 0, population: 0, elevation: 0.12 },
+		MN: { adivasiShare: 41.1, scShare: 0.4, densityIndex: 13, households: 0, population: 0, elevation: 0.88 },
 		TN: { adivasiShare: 0.9, scShare: 17.9, densityIndex: 68, households: 0, population: 0, elevation: 0.2 },
+		MZ: { adivasiShare: 94.4, scShare: 0.1, densityIndex: 10, households: 0, population: 0, elevation: 0.91 },
+		NL: { adivasiShare: 86.5, scShare: 0.0, densityIndex: 12, households: 0, population: 0, elevation: 0.89 },
+		PB: { adivasiShare: 0.0, scShare: 32.0, densityIndex: 33, households: 0, population: 0, elevation: 0.2 },
+		PY: { adivasiShare: 0.2, scShare: 16.7, densityIndex: 7, households: 0, population: 0, elevation: 0.16 },
 		KA: { adivasiShare: 6.9, scShare: 17.2, densityIndex: 63, households: 0, population: 0, elevation: 0.76 },
 		RJ: { adivasiShare: 13.5, scShare: 17.8, densityIndex: 55, households: 0, population: 0, elevation: 0.68 },
+		SK: { adivasiShare: 33.8, scShare: 4.4, densityIndex: 6, households: 0, population: 0, elevation: 0.79 },
+		TG: { adivasiShare: 9.6, scShare: 15.4, densityIndex: 50, households: 0, population: 0, elevation: 0.57 },
+		TR: { adivasiShare: 31.8, scShare: 17.1, densityIndex: 24, households: 0, population: 0, elevation: 0.66 },
+		UT: { adivasiShare: 2.9, scShare: 18.7, densityIndex: 27, households: 0, population: 0, elevation: 0.24 },
 		HR: { adivasiShare: 0.0, scShare: 24.7, densityIndex: 21, households: 0, population: 0, elevation: 0.22 }
 	};
 
@@ -221,10 +294,7 @@
 
 	let regions = $derived.by<Region[]>(() => {
 		const ids = new Set<string>();
-		ids.add('MP');
-		ids.add('TN');
-		ids.add('ML');
-		ids.add('OR');
+		Object.keys(regionNames).forEach((id) => ids.add(id));
 		projects.forEach((project) => project.regions?.forEach((id) => ids.add(id)));
 
 		return Array.from(ids)
@@ -349,7 +419,7 @@
 		const onScroll = () => {
 			const doc = document.documentElement;
 			const stageTop = mapStageEl?.offsetTop ?? 0;
-			const stageHeight = mapStageEl?.offsetHeight ?? window.innerHeight * 3.4;
+			const stageHeight = mapStageEl?.offsetHeight ?? window.innerHeight * 5.5;
 
 			const stageSpan = Math.max(1, stageHeight - window.innerHeight);
 			const totalSpan = Math.max(1, doc.scrollHeight - window.innerHeight);
@@ -549,7 +619,7 @@
 
 <style>
 	.map-stage {
-		height: 560vh;
+		height: 760vh;
 		background:
 			radial-gradient(circle at 15% 10%, color-mix(in srgb, var(--color-accent-soft) 36%, transparent), transparent 45%),
 			radial-gradient(circle at 88% 84%, color-mix(in srgb, var(--color-accent-soft) 28%, transparent), transparent 34%),
@@ -820,7 +890,7 @@
 
 	@media (max-width: 900px) {
 		.map-stage {
-			height: 520vh;
+			height: 700vh;
 			margin-top: -64px;
 		}
 
