@@ -907,3 +907,23 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 
 **Notes:**
 - CV PDF (`Singh_Anindyya_Resume.pdf`) could not be read (binary hex); content sourced from project-details.ts, website fetch, and dadri-methodology essay instead.
+
+---
+
+### 2026-08-03 — State Background Images Standardized to WebP
+
+**Decision:** Integrate newly uploaded state background WebP assets and update all story/preload references to match the new filenames.
+
+**Context:** The previous state image set included large SVG variants and mixed naming (`barwani-map.webp`, `dadri.svg`). The user removed older files and uploaded a clean WebP set in `static/images/states/` with names `barwani.webp`, `west_bengal.webp`, and `dadri.webp`.
+
+**Changes made:**
+- Updated preload links in `src/app.html` to use `barwani.webp` and added preload for `dadri.webp`.
+- Updated homepage state story image references in `src/routes/+page.svelte`:
+  - MP: `/images/states/barwani.webp`
+  - WB: `/images/states/west_bengal.webp`
+  - UP: `/images/states/dadri.webp`
+
+**Alternatives considered:**
+- Keep SVG for Dadri while using WebP for others — rejected to avoid mixed heavy/light asset behavior and inconsistent performance.
+
+**Consequence / next step:** State story backgrounds are now consistent and lightweight across MP/WB/UP. Next visual pass can focus on crop/art-direction tuning if any composition feels off on mobile.

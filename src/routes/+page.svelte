@@ -86,7 +86,7 @@
 			title: 'Building Resilience through MGNREGA Assets',
 			subtitle: 'Field Research',
 			location: 'Barwani, Madhya Pradesh',
-			imageUrl: '/images/states/barwani-map.webp',
+			imageUrl: '/images/states/barwani.webp',
 			bullets: [
 				'Directed a daily field team of 8 surveyors, 2 supervisors, 2 asset auditors, and 1 field manager across two states, running the operation independently with minimal supervision.',
 				'Conducted high-frequency checks every day, reducing human and data-entry errors and keeping data quality strong for downstream causal analysis.',
@@ -112,7 +112,7 @@
         title: 'Dadri Forecast',
         subtitle: 'Militant research on land, ecology, and extractive development',
         location: 'Dadri, Gautam Buddha Nagar, Uttar Pradesh',
-        imageUrl: '/images/states/dadri.svg',
+		imageUrl: '/images/states/dadri.webp',
         kicker: 'Khandera Art Space',
         bullets: [
             'A militant-research initiative rooted in Gautam Buddha Nagar, examining land transformation, ecological collapse, and caste and communal violence in the shadow of extractive development.',
