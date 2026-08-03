@@ -588,9 +588,11 @@
 					<button class="story-close" type="button" aria-label="Close" onclick={closeStory}>×</button>
 							<p class="story-kicker">{selectedStory.kicker ?? 'Inclusion Economics India Centre'}</p>
 					<h2>{selectedStory.title}</h2>
-					<p class="story-subtitle">{selectedStory.subtitle}</p>
-					<p class="story-location">{selectedStory.location}</p>
-					<p class="story-stats">Adivasi share {activeMetric ? activeMetric.adivasiShare.toFixed(1) : '—'}%</p>
+					<div class="story-meta" aria-label="Story details">
+						<p class="story-subtitle">{selectedStory.subtitle}</p>
+						<p class="story-location">{selectedStory.location}</p>
+						<p class="story-stats">Adivasi share {activeMetric ? activeMetric.adivasiShare.toFixed(1) : '—'}%</p>
+					</div>
 					<ul>
 						{#each selectedStory.bullets as bullet}
 							<li>{bullet}</li>
@@ -619,7 +621,7 @@
 
 <style>
 	.map-stage {
-		height: 760vh;
+		height: 980vh;
 		background:
 			radial-gradient(circle at 15% 10%, color-mix(in srgb, var(--color-accent-soft) 36%, transparent), transparent 45%),
 			radial-gradient(circle at 88% 84%, color-mix(in srgb, var(--color-accent-soft) 28%, transparent), transparent 34%),
@@ -807,6 +809,17 @@
 		color: var(--color-text-muted);
 	}
 
+	.story-meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.35rem 0.9rem;
+		align-items: baseline;
+	}
+
+	.story-meta > p {
+		margin: 0;
+	}
+
 	.state-story-content h2 {
 		font-family: var(--font-serif);
 		font-size: clamp(1.3rem, 2.2vw, 1.9rem);
@@ -890,7 +903,7 @@
 
 	@media (max-width: 900px) {
 		.map-stage {
-			height: 700vh;
+			height: 900vh;
 			margin-top: -64px;
 		}
 

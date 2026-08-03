@@ -993,3 +993,17 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - Extended the map stage height again so the sticky map stays on screen longer and lower states are easier to reach.
 
 **Consequence / next step:** The live map should now show hover stats on every visible state, even when no story exists, and the scroll runway should be long enough to reach Tamil Nadu more comfortably.
+
+---
+
+### 2026-08-03 — Story Meta Alignment and Extra Scroll Runway
+
+**Decision:** Group the story subtitle, location, and Adivasi share into a single aligned metadata row and extend the map stage further so the lower part of the map remains reachable during scroll.
+
+**Context:** The user wanted the top metadata line in the story cards to read more cleanly instead of stacking one item per line, and said the page still did not reveal enough of the map. The earlier stage height increase was not enough in the live build.
+
+**Changes made:**
+- Wrapped the subtitle, location, and Adivasi share in a horizontal metadata row with wrap support.
+- Increased the map stage height again to give the sticky map more scrolling distance.
+
+**Consequence / next step:** The story card metadata should read more like a single aligned block, and the scroll should now expose more of the map before the sticky section releases.
