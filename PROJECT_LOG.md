@@ -962,3 +962,18 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - Increased the map scroll stage height to give the sticky map more runway.
 
 **Consequence / next step:** The state cards now read closer to CV copy and the page should expose more of the map during scroll. Next round, if needed, is to split the long state-story content out of the page component into a dedicated data module.
+
+---
+
+### 2026-08-03 — Live Map Key Fix and Hover-Only Odisha
+
+**Decision:** Rename Meghalaya to the live map key `ML`, keep Odisha as a hover-stats-only region with no story card, and extend the sticky map runway so Tamil Nadu can be reached more comfortably.
+
+**Context:** The deployed map uses `ML` for Meghalaya, not `ME`, so the story card and hover stats could not attach correctly. The user also wanted Odisha to show Adivasi stats on hover without adding a story yet. The map scroll felt too short to reach the lower states.
+
+**Changes made:**
+- Switched Meghalaya state handling from `ME` to `ML` in the region names, SECC lookup, and story entry key.
+- Added Odisha (`OR`) to the hover region set and SECC mapping, but intentionally left it without a story card.
+- Increased the scroll runway further so the sticky map stays active long enough to navigate to Tamil Nadu.
+
+**Consequence / next step:** Meghalaya now opens on the live map, Odisha shows hover stats without a story card, and the page should have more room to scroll before the sticky map releases.

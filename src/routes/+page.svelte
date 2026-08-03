@@ -52,7 +52,8 @@
 		BR: 'Bihar',
 		DL: 'Delhi',
 		MH: 'Maharashtra',
-		ME: 'Meghalaya',
+		ML: 'Meghalaya',
+		OR: 'Odisha',
 		TN: 'Tamil Nadu',
 		KA: 'Karnataka',
 		RJ: 'Rajasthan',
@@ -66,7 +67,8 @@
 		BR: '10',
 		DL: '07',
 		MH: '27',
-		ME: '17',
+		ML: '17',
+		OR: '21',
 		TN: '33',
 		KA: '29',
 		RJ: '08',
@@ -81,6 +83,8 @@
 		DL: { adivasiShare: 0.4, scShare: 18.0, densityIndex: 12, households: 0, population: 0, elevation: 0.18 },
 		MH: { adivasiShare: 9.4, scShare: 12.3, densityIndex: 71, households: 0, population: 0, elevation: 0.82 },
 		ME: { adivasiShare: 90.8, scShare: 1.0, densityIndex: 18, households: 0, population: 0, elevation: 0.9 },
+		ML: { adivasiShare: 90.8, scShare: 1.0, densityIndex: 18, households: 0, population: 0, elevation: 0.9 },
+		OR: { adivasiShare: 22.9, scShare: 17.3, densityIndex: 49, households: 0, population: 0, elevation: 0.42 },
 		TN: { adivasiShare: 0.9, scShare: 17.9, densityIndex: 68, households: 0, population: 0, elevation: 0.2 },
 		KA: { adivasiShare: 6.9, scShare: 17.2, densityIndex: 63, households: 0, population: 0, elevation: 0.76 },
 		RJ: { adivasiShare: 13.5, scShare: 17.8, densityIndex: 55, households: 0, population: 0, elevation: 0.68 },
@@ -159,7 +163,7 @@
 				'I recorded Nandurbar as a priority district for piloting because of its water-management stress and climate shocks.'
 			]
 		},
-		ME: {
+		ML: {
 			title: 'Climate Resilient Decision Support',
 			subtitle: 'X Moonshot Factory scoping visit',
 			location: 'Shillong, Meghalaya',
@@ -219,7 +223,8 @@
 		const ids = new Set<string>();
 		ids.add('MP');
 		ids.add('TN');
-		ids.add('ME');
+		ids.add('ML');
+		ids.add('OR');
 		projects.forEach((project) => project.regions?.forEach((id) => ids.add(id)));
 
 		return Array.from(ids)
@@ -544,7 +549,7 @@
 
 <style>
 	.map-stage {
-		height: 420vh;
+		height: 560vh;
 		background:
 			radial-gradient(circle at 15% 10%, color-mix(in srgb, var(--color-accent-soft) 36%, transparent), transparent 45%),
 			radial-gradient(circle at 88% 84%, color-mix(in srgb, var(--color-accent-soft) 28%, transparent), transparent 34%),
@@ -815,7 +820,7 @@
 
 	@media (max-width: 900px) {
 		.map-stage {
-			height: 380vh;
+			height: 520vh;
 			margin-top: -64px;
 		}
 
