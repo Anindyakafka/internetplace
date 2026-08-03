@@ -946,3 +946,19 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - Keep the new story copy only in the hover HUD and leave the story cards unchanged — rejected because the user explicitly asked to place the stats in every state story.
 
 **Consequence / next step:** The homepage now has state-story coverage for all requested states. If needed, the next refinement is to split the Google X copy into a dedicated content file so those long paragraphs live outside the page component.
+
+---
+
+### 2026-08-03 — State Story Copy and Scroll Pass
+
+**Decision:** Rewrite the Building Resilience and Google X state stories in a more CV-aligned, action-oriented voice, show the Inclusion Economics India Centre kicker on the state cards, and increase the scroll height of the map stage.
+
+**Context:** The user wanted the top line on the MGNREGA and Google X cards to read Inclusion Economics India Centre, wanted the Google X cards to describe what was actually done rather than a generic summary, and reported that the page did not scroll far enough to experience the full map.
+
+**Changes made:**
+- Rewrote the Madhya Pradesh and Bihar MGNREGA text in first person and kept Bihar aligned with the Madhya Pradesh treatment.
+- Reworked the Maharashtra, Meghalaya, and Tamil Nadu Google X copy to describe the prototype review, district meetings, data-sovereignty constraints, and location-specific planning outcomes.
+- Rendered the kicker label consistently so the state cards show Inclusion Economics India Centre by default.
+- Increased the map scroll stage height to give the sticky map more runway.
+
+**Consequence / next step:** The state cards now read closer to CV copy and the page should expose more of the map during scroll. Next round, if needed, is to split the long state-story content out of the page component into a dedicated data module.

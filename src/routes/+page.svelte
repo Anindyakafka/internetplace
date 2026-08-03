@@ -90,28 +90,30 @@
 	const stateStories: Partial<Record<string, StateStory>> = {
 		MP: {
 			title: 'Building Resilience through MGNREGA Assets',
-			subtitle: 'Field Research',
+			subtitle: 'Field Research at scale',
 			location: 'Barwani, Madhya Pradesh',
 			imageUrl: '/images/states/barwani.webp',
+			kicker: 'Inclusion Economics India Centre',
 			bullets: [
-				'Directed a daily field team of 8 surveyors, 2 supervisors, 2 asset auditors, and 1 field manager across two states, running the operation independently with minimal supervision.',
-				'Conducted high-frequency checks every day, reducing human and data-entry errors and keeping data quality strong for downstream causal analysis.',
-				'Turned slow manual scraping into efficient, reusable pipelines transferable across systems and users, sharply reducing analysis turnaround time.',
-				'Secured Letters of Support from district administration through direct stakeholder engagement and built durable relationships beyond the pilot.',
-				'Built field operations from the ground up: CTO forms, protocols, hiring, and training; delivered pilot documentation that informed future evaluations of climate resilience outcomes.'
+				'I directed a daily field team of 8 surveyors, 2 supervisors, 2 asset auditors, and 1 field manager across two states, keeping the operation running independently with minimal supervision.',
+				'I built the field QA routine, running high-frequency checks every day to reduce human and data-entry errors and keep the downstream causal analysis reliable.',
+				'I turned slow manual scraping into reusable pipelines that could be transferred across systems and users, cutting analysis turnaround time.',
+				'I secured Letters of Support from district administration through direct stakeholder engagement and built durable relationships beyond the pilot.',
+				'I built the field operations from the ground up: CTO forms, protocols, hiring, and training, and delivered pilot documentation that informed later climate-resilience evaluations.'
 			]
 		},
 		BR: {
 			title: 'Building Resilience through MGNREGA Assets',
-			subtitle: 'Field Research',
+			subtitle: 'Field Research at scale',
 			location: 'Bihar, India',
 			imageUrl: '/images/states/bihar.webp',
+			kicker: 'Inclusion Economics India Centre',
 			bullets: [
-				'Directed a daily field team of 8 surveyors, 2 supervisors, 2 asset auditors, and 1 field manager across two states, running the operation independently with minimal supervision.',
-				'Conducted high-frequency checks every day, reducing human and data-entry errors and keeping data quality strong for downstream causal analysis.',
-				'Turned slow manual scraping into efficient, reusable pipelines transferable across systems and users, sharply reducing analysis turnaround time.',
-				'Secured Letters of Support from district administration through direct stakeholder engagement and built durable relationships beyond the pilot.',
-				'Built field operations from the ground up: CTO forms, protocols, hiring, and training; delivered pilot documentation that informed future evaluations of climate resilience outcomes.'
+				'I directed a daily field team of 8 surveyors, 2 supervisors, 2 asset auditors, and 1 field manager across two states, keeping the operation running independently with minimal supervision.',
+				'I built the field QA routine, running high-frequency checks every day to reduce human and data-entry errors and keep the downstream causal analysis reliable.',
+				'I turned slow manual scraping into reusable pipelines that could be transferred across systems and users, cutting analysis turnaround time.',
+				'I secured Letters of Support from district administration through direct stakeholder engagement and built durable relationships beyond the pilot.',
+				'I built the field operations from the ground up: CTO forms, protocols, hiring, and training, and delivered pilot documentation that informed later climate-resilience evaluations.'
 			],
 			repoUrl: 'https://github.com/Anindyakafka/MGNREGA_assets',
 			repoLabel: 'Open GitHub repository'
@@ -121,6 +123,7 @@
 			subtitle: 'Independent Research',
 			location: 'West Bengal, India',
 			imageUrl: '/images/states/west_bengal.webp',
+			kicker: 'Inclusion Economics India Centre',
 			bullets: [
 				'Built two end-to-end scraping pipelines; covering 2002-style booth-level electoral rolls and the 2026 Special Intensive Revision (SIR)/ASD rolls, converting tens of thousands of scattered booth-level PDFs into structured, analyzable electoral data for West Bengal.',
 				'Delivered the structured dataset for use in the Bengal Biennale 2026, providing the data backbone for a public exhibition on the state\'s electoral history.',
@@ -134,6 +137,7 @@
 			subtitle: 'Research Tooling',
 			location: 'Delhi',
 			imageUrl: '/images/states/delhi.png',
+			kicker: 'Inclusion Economics India Centre',
 			bullets: [
 				'PyTorch name→ethnicity classifier with nine model configurations, up to 99% accuracy on single-country splits.',
 				'Supports batch and single-name inference with optional probability distributions and CSV outputs.',
@@ -147,11 +151,12 @@
 			subtitle: 'X Moonshot Factory scoping visit',
 			location: 'Nandurbar, Maharashtra',
 			imageUrl: '/images/states/maharashtra.webp',
+			kicker: 'Inclusion Economics India Centre',
 			bullets: [
-				'The Nandurbar discussions focused on watershed management and reducing out-migration through asset generation.',
-				'Political and operational realities in district planning often push visible, labour-intensive works over long-term climate resilience investments.',
-				'The team emphasized the need for work allocation, resource allocation, and district-level decision support to help district collectors spend limited funds and manpower efficiently.',
-				'Nandurbar was framed as a priority district, with emphasis on water management and climate shocks.'
+				'I joined the X Moonshot Factory / IEIC scoping visit between 19 and 27 February 2026 to refine a prototype AI tool for district-level budgeting and climate-resilient decision support.',
+				'In Nandurbar, I discussed watershed management and reducing out-migration through asset generation with district stakeholders.',
+				'I documented how political and operational realities push visible, labour-intensive works over longer-term climate investments, and how the tool could help district collectors allocate limited funds and manpower better.',
+				'I recorded Nandurbar as a priority district for piloting because of its water-management stress and climate shocks.'
 			]
 		},
 		ME: {
@@ -159,11 +164,12 @@
 			subtitle: 'X Moonshot Factory scoping visit',
 			location: 'Shillong, Meghalaya',
 			imageUrl: '/images/states/meghalaya.webp',
+			kicker: 'Inclusion Economics India Centre',
 			bullets: [
-				'The meetings focused on demonstrating a tool that integrates fragmented departmental data to help decision-makers, primarily district collectors, plan for climate risks like floods, droughts, and landslides.',
-				'In Meghalaya, the discussions centered on East Khasi Hills and West Garo Hills, alongside state officials in Shillong, with emphasis on data sovereignty and keeping government data under direct government control.',
-				'The scoping visit also identified a proactive planning gap: there is currently no structured system or policy framework to help administrators anticipate and plan for climate shocks.',
-				'Priority districts for piloting included East Khasi Hills and West Garo Hills.'
+				'I joined the X Moonshot Factory / IEIC scoping visit to show how a prototype tool could integrate fragmented departmental data for climate-risk budgeting.',
+				'In Shillong, I met state and district officials, including the Rural Development and Disaster Management teams, to map what data they actually needed for planning.',
+				'I documented the data-sovereignty requirement directly: government data had to remain under government control, with no external access path.',
+				'I flagged East Khasi Hills and West Garo Hills as priority pilot districts because of landslides, flash floods, and access constraints.'
 			]
 		},
 		TN: {
@@ -171,11 +177,12 @@
 			subtitle: 'X Moonshot Factory scoping visit',
 			location: 'Chennai and Ramanathapuram, Tamil Nadu',
 			imageUrl: '/images/states/tamil_nadu.webp',
+			kicker: 'Inclusion Economics India Centre',
 			bullets: [
-				'The Tamil Nadu meetings explored how a prototype AI-based tool could support district-level budgeting and help decision-makers plan for climate-resilient investments.',
-				'In Chennai and Ramanathapuram, the discussions connected departmental data, local climate risk, and the need for evidence-based justification for funding climate investments.',
-				'The review highlighted Payment for Ecosystem Services (PES) and island restoration as two concrete planning directions for Tamil Nadu districts.',
-				'The project framed the tool as a way to make district-level climate planning more legible, defensible, and operational.'
+				'I joined the X Moonshot Factory / IEIC scoping visit to review how a prototype AI tool could support district-level budgeting and climate-resilient investment planning.',
+				'In Chennai and Ramanathapuram, I met officials to connect departmental data, local climate risk, and the evidence needed to justify funding climate investments.',
+				'I noted the project directions that emerged for Tamil Nadu: Payment for Ecosystem Services, island restoration, and more defensible district planning.',
+				'I framed the tool as a way to make climate planning more legible, operational, and usable for district decision-makers.'
 			]
 		},
 		UP: {
@@ -504,7 +511,7 @@
 				<div class="state-story-scrim"></div>
 				<article class="state-story-content" aria-label={`${selectedStory.location} field story`}>
 					<button class="story-close" type="button" aria-label="Close" onclick={closeStory}>×</button>
-					{#if selectedStory.kicker}<p class="story-kicker">{selectedStory.kicker}</p>{/if}
+							<p class="story-kicker">{selectedStory.kicker ?? 'Inclusion Economics India Centre'}</p>
 					<h2>{selectedStory.title}</h2>
 					<p class="story-subtitle">{selectedStory.subtitle}</p>
 					<p class="story-location">{selectedStory.location}</p>
@@ -537,7 +544,7 @@
 
 <style>
 	.map-stage {
-		height: 340vh;
+		height: 420vh;
 		background:
 			radial-gradient(circle at 15% 10%, color-mix(in srgb, var(--color-accent-soft) 36%, transparent), transparent 45%),
 			radial-gradient(circle at 88% 84%, color-mix(in srgb, var(--color-accent-soft) 28%, transparent), transparent 34%),
@@ -808,7 +815,7 @@
 
 	@media (max-width: 900px) {
 		.map-stage {
-			height: 305vh;
+			height: 380vh;
 			margin-top: -64px;
 		}
 
