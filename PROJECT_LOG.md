@@ -1022,3 +1022,19 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - Structured the story metadata into a grid row (subtitle, location, Adivasi share) with responsive wrapping and truncation rules.
 
 **Consequence / next step:** Navigation should now feel less exhausting on large screens and clearer on phone sizes, while keeping lower-state access and cleaner story-card hierarchy.
+
+---
+
+### 2026-08-06 — Phone Orientation Stabilization
+
+**Decision:** Add phone-orientation-specific map behavior and layout rules so portrait and landscape do not collide or drift.
+
+**Context:** On phones, the map/HUD/story layers were inconsistent across orientations and felt "all over the place." The previous generic mobile styles were not enough for short-height landscape viewports.
+
+**Changes made:**
+- Added a dedicated landscape-phone branch in scroll-motion logic with its own scale and pan profile.
+- Switched sticky viewport sizing to `svh` and added safe-area aware bottom spacing for instruction/HUD/story panel.
+- Added a dedicated `@media (max-width: 900px) and (orientation: landscape)` block to rebalance title, map width/origin, HUD placement, and story-card dimensions.
+- Kept story metadata readable with responsive grid behavior across portrait and landscape.
+
+**Consequence / next step:** Phone portrait and landscape should now remain stable, with fewer overlays/collisions and easier lower-map navigation.

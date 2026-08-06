@@ -429,15 +429,28 @@
 			const withinStage = window.scrollY - stageTop;
 			const progress = Math.max(0, Math.min(1, withinStage / effectiveSpan));
 
+			const isLandscapePhone =
+				window.innerWidth <= 900 &&
+				window.innerHeight <= 520 &&
+				window.innerWidth > window.innerHeight;
 			const isPhone = window.innerWidth <= 700;
 			const isTablet = window.innerWidth > 700 && window.innerWidth <= 1100;
 
+			if (isLandscapePhone) {
+				const startScale = 1.36;
+				const endScale = 0.88;
+				mapScale = startScale + (endScale - startScale) * progress;
+				mapShiftX = -2 + progress * 7;
+				mapShiftY = 12 + progress * -34;
+				return;
+			}
+
 			if (isPhone) {
-				const startScale = 1.22;
-				const endScale = 0.92;
+				const startScale = 1.26;
+				const endScale = 0.9;
 				mapScale = startScale + (endScale - startScale) * progress;
 				mapShiftX = 0;
-				mapShiftY = 12 + progress * -30;
+				mapShiftY = 10 + progress * -36;
 				return;
 			}
 
@@ -651,7 +664,7 @@
 	.map-sticky {
 		position: sticky;
 		top: 0;
-		height: 100vh;
+		height: 100svh;
 		overflow: hidden;
 		display: grid;
 		place-items: center;
@@ -901,7 +914,7 @@
 
 	.map-instruction {
 		position: absolute;
-		bottom: 1.1rem;
+		bottom: calc(1.1rem + env(safe-area-inset-bottom));
 		left: 50%;
 		transform: translateX(-50%);
 		padding: 0.5rem 0.85rem;
@@ -939,13 +952,17 @@
 
 	@media (max-width: 900px) {
 		.map-stage {
-			height: 320vh;
+			height: 430svh;
 			margin-top: -64px;
+		}
+
+		.map-sticky {
+			height: 100svh;
 		}
 
 		.map-zoom-shell {
 			width: 100vw;
-			height: 90vh;
+			height: 88svh;
 		}
 
 		.india-map {
@@ -954,7 +971,7 @@
 
 		.hover-hud {
 			top: auto;
-			bottom: 1.2rem;
+			bottom: calc(3.9rem + env(safe-area-inset-bottom));
 			right: 0.8rem;
 			width: min(13rem, 56vw);
 		}
@@ -963,10 +980,10 @@
 			left: 50%;
 			right: auto;
 			top: auto;
-			bottom: 1rem;
+			bottom: calc(0.8rem + env(safe-area-inset-bottom));
 			transform: translateX(-50%);
 			width: min(94vw, 34rem);
-			max-height: 63vh;
+			max-height: 66svh;
 		}
 
 		.map-instruction {
@@ -987,6 +1004,52 @@
 
 		.story-stats {
 			text-align: left;
+		}
+	}
+
+	@media (max-width: 900px) and (orientation: landscape) {
+		.map-stage {
+			height: 620svh;
+		}
+
+		.landing-name {
+			top: 0.55rem;
+			font-size: clamp(1.1rem, 3.4vw, 1.45rem);
+		}
+
+		.map-zoom-shell {
+			height: 82svh;
+		}
+
+		.india-map {
+			width: min(88rem, 130vw);
+			transform-origin: 50% 58%;
+		}
+
+		.hover-hud {
+			width: min(13.5rem, 46vw);
+			bottom: calc(0.55rem + env(safe-area-inset-bottom));
+		}
+
+		.state-story-content {
+			left: auto;
+			right: 0.55rem;
+			bottom: calc(0.55rem + env(safe-area-inset-bottom));
+			transform: none;
+			width: min(56vw, 28rem);
+			max-height: 76svh;
+			padding: 0.75rem;
+		}
+
+		.story-meta {
+			grid-template-columns: 1fr;
+			gap: 0.16rem;
+		}
+
+		.map-instruction {
+			bottom: calc(0.5rem + env(safe-area-inset-bottom));
+			font-size: 0.62rem;
+			padding: 0.35rem 0.6rem;
 		}
 	}
 
