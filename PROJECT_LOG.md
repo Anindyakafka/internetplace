@@ -258,6 +258,42 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 
 4. **Documentation**
   - Added `docs/SECC_DEPLOYMENT.md` documenting deployment modes, build behavior, and attribution considerations.
+
+---
+
+### 2026-08-06 — Footer compacted into single-strip bottom system
+
+**Decision:** Refactor the homepage footer into a dense, single-strip composition with all major elements aligned in one row: badges, socials, misc links, status panel, and the chhipi terminal.
+
+**Context:** The previous footer implementation felt too large and blocky versus the requested aman.bh-style bottom section. User feedback explicitly asked for tighter alignment and a one-strip feel.
+
+**What changed:**
+
+1. **Footer markup consolidation (`src/routes/+page.svelte`)**
+  - Introduced `.footer-strip` as the primary grid container.
+  - Added compact `.footer-badges` rail.
+  - Kept Socials and Miscellaneous as tight vertical lists.
+  - Integrated the terminal into the same strip instead of a separate full-width block.
+  - Retained live status panel fields (ONLINE/OFFLINE, SCRIBBLING/DEAD, IST time, weather signal).
+
+2. **Visual compaction (`src/routes/+page.svelte` styles)**
+  - Reduced footer paddings, heading sizes, link sizes, and inter-block spacing.
+  - Tightened terminal shell radius, paddings, log height, and input sizing.
+  - Reduced status panel density and converted to single-column telemetry lines.
+  - Added mobile fallback to stack the strip cleanly on narrow viewports.
+
+3. **Label cleanup**
+  - Simplified weather status text generation to use concise values (`SIGNAL PENDING`, `API HAVING FEELINGS`) while preserving `WEATHER:` prefix in display.
+
+4. **Theme-toggle removal (`src/routes/+layout.svelte`)**
+  - Removed dark/light toggle buttons from home and inner-page headers to match the requested no-toggle footer treatment.
+  - Kept header structure and site mark intact, with simplified layout alignment.
+
+**Alternatives considered:**
+- *Keep terminal as a second-row block* — rejected because it preserved the tall, segmented footer silhouette.
+- *Use larger card-like containers for each group* — rejected to avoid visual bulk and stay close to the compact reference feel.
+
+**Consequence / next step:** The footer now reads as a compact, unified strip and is substantially closer to the requested bottom-section style. Next refinement can focus on pixel-level spacing/typography tuning from visual comparison screenshots.
   - Updated `README.md` with a “Large data workflow (SECC / SHRUG)” section.
 
 **Validation:**
@@ -1222,3 +1258,26 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - Rebuilt and verified in preview using cache-busted URL checks and screenshot comparison.
 
 **Consequence / next step:** Texture is now clearly visible in the hero map without reintroducing contour lines.
+
+---
+
+### 2026-08-06 - Footer + Chhipi Terminal Implementation
+
+**Decision:** Implement an aman.bh-inspired bottom footer block on the homepage with custom social/misc links, a sarcastic interactive terminal named `chhipi`, and a live status panel.
+
+**Context:** User requested the structural pattern (Socials, Miscellaneous, terminal, status strip) while replacing identity details and skipping lite-mode behavior for now.
+
+**Changes made:**
+- Added homepage footer sections in `src/routes/+page.svelte`:
+  - **Socials**: LinkedIn, Email, Instagram, Twitter, GitHub.
+  - **Miscellaneous**: Colophon, Notes, Blog Roll placeholder route, Source code.
+- Added **Interactive Terminal** (`chhipi`) with Hitchhiker-inspired prompt and sarcastic command responses (`help`, `status`, `socials`, `weather`, `about`, `ping`, `clear`).
+- Added **Status panel** with requested semantics:
+  - `ONLINE` → `SCRIBBLING`
+  - `OFFLINE` → `DEAD`
+  - `OPERATOR: ANINDYA`
+  - `LOCALTIME` in IST via `Asia/Kolkata`.
+- Wired free weather fetch using Open-Meteo (no key required) for Kolkata coordinates with periodic refresh.
+- Added responsive footer/terminal/status styles for desktop and mobile.
+
+**Consequence / next step:** Homepage now includes the requested footer system and interaction skeleton; user can later provide video content and optional richer status/weather integrations.

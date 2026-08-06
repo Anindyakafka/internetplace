@@ -299,6 +299,22 @@
 	let noteDragStartX = 0;
 	let noteDragStartY = 0;
 	let mapStageEl: HTMLElement | null = $state(null);
+	let terminalInput = $state('');
+	let terminalLines = $state<string[]>([
+		'CHHIPI/42 boot sequence initialized...',
+		'Checking improbability drive... [APPARENTLY FUNCTIONAL]',
+		'Locating tea subsystem... [INCONCLUSIVE]',
+		'Sanity module... [POLITELY DECLINED]',
+		'',
+		'Don\'t panic. Or do. I am not your supervisor.',
+		"Type 'help' and I will answer with reluctant precision.",
+		''
+	]);
+	let operatorOnline = $state(false);
+	let istTimeLabel = $state('LOADING IST...');
+	let weatherLabel = $state('SIGNAL PENDING');
+
+	const terminalPrompt = 'heart-of-gold@chhipi:~ %';
 
 	let regions = $derived.by<Region[]>(() => {
 		const ids = new Set<string>();
@@ -412,6 +428,93 @@
 
 		return () => {
 			cancelled = true;
+		};
+	});
+
+	$effect(() => {
+		if (!browser) return;
+
+		const updatePresenceAndTime = () => {
+			const now = new Date();
+			const hour24 = Number(
+				new Intl.DateTimeFormat('en-GB', {
+					timeZone: 'Asia/Kolkata',
+					hour: '2-digit',
+					hour12: false
+				}).format(now)
+			);
+
+			const timeText = new Intl.DateTimeFormat('en-IN', {
+				timeZone: 'Asia/Kolkata',
+				hour: '2-digit',
+				minute: '2-digit',
+				hour12: false
+			}).format(now);
+
+			// "Online" means the tab is visible and it's a plausible work window in IST.
+			operatorOnline = document.visibilityState === 'visible' && hour24 >= 9 && hour24 < 23;
+			istTimeLabel = `${timeText} IST`;
+		};
+
+		const weatherCodeToLabel: Record<number, string> = {
+			0: 'CLEAR',
+			1: 'MOSTLY CLEAR',
+			2: 'PARTLY CLOUDY',
+			3: 'OVERCAST',
+			45: 'FOGGY',
+			48: 'FREEZING FOG',
+			51: 'LIGHT DRIZZLE',
+			53: 'DRIZZLE',
+			55: 'HEAVY DRIZZLE',
+			61: 'LIGHT RAIN',
+			63: 'RAIN',
+			65: 'HEAVY RAIN',
+			71: 'LIGHT SNOW',
+			73: 'SNOW',
+			75: 'HEAVY SNOW',
+			80: 'RAIN SHOWERS',
+			81: 'STRONG SHOWERS',
+			82: 'VIOLENT SHOWERS',
+			95: 'THUNDERSTORM'
+		};
+
+		const refreshWeather = async () => {
+			try {
+				const url =
+					'https://api.open-meteo.com/v1/forecast?latitude=22.5726&longitude=88.3639&current=temperature_2m,weather_code&timezone=Asia%2FKolkata';
+				const response = await fetch(url);
+				if (!response.ok) throw new Error('weather fetch failed');
+
+				const payload = (await response.json()) as {
+					current?: { temperature_2m?: number; weather_code?: number };
+				};
+
+				const temp = payload.current?.temperature_2m;
+				const code = payload.current?.weather_code;
+				if (typeof temp !== 'number') throw new Error('missing weather data');
+
+				const descriptor = typeof code === 'number' ? (weatherCodeToLabel[code] ?? 'ATMOSPHERIC DRAMA') : 'ATMOSPHERIC DRAMA';
+				weatherLabel = `${Math.round(temp)}°C, ${descriptor}`;
+			} catch {
+				weatherLabel = 'API HAVING FEELINGS';
+			}
+		};
+
+		updatePresenceAndTime();
+		void refreshWeather();
+
+		const onVisibility = () => updatePresenceAndTime();
+		document.addEventListener('visibilitychange', onVisibility);
+
+		const clockTimer = window.setInterval(updatePresenceAndTime, 60_000);
+		const weatherTimer = window.setInterval(() => {
+			void refreshWeather();
+		}, 30 * 60_000);
+
+		return () => {
+			document.removeEventListener('visibilitychange', onVisibility);
+			window.clearInterval(clockTimer);
+			window.clearInterval(weatherTimer);
 		};
 	});
 
@@ -581,6 +684,78 @@
 		});
 	}
 
+	function appendTerminalLines(lines: string[]) {
+		terminalLines = [...terminalLines, ...lines];
+	}
+
+	function handleTerminalCommand(rawCommand: string) {
+		const command = rawCommand.trim();
+		if (!command) return;
+
+		appendTerminalLines([`${terminalPrompt} ${command}`]);
+
+		const [base, ...rest] = command.toLowerCase().split(/\s+/);
+		switch (base) {
+			case 'help':
+				appendTerminalLines([
+					'Available commands (because chaos needs structure):',
+					"- help: print this precious scroll of obviousness",
+					"- status: tell you whether I am scribbling or dead",
+					'- socials: dump contact links',
+					"- weather: check Kolkata weather via a free API",
+					"- about: one-line mission statement with mild disappointment",
+					"- clear: wipe terminal memory like nothing mattered",
+					"- ping: confirm that electrons still move"
+				]);
+				break;
+			case 'status':
+				appendTerminalLines([
+					`CURRENTLY: ${operatorOnline ? 'ONLINE' : 'OFFLINE'}`,
+					'OPERATOR: ANINDYA',
+					`STATUS: ${operatorOnline ? 'SCRIBBLING' : 'DEAD'}`,
+					`LOCALTIME: ${istTimeLabel}`,
+					`WEATHER: ${weatherLabel}`
+				]);
+				break;
+			case 'socials':
+				appendTerminalLines([
+					'LinkedIn: https://linkedin.com/in/anindyakafka',
+					'GitHub: https://github.com/anindyakafka',
+					'Instagram: https://www.instagram.com/anindya.hajabarala/',
+					'Twitter: https://x.com/Kafkanindya7',
+					'Email: mailto:anindya2232@gmail.com'
+				]);
+				break;
+			case 'weather':
+				appendTerminalLines([
+					`KOLKATA WEATHER: ${weatherLabel}`,
+					'You are welcome. Try stepping outside too.'
+				]);
+				break;
+			case 'about':
+				appendTerminalLines([
+					'CHHIPI v2.0: A sarcastic shell for maps, stories, and selective optimism.'
+				]);
+				break;
+			case 'ping':
+				appendTerminalLines(['pong. The void still responds.']);
+				break;
+			case 'clear':
+				terminalLines = [];
+				break;
+			default:
+				appendTerminalLines([
+					`Unknown command: ${base}${rest.length ? ` ${rest.join(' ')}` : ''}`,
+					"Type 'help' so we can both pretend this was intentional."
+				]);
+		}
+	}
+
+	function submitTerminalInput() {
+		handleTerminalCommand(terminalInput);
+		terminalInput = '';
+	}
+
 </script>
 
 <svelte:head>
@@ -720,6 +895,72 @@
 		{/if}
 	</div>
 </section>
+
+<footer class="home-footer" aria-label="Site footer">
+	<div class="footer-strip">
+		<div class="footer-badges" aria-hidden="true">
+			<span>MICRO WEB</span>
+			<span>HAND CODED</span>
+			<span>MAP FIELD NOTES</span>
+		</div>
+
+		<section class="footer-link-block" aria-labelledby="socials-heading">
+			<h2 id="socials-heading">Socials</h2>
+			<ul>
+				<li><a href="https://linkedin.com/in/anindyakafka" target="_blank" rel="noreferrer noopener">LinkedIn</a></li>
+				<li><a href="mailto:anindya2232@gmail.com">Email</a></li>
+				<li><a href="https://www.instagram.com/anindya.hajabarala/" target="_blank" rel="noreferrer noopener">Instagram</a></li>
+				<li><a href="https://x.com/Kafkanindya7" target="_blank" rel="noreferrer noopener">Twitter</a></li>
+				<li><a href="https://github.com/anindyakafka" target="_blank" rel="noreferrer noopener">GitHub</a></li>
+			</ul>
+		</section>
+
+		<section class="footer-link-block" aria-labelledby="misc-heading">
+			<h2 id="misc-heading">Miscellaneous</h2>
+			<ul>
+				<li><a href="/colophon">Colophon</a></li>
+				<li><a href="/writing">Notes</a></li>
+				<li><a href="/work">Blog Roll</a></li>
+				<li><a href="https://github.com/Anindyakafka/internetplace" target="_blank" rel="noreferrer noopener">Source code</a></li>
+			</ul>
+		</section>
+
+		<section class="status-panel" aria-label="Operator status panel">
+			<p class="status-currently">
+				Currently <strong>{operatorOnline ? 'ONLINE' : 'OFFLINE'}</strong>
+			</p>
+			<div class="status-grid">
+				<p><span>OPERATOR:</span> ANINDYA</p>
+				<p><span>STATUS:</span> {operatorOnline ? 'SCRIBBLING' : 'DEAD'}</p>
+				<p><span>MODE:</span> {operatorOnline ? 'MARGIN NOTES IN PROGRESS' : 'OFFLINE'}</p>
+				<p><span>LOCALTIME:</span> {istTimeLabel}</p>
+				<p><span>WEATHER:</span> {weatherLabel}</p>
+			</div>
+		</section>
+
+		<section class="chhipi-terminal" aria-label="Interactive terminal">
+			<h2>Interactive Terminal</h2>
+			<div class="terminal-shell" role="region" aria-live="polite" aria-label="Terminal output">
+				<div class="terminal-log" role="log" aria-label="Terminal log">
+					{#each terminalLines as line, index (index)}
+						<p>{line}</p>
+					{/each}
+				</div>
+				<div class="terminal-input-row">
+					<span>{terminalPrompt}</span>
+					<input
+						type="text"
+						placeholder="Enter command"
+						bind:value={terminalInput}
+						onkeydown={(event) => {
+							if (event.key === 'Enter') submitTerminalInput();
+						}}
+					/>
+				</div>
+			</div>
+		</section>
+	</div>
+</footer>
 
 <style>
 	.map-stage {
@@ -1125,6 +1366,183 @@
 		z-index: 9;
 	}
 
+	.home-footer {
+		position: relative;
+		padding: clamp(1.05rem, 2vw, 1.4rem) var(--space-l) clamp(1.1rem, 2.2vw, 1.55rem);
+		border-top: 1px solid color-mix(in srgb, var(--color-border) 78%, transparent);
+		background:
+			radial-gradient(circle at 10% 10%, rgba(104, 104, 104, 0.08), transparent 44%),
+			radial-gradient(circle at 88% 84%, rgba(78, 78, 78, 0.07), transparent 38%),
+			color-mix(in srgb, var(--color-surface) 88%, transparent);
+	}
+
+	.footer-strip {
+		max-width: min(74rem, 96vw);
+		margin: 0 auto;
+		display: grid;
+		grid-template-columns: minmax(9rem, 0.9fr) minmax(10rem, 1fr) minmax(10rem, 1fr) minmax(11rem, 1fr) minmax(15rem, 1.5fr);
+		gap: clamp(0.8rem, 1.8vw, 1.2rem);
+		align-items: start;
+		padding-bottom: 0.3rem;
+	}
+
+	.footer-badges {
+		display: flex;
+		flex-wrap: wrap;
+		align-content: start;
+		gap: 0.35rem;
+	}
+
+	.footer-badges span {
+		font-family: var(--font-mono);
+		font-size: 0.62rem;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		padding: 0.23rem 0.44rem;
+		border: 1px solid color-mix(in srgb, var(--color-border-strong) 70%, transparent);
+		border-radius: 999px;
+		color: var(--color-text-muted);
+		background: color-mix(in srgb, var(--color-surface-raised) 82%, transparent);
+	}
+
+	.footer-link-block h2 {
+		margin: 0 0 0.4rem;
+		font-family: var(--font-mono);
+		font-size: 0.65rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--color-text-muted);
+	}
+
+	.footer-link-block ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 0.22rem;
+	}
+
+	.footer-link-block a {
+		font-family: var(--font-sans);
+		font-size: 0.8rem;
+		text-decoration: none;
+		color: var(--color-text);
+		border-bottom: 1px dashed transparent;
+		width: fit-content;
+		line-height: 1.25;
+	}
+
+	.footer-link-block a:hover {
+		border-bottom-color: color-mix(in srgb, var(--color-accent) 66%, transparent);
+	}
+
+	.chhipi-terminal {
+		max-width: none;
+		margin: 0;
+		display: grid;
+		gap: 0.4rem;
+	}
+
+	.chhipi-terminal h2 {
+		margin: 0;
+		font-size: 0.72rem;
+		font-family: var(--font-mono);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: var(--color-text-muted);
+	}
+
+	.terminal-shell {
+		border: 1px solid color-mix(in srgb, var(--color-border-strong) 82%, transparent);
+		border-radius: 0.45rem;
+		background: color-mix(in srgb, var(--color-surface-raised) 80%, transparent);
+		padding: 0.52rem;
+	}
+
+	.terminal-log {
+		max-height: 6rem;
+		overflow: auto;
+		padding-right: 0.22rem;
+		display: grid;
+		gap: 0.12rem;
+	}
+
+	.terminal-log p {
+		margin: 0;
+		font-family: var(--font-mono);
+		font-size: 0.7rem;
+		line-height: 1.25;
+		color: color-mix(in srgb, var(--color-text) 92%, transparent);
+		white-space: pre-wrap;
+	}
+
+	.terminal-input-row {
+		margin-top: 0.45rem;
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr);
+		align-items: center;
+		gap: 0.36rem;
+	}
+
+	.terminal-input-row span {
+		font-family: var(--font-mono);
+		font-size: 0.64rem;
+		color: var(--color-text-muted);
+	}
+
+	.terminal-input-row input {
+		width: 100%;
+		border: 1px solid color-mix(in srgb, var(--color-border-strong) 75%, transparent);
+		border-radius: 0.32rem;
+		background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+		padding: 0.34rem 0.44rem;
+		font-family: var(--font-mono);
+		font-size: 0.68rem;
+		color: var(--color-text);
+	}
+
+	.terminal-input-row input:focus {
+		outline: 2px solid color-mix(in srgb, var(--color-accent) 64%, transparent);
+		outline-offset: 1px;
+	}
+
+	.status-panel {
+		margin: 0;
+		padding: 0.48rem 0.54rem;
+		border-radius: 0.45rem;
+		border: 1px solid color-mix(in srgb, var(--color-border-strong) 82%, transparent);
+		background: color-mix(in srgb, var(--color-surface) 90%, transparent);
+	}
+
+	.status-currently {
+		margin: 0 0 0.34rem;
+		font-family: var(--font-mono);
+		font-size: 0.68rem;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+	}
+
+	.status-currently strong {
+		font-size: 0.72rem;
+	}
+
+	.status-grid {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 0.14rem;
+	}
+
+	.status-grid p {
+		margin: 0;
+		font-family: var(--font-mono);
+		font-size: 0.66rem;
+		line-height: 1.25;
+	}
+
+	.status-grid span {
+		color: var(--color-text-muted);
+	}
+
 	@keyframes fadeIn {
 		from {
 			opacity: 0;
@@ -1291,6 +1709,24 @@
 
 		.story-stats {
 			text-align: left;
+		}
+
+		.home-footer {
+			padding-inline: 0.72rem;
+		}
+
+		.footer-strip {
+			grid-template-columns: 1fr;
+			gap: 0.66rem;
+		}
+
+		.status-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.terminal-input-row {
+			grid-template-columns: 1fr;
+			gap: 0.35rem;
 		}
 
 		.landing-note {
