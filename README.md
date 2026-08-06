@@ -1,6 +1,6 @@
 # internetplace
 
-internetplace is Anindya Singh's portfolio site: one home for projects, writing, field stories, and data work previously spread across multiple repositories and sites.
+internetplace is my portfolio site: one home for projects, writing, field stories, and data work previously spread across multiple repositories and sites.
 
 The site is built with SvelteKit (static output) and uses Pretext for long-form text layout.
 
@@ -166,14 +166,9 @@ Below is a practical, developer-focused structure map (not every generated file 
 
 ## External Project Links
 
-- CBFC Watch: https://cbfc.watch/
 - Dadri Forecast: https://khanderartspace.netlify.app/dadri-forecast
 - Name Ethnicity Detector: https://github.com/Anindyakafka/name-ethnicity-detector
 - MGNREGA Assets (Bihar): https://github.com/Anindyakafka/MGNREGA_assets
 - Sounding Names / Religion: https://github.com/Anindyakafka/Sounding-Names_religion
 - netCDF manipulation and conversion: https://github.com/Anindyakafka/netCDF_manipulation_x_conversion
 - Electoral Rolls West Bengal 2002: https://github.com/Anindyakafka/Electoral-Rolls-West-Bengal-2002
-
-## License
-
-See LICENSE.

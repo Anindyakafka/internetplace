@@ -553,6 +553,18 @@
 <section class="map-stage" bind:this={mapStageEl}>
 	<div class="map-sticky">
 		<h1 class="landing-name">Anindya Singh</h1>
+		<aside class="landing-note" aria-label="Exploration note">
+			<p class="landing-note-kicker">Field Note 00</p>
+			<p>
+				Spend a minute clicking around this map. Some states read like surveillance logs,
+				some like dream corridors, some like absurd travel notes, and some like a body
+				waking up in a changed room.
+			</p>
+			<p class="landing-note-meta">
+				Inspired by Orwell, Murakami, Adams, and Kafka.
+			</p>
+			<a class="landing-note-link" href="/sections">Click here to explore the site sections →</a>
+		</aside>
 		<p class="portrait-only-notice" role="status">Rotate to portrait mode to explore stories.</p>
 
 		<div
@@ -742,6 +754,62 @@
 
 	.mobile-hud {
 		display: none;
+	}
+
+	.landing-note {
+		position: absolute;
+		left: clamp(0.8rem, 2vw, 1.6rem);
+		top: clamp(5.8rem, 12vh, 8.8rem);
+		width: min(24rem, 36vw);
+		padding: 0.68rem 0.76rem;
+		border-radius: 0.9rem;
+		background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+		border: 1px solid color-mix(in srgb, var(--color-border) 68%, transparent);
+		backdrop-filter: blur(8px);
+		z-index: 12;
+		display: grid;
+		gap: 0.45rem;
+	}
+
+	.landing-note p {
+		margin: 0;
+		font-size: var(--step--1);
+		line-height: 1.42;
+		color: var(--color-text-muted);
+	}
+
+	.landing-note-kicker {
+		font-family: var(--font-mono);
+		font-size: var(--step--2);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: var(--color-text);
+	}
+
+	.landing-note-meta {
+		font-family: var(--font-mono);
+		font-size: var(--step--2);
+		letter-spacing: 0.04em;
+	}
+
+	.landing-note-link {
+		display: inline-flex;
+		align-items: center;
+		justify-self: start;
+		font-family: var(--font-mono);
+		font-size: var(--step--2);
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		padding: 0.34rem 0.52rem;
+		border-radius: 999px;
+		text-decoration: none;
+		color: var(--color-text);
+		border: 1px solid color-mix(in srgb, var(--color-border) 72%, transparent);
+		background: color-mix(in srgb, var(--color-surface) 76%, transparent);
+	}
+
+	.landing-note-link:hover {
+		border-color: var(--color-border-strong);
 	}
 
 	.portrait-only-notice {
@@ -1119,6 +1187,20 @@
 		.story-stats {
 			text-align: left;
 		}
+
+		.landing-note {
+			left: 50%;
+			top: 4.7rem;
+			transform: translateX(-50%);
+			width: min(94vw, 30rem);
+			gap: 0.34rem;
+			padding: 0.52rem 0.62rem;
+		}
+
+		.landing-note p {
+			font-size: 0.67rem;
+			line-height: 1.35;
+		}
 	}
 
 	@media (max-width: 900px) and (orientation: landscape) {
@@ -1158,6 +1240,7 @@
 		.map-zoom-shell,
 		.mobile-region-picker,
 		.mobile-hud,
+		.landing-note,
 		.state-story-scene,
 		.story-loading,
 		.map-instruction,

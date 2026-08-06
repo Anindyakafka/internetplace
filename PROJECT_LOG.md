@@ -1100,3 +1100,19 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - Updated script and deployment notes to match package.json and netlify.toml behavior.
 
 **Consequence / next step:** New contributors can now understand project layout and run/deploy workflow directly from README without hunting through multiple files.
+
+---
+
+### 2026-08-06 - Landing Narrative + Sections Skeleton
+
+**Decision:** Add a creative onboarding note to the homepage map and create a dedicated sections hub route as a future-facing skeleton.
+
+**Context:** The site needed a stronger narrative cue telling visitors to explore the landing map, plus a clear path to an index of broader site areas that will later host more data-driven, personal, and professional material.
+
+**Changes made:**
+- Added a homepage exploration note with literary tone (inspired by Orwell, Murakami, Adams, and Kafka) without using direct copyrighted quotations.
+- Added a direct CTA link from the landing page to a new `/sections` route.
+- Created `src/routes/sections/+page.svelte` as a skeleton atlas page with cards for Data & Methods, Writing, Professional Work, Personal Field Notes, About, and Colophon.
+- Included explicit status language (`expanding` / `planned`) to set expectations for gradual content population.
+
+**Consequence / next step:** Visitors now get an intentional invitation to explore immediately, and there is a structured placeholder hub for upcoming sections and future content growth.
