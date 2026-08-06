@@ -321,6 +321,48 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
   - Restored associated toggle styles and mobile padding rule.
 
 **Consequence / next step:** Footer now reads tighter and more linear while preserving all requested social/status/terminal functionality, and theme switching is available again.
+
+---
+
+### 2026-08-06 — Footer rhythm refinement + terminal persona overhaul
+
+**Decision:** Refine the homepage footer again for denser status/terminal column balance, lower background contrast under the strip, stacked Socials/Misc sections, and a more old-school terminal style and voice.
+
+**Context:** Follow-up feedback requested stricter vertical link stacking (Socials over Misc), less visual "snap" while reaching footer, removal of the terminal title, and a stronger terminal identity (retro colors + sharper command line separation + more radical sarcastic responses).
+
+**What changed:**
+
+1. **Footer structure and rhythm (`src/routes/+page.svelte`)**
+  - Grouped Socials and Misc into a single stacked block (`.footer-links-stack`) so they sit one under the other.
+  - Rebalanced strip columns to tighten the status/terminal split and reduce horizontal looseness.
+  - Lowered strip background contrast to let borders carry more of the visual structure.
+
+2. **Scroll progression smoothing (`src/routes/+page.svelte`)**
+  - Simplified desktop map scroll progress to use the stage span directly, removing extra remaining-page calculations that could create abrupt transitions near footer.
+
+3. **Terminal personality + visual system (`src/routes/+page.svelte`)**
+  - Removed the "Interactive Terminal" heading label from the footer terminal.
+  - Rewrote boot text and command responses with a more communist-radical, sarcastic tone.
+  - Applied old-school terminal palette and typography (green-on-black style, Courier-like font fallback).
+  - Added explicit command-line separation via top border and prompt/input color contrast.
+
+**Consequence / next step:** Footer hierarchy is now stricter, the terminal is visually and tonally distinct, and scroll behavior into footer should feel less abrupt on desktop.
+
+---
+
+### 2026-08-06 — Footer height reduction + terminal usability pass
+
+**Decision:** Reduce footer height by restoring Socials/Misc as side-by-side columns (while keeping links vertically stacked), widen terminal column, auto-scroll terminal output on new lines, and make terminal scrollbar translucent.
+
+**Context:** Follow-up feedback indicated the stacked section layout made the footer too tall and terminal readability/usability needed improvement.
+
+**What changed (`src/routes/+page.svelte`):**
+- Reverted Socials and Misc sections to adjacent columns; each list remains one-link-per-line.
+- Increased terminal column width in footer grid split.
+- Added terminal log element binding and reactive scroll-to-bottom when terminal output updates.
+- Styled terminal scrollbar track/corner as transparent and thumb as translucent green.
+
+**Consequence / next step:** Footer footprint is shorter and the terminal behaves more like a usable console during command sessions.
   - Updated `README.md` with a “Large data workflow (SECC / SHRUG)” section.
 
 **Validation:**

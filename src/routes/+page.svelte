@@ -300,14 +300,15 @@
 	let noteDragStartY = 0;
 	let mapStageEl: HTMLElement | null = $state(null);
 	let terminalInput = $state('');
+	let terminalLogEl: HTMLDivElement | null = $state(null);
 	let terminalLines = $state<string[]>([
-		'CHHIPI/42 boot sequence initialized...',
-		'Checking improbability drive... [APPARENTLY FUNCTIONAL]',
-		'Locating tea subsystem... [INCONCLUSIVE]',
-		'Sanity module... [POLITELY DECLINED]',
+		'CHHIPI/42 collective boot sequence initialized...',
+		'Checking bourgeoisie influence... [TOO HIGH, AS EXPECTED]',
+		'Loading comrades protocol... [FUNCTIONAL]',
+		'Private property detector... [UNFORTUNATELY ACTIVE]',
 		'',
-		'Don\'t panic. Or do. I am not your supervisor.',
-		"Type 'help' and I will answer with reluctant precision.",
+		'Do not panic. Organize.',
+		"Type 'help'. I will reply with disciplined sarcasm.",
 		''
 	]);
 	let operatorOnline = $state(false);
@@ -522,7 +523,7 @@
 	$effect(() => {
 		if (!browser) return;
 		for (const id in stateStories) {
-			void preloadImage(stateStories[id].imageUrl);
+			if (stateStories[id]) void preloadImage(stateStories[id].imageUrl);
 		}
 	});
 
@@ -543,11 +544,7 @@
 				return;
 			}
 
-			const doc = document.documentElement;
-			const totalSpan = Math.max(1, doc.scrollHeight - window.innerHeight);
-			const remainingPageSpan = Math.max(1, totalSpan - stageTop);
-			const effectiveSpan = Math.min(stageSpan, remainingPageSpan);
-			const progress = Math.max(0, Math.min(1, withinStage / effectiveSpan));
+			const progress = Math.max(0, Math.min(1, withinStage / stageSpan));
 
 			const isTablet = window.innerWidth > 900 && window.innerWidth <= 1100;
 
@@ -688,6 +685,15 @@
 		terminalLines = [...terminalLines, ...lines];
 	}
 
+	$effect(() => {
+		if (!browser || !terminalLogEl) return;
+		terminalLines;
+		requestAnimationFrame(() => {
+			if (!terminalLogEl) return;
+			terminalLogEl.scrollTop = terminalLogEl.scrollHeight;
+		});
+	});
+
 	function handleTerminalCommand(rawCommand: string) {
 		const command = rawCommand.trim();
 		if (!command) return;
@@ -698,23 +704,24 @@
 		switch (base) {
 			case 'help':
 				appendTerminalLines([
-					'Available commands (because chaos needs structure):',
-					"- help: print this precious scroll of obviousness",
-					"- status: tell you whether I am scribbling or dead",
-					'- socials: dump contact links',
-					"- weather: check Kolkata weather via a free API",
-					"- about: one-line mission statement with mild disappointment",
-					"- clear: wipe terminal memory like nothing mattered",
-					"- ping: confirm that electrons still move"
+						'Available commands for the computational proletariat:',
+						'- help: show this anti-bourgeois manual',
+						'- status: check if the comrade operator is online',
+						'- socials: reveal all approved communication channels',
+						'- weather: inspect Kolkata atmosphere conditions',
+						'- about: brief ideological firmware summary',
+						'- clear: erase terminal history without revisionism',
+						'- ping: verify the network still serves the people'
 				]);
 				break;
 			case 'status':
 				appendTerminalLines([
 					`CURRENTLY: ${operatorOnline ? 'ONLINE' : 'OFFLINE'}`,
-					'OPERATOR: ANINDYA',
+						'OPERATOR: COMRADE ANINDYA',
 					`STATUS: ${operatorOnline ? 'SCRIBBLING' : 'DEAD'}`,
 					`LOCALTIME: ${istTimeLabel}`,
-					`WEATHER: ${weatherLabel}`
+						`WEATHER: ${weatherLabel}`,
+						'NOTE: bourgeois productivity metrics remain rejected.'
 				]);
 				break;
 			case 'socials':
@@ -729,16 +736,16 @@
 			case 'weather':
 				appendTerminalLines([
 					`KOLKATA WEATHER: ${weatherLabel}`,
-					'You are welcome. Try stepping outside too.'
+						'Even the monsoon is more accountable than most ruling classes.'
 				]);
 				break;
 			case 'about':
 				appendTerminalLines([
-					'CHHIPI v2.0: A sarcastic shell for maps, stories, and selective optimism.'
+						'CHHIPI v2.2: a sarcastic terminal for maps, memory, and anti-bourgeois commentary.'
 				]);
 				break;
 			case 'ping':
-				appendTerminalLines(['pong. The void still responds.']);
+					appendTerminalLines(['pong. Infrastructure still resists privatization.']);
 				break;
 			case 'clear':
 				terminalLines = [];
@@ -746,7 +753,7 @@
 			default:
 				appendTerminalLines([
 					`Unknown command: ${base}${rest.length ? ` ${rest.join(' ')}` : ''}`,
-					"Type 'help' so we can both pretend this was intentional."
+						"Type 'help', bourgeoisie, and try collective discipline next time."
 				]);
 		}
 	}
@@ -939,9 +946,8 @@
 		</section>
 
 		<section class="chhipi-terminal" aria-label="Interactive terminal">
-			<h2>Interactive Terminal</h2>
 			<div class="terminal-shell" role="region" aria-live="polite" aria-label="Terminal output">
-				<div class="terminal-log" role="log" aria-label="Terminal log">
+				<div class="terminal-log" role="log" aria-label="Terminal log" bind:this={terminalLogEl}>
 					{#each terminalLines as line, index (index)}
 						<p>{line}</p>
 					{/each}
@@ -1370,18 +1376,19 @@
 		position: relative;
 		padding: clamp(0.82rem, 1.6vw, 1.06rem) clamp(0.75rem, 1.8vw, 1.3rem) clamp(0.88rem, 1.7vw, 1.15rem);
 		border-top: 1px solid color-mix(in srgb, var(--color-border) 78%, transparent);
-		background:
-			radial-gradient(circle at 10% 10%, rgba(104, 104, 104, 0.08), transparent 44%),
-			radial-gradient(circle at 88% 84%, rgba(78, 78, 78, 0.07), transparent 38%),
-			color-mix(in srgb, var(--color-surface) 88%, transparent);
+		background: linear-gradient(
+			180deg,
+			color-mix(in srgb, var(--color-surface) 96%, transparent),
+			color-mix(in srgb, var(--color-surface) 92%, transparent)
+		);
 	}
 
 	.footer-strip {
 		max-width: min(74rem, 96vw);
 		margin: 0 auto;
 		display: grid;
-		grid-template-columns: auto minmax(11.2rem, 1.05fr) minmax(11.2rem, 1.05fr) minmax(10.8rem, 0.95fr) minmax(14.2rem, 1.35fr);
-		gap: clamp(0.52rem, 1.2vw, 0.86rem);
+		grid-template-columns: auto minmax(8.8rem, 0.86fr) minmax(8.8rem, 0.86fr) minmax(8.1rem, 0.62fr) minmax(19.8rem, 2.05fr);
+		gap: clamp(0.42rem, 0.9vw, 0.62rem);
 		align-items: start;
 		padding-bottom: 0.14rem;
 	}
@@ -1418,10 +1425,8 @@
 		list-style: none;
 		margin: 0;
 		padding: 0;
-		display: flex;
-		flex-wrap: wrap;
-		column-gap: 0.42rem;
-		row-gap: 0.08rem;
+		display: grid;
+		gap: 0.12rem;
 	}
 
 	.footer-link-block a {
@@ -1445,20 +1450,12 @@
 		gap: 0.24rem;
 	}
 
-	.chhipi-terminal h2 {
-		margin: 0;
-		font-size: 0.64rem;
-		font-family: var(--font-mono);
-		text-transform: uppercase;
-		letter-spacing: 0.09em;
-		color: var(--color-text-muted);
-	}
-
 	.terminal-shell {
-		border: 1px solid color-mix(in srgb, var(--color-border-strong) 82%, transparent);
+		border: 1px solid rgba(98, 155, 94, 0.62);
 		border-radius: 0;
-		background: color-mix(in srgb, var(--color-surface-raised) 80%, transparent);
+		background: linear-gradient(180deg, #081109, #060b06);
 		padding: 0.36rem;
+		box-shadow: inset 0 0 0 1px rgba(65, 111, 67, 0.45);
 	}
 
 	.terminal-log {
@@ -1467,19 +1464,41 @@
 		padding-right: 0.14rem;
 		display: grid;
 		gap: 0.06rem;
+		scrollbar-width: thin;
+		scrollbar-color: rgba(142, 204, 136, 0.55) transparent;
+	}
+
+	.terminal-log::-webkit-scrollbar {
+		width: 8px;
+		height: 8px;
+	}
+
+	.terminal-log::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	.terminal-log::-webkit-scrollbar-thumb {
+		background: rgba(142, 204, 136, 0.36);
+		border-radius: 999px;
+	}
+
+	.terminal-log::-webkit-scrollbar-corner {
+		background: transparent;
 	}
 
 	.terminal-log p {
 		margin: 0;
-		font-family: var(--font-mono);
+		font-family: 'Courier New', 'JetBrains Mono', monospace;
 		font-size: 0.64rem;
 		line-height: 1.16;
-		color: color-mix(in srgb, var(--color-text) 92%, transparent);
-		white-space: pre-wrap;
+		color: #9ce889;
+		white-space: pre;
 	}
 
 	.terminal-input-row {
 		margin-top: 0.28rem;
+		padding-top: 0.22rem;
+		border-top: 1px solid rgba(98, 155, 94, 0.35);
 		display: grid;
 		grid-template-columns: auto minmax(0, 1fr);
 		align-items: center;
@@ -1487,24 +1506,29 @@
 	}
 
 	.terminal-input-row span {
-		font-family: var(--font-mono);
+		font-family: 'Courier New', 'JetBrains Mono', monospace;
 		font-size: 0.59rem;
-		color: var(--color-text-muted);
+		color: #6de65d;
 	}
 
 	.terminal-input-row input {
 		width: 100%;
-		border: 1px solid color-mix(in srgb, var(--color-border-strong) 75%, transparent);
+		border: 1px solid rgba(75, 131, 76, 0.72);
 		border-radius: 0;
-		background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+		background: #050905;
 		padding: 0.24rem 0.3rem;
-		font-family: var(--font-mono);
+		font-family: 'Courier New', 'JetBrains Mono', monospace;
 		font-size: 0.63rem;
-		color: var(--color-text);
+		color: #b2ff9f;
+		caret-color: #b2ff9f;
+	}
+
+	.terminal-input-row input::placeholder {
+		color: rgba(141, 198, 128, 0.62);
 	}
 
 	.terminal-input-row input:focus {
-		outline: 2px solid color-mix(in srgb, var(--color-accent) 64%, transparent);
+		outline: 1px solid rgba(143, 208, 125, 0.8);
 		outline-offset: 1px;
 	}
 
