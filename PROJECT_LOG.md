@@ -1148,3 +1148,48 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - Added slow drift keyframes for contours and grain, plus reduced-motion fallback to disable texture animation.
 
 **Consequence / next step:** The whole site now has a coherent textured baseline that can be selectively reduced per-page later if any section feels visually overworked.
+
+---
+
+### 2026-08-06 - Texture Visibility Calibration
+
+**Decision:** Increase homepage texture contrast after inspection showed the effect was technically active but visually understated on the landing map layer.
+
+**Context:** The map stage's own background stack was dominating perceived visuals, making earlier global texture adjustments look unchanged in practice.
+
+**Changes made:**
+- Strengthened `repeating-radial-gradient` and line-layer opacity in `src/routes/+page.svelte` for the `.map-stage` background.
+- Rebuilt and rechecked computed styles to confirm the topographic layers are now present in the served build.
+
+**Consequence / next step:** Texture now reads clearly on the homepage even when motion is reduced, while keeping the broader site-wide texture system intact.
+
+---
+
+### 2026-08-06 - Line Texture Removal
+
+**Decision:** Remove contour/scanline-style texture layers that became visually dominant and distracting.
+
+**Context:** The textured look should support the map storytelling, not compete with it. The line bands were reading as artifacts rather than material texture.
+
+**Changes made:**
+- Removed repeating radial/linear line layers from homepage `.map-stage` in `src/routes/+page.svelte`.
+- Replaced global `body::before` repeating contour stack with a soft non-repeating radial tint in `src/lib/styles/global.css`.
+- Kept paper grain/noise and warm spot gradients so the surface remains textured without directional lines.
+
+**Consequence / next step:** The background now feels quieter and less distracting; further tuning can focus only on grain density if needed.
+
+---
+
+### 2026-08-06 - Grain Prominence Boost (Neutral)
+
+**Decision:** Increase texture prominence with stronger grain and atmospheric depth while explicitly avoiding warmer color bias.
+
+**Context:** After line-pattern removal, the texture became too quiet. The desired direction is bolder material texture (more grain, more presence), but neutral in tone.
+
+**Changes made:**
+- Increased global grain strength via `--texture-noise-opacity` and tighter grain scale in `src/lib/styles/global.css`.
+- Added multiply blend + mild contrast/brightness shaping on grain layer to make texture read clearly.
+- Shifted global tint overlays from warm browns toward neutral grays in both light and dark theme definitions.
+- Increased homepage `.map-stage` atmospheric overlays with neutral radial layers in `src/routes/+page.svelte`.
+
+**Consequence / next step:** Texture reads more prominently without contour lines or extra warmth; future tuning can now be a simple single-parameter grain-density adjustment.

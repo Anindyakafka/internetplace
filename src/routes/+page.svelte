@@ -725,22 +725,9 @@
 	.map-stage {
 		height: 430vh;
 		background:
-			repeating-linear-gradient(
-				45deg,
-				rgba(255, 255, 255, 0.02) 0,
-				rgba(255, 255, 255, 0.02) 2px,
-				transparent 2px,
-				transparent 11px
-			),
-			repeating-linear-gradient(
-				135deg,
-				rgba(12, 26, 74, 0.028) 0,
-				rgba(12, 26, 74, 0.028) 1px,
-				transparent 1px,
-				transparent 8px
-			),
-			radial-gradient(circle at 15% 10%, color-mix(in srgb, var(--color-accent-soft) 36%, transparent), transparent 45%),
-			radial-gradient(circle at 88% 84%, color-mix(in srgb, var(--color-accent-soft) 28%, transparent), transparent 34%),
+			radial-gradient(circle at 12% 11%, rgba(95, 95, 95, 0.13), transparent 46%),
+			radial-gradient(circle at 86% 82%, rgba(78, 78, 78, 0.11), transparent 36%),
+			radial-gradient(circle at 50% 56%, rgba(120, 120, 120, 0.06), transparent 58%),
 			var(--color-bg);
 		margin-top: -64px;
 	}
