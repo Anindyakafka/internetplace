@@ -113,6 +113,8 @@ body {
 	font-size: var(--step-0);
 	line-height: 1.6;
 	color: var(--color-text);
+	position: relative;
+	isolation: isolate;
 	background-color: var(--color-bg);
 	background-image:
 		radial-gradient(circle at 14% 12%, rgba(112, 112, 112, var(--texture-spot-opacity)), transparent 44%),
@@ -130,7 +132,12 @@ body::after {
 	position: fixed;
 	inset: -10%;
 	pointer-events: none;
-	z-index: -1;
+	z-index: 0;
+}
+
+body > * {
+	position: relative;
+	z-index: 1;
 }
 
 body::before {

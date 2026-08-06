@@ -1207,3 +1207,18 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - Reduced grain tile size from `240px` to `180px` for denser visible texture.
 
 **Consequence / next step:** Texture is now materially more prominent while remaining line-free and neutral-toned.
+
+---
+
+### 2026-08-06 - Map-Stage Texture Visibility Fix
+
+**Decision:** Add an explicit grain overlay pseudo-layer on the homepage map stage to guarantee visible texture in dark mode.
+
+**Context:** Even after global grain bumps, the map scene still looked too flat during visual inspection because map strokes and dark fills dominated perception.
+
+**Changes made:**
+- Added `.map-stage::before` grain overlay in `src/routes/+page.svelte` with explicit opacity, blend mode, and dense repeat size.
+- Set `.map-stage` as a positioned stacking context and ensured `.map-sticky` renders above the grain layer.
+- Rebuilt and verified in preview using cache-busted URL checks and screenshot comparison.
+
+**Consequence / next step:** Texture is now clearly visible in the hero map without reintroducing contour lines.

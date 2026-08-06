@@ -723,13 +723,29 @@
 
 <style>
 	.map-stage {
+		position: relative;
 		height: 430vh;
 		background:
 			radial-gradient(circle at 12% 11%, rgba(95, 95, 95, 0.13), transparent 46%),
 			radial-gradient(circle at 86% 82%, rgba(78, 78, 78, 0.11), transparent 36%),
 			radial-gradient(circle at 50% 56%, rgba(120, 120, 120, 0.06), transparent 58%),
 			var(--color-bg);
+		background-size: auto, auto, auto, auto;
+		background-repeat: no-repeat, no-repeat, no-repeat, repeat;
 		margin-top: -64px;
+	}
+
+	.map-stage::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		z-index: 0;
+		background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+		background-size: 96px 96px;
+		background-repeat: repeat;
+		opacity: 0.3;
+		mix-blend-mode: screen;
 	}
 
 	.map-sticky {
@@ -737,6 +753,7 @@
 		top: 0;
 		height: 100svh;
 		overflow: hidden;
+		z-index: 1;
 		display: grid;
 		place-items: center;
 	}
