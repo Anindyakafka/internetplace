@@ -905,11 +905,12 @@
 
 <footer class="home-footer" aria-label="Site footer">
 	<div class="footer-strip">
-		<div class="footer-badges" aria-hidden="true">
-			<span>MICRO WEB</span>
-			<span>HAND CODED</span>
-			<span>MAP FIELD NOTES</span>
-		</div>
+		<section class="footer-video-panel" aria-label="Footer reel">
+			<video class="footer-video" autoplay muted loop playsinline preload="none">
+				<source src="/videos/intro.web.720.mp4" media="(max-width: 900px)" type="video/mp4" />
+				<source src="/videos/intro.web.mp4" type="video/mp4" />
+			</video>
+		</section>
 
 		<section class="footer-link-block" aria-labelledby="socials-heading">
 			<h2 id="socials-heading">Socials</h2>
@@ -1387,29 +1388,27 @@
 		max-width: min(74rem, 96vw);
 		margin: 0 auto;
 		display: grid;
-		grid-template-columns: auto minmax(8.8rem, 0.86fr) minmax(8.8rem, 0.86fr) minmax(8.1rem, 0.62fr) minmax(19.8rem, 2.05fr);
+		grid-template-columns: minmax(12.5rem, 1.1fr) minmax(8.8rem, 0.84fr) minmax(8.8rem, 0.84fr) minmax(8.1rem, 0.62fr) minmax(18.8rem, 1.95fr);
 		gap: clamp(0.42rem, 0.9vw, 0.62rem);
 		align-items: start;
 		padding-bottom: 0.14rem;
 	}
 
-	.footer-badges {
-		display: flex;
-		flex-wrap: wrap;
-		align-content: start;
-		gap: 0.24rem;
+	.footer-video-panel {
+		position: relative;
+		height: clamp(5.6rem, 10vw, 7.3rem);
+		border: 1px solid color-mix(in srgb, var(--color-border-strong) 72%, transparent);
+		background: color-mix(in srgb, var(--color-surface-raised) 86%, transparent);
+		overflow: hidden;
 	}
 
-	.footer-badges span {
-		font-family: var(--font-mono);
-		font-size: 0.59rem;
-		letter-spacing: 0.05em;
-		text-transform: uppercase;
-		padding: 0.18rem 0.34rem;
-		border: 1px solid color-mix(in srgb, var(--color-border-strong) 70%, transparent);
-		border-radius: 0;
-		color: var(--color-text-muted);
-		background: color-mix(in srgb, var(--color-surface-raised) 82%, transparent);
+	.footer-video {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center 68%;
+		filter: saturate(0.95) contrast(1.03);
 	}
 
 	.footer-link-block h2 {
