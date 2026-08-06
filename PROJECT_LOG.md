@@ -1070,3 +1070,33 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - Kept story content scrollable and safe-area aware so long text does not clip.
 
 **Consequence / next step:** Phone portrait is now the supported and stable experience for reading stories; landscape now clearly asks users to rotate instead of showing a broken/cut layout.
+
+---
+
+### 2026-08-06 - Phone Story Background Restored
+
+**Decision:** Restore story background imagery on phone portrait, but keep it constrained to a stable card-friendly layout.
+
+**Context:** After the portrait-only stabilization pass, the story scene image layer was hidden on phone to prevent clipping artifacts. This removed the visual background entirely, which made stories feel broken.
+
+**Changes made:**
+- Re-enabled the story image on phone portrait as a bounded visual header above the story card.
+- Kept the scrim disabled on phone portrait to avoid muddy overlays.
+- Preserved pointer safety and scroll stability by keeping the scene container non-interactive and the content card interactive.
+
+**Consequence / next step:** Phone portrait now shows story imagery again without the earlier cutout/cropping behavior.
+
+---
+
+### 2026-08-06 - README Rewrite and Structure Map
+
+**Decision:** Rewrite README.md into a cleaner onboarding and maintenance document with a practical project structure section.
+
+**Context:** The previous README had drifted from current workflow details and did not provide a clear, consolidated folder/file structure for new contributors.
+
+**Changes made:**
+- Rewrote README sections for overview, stack, setup, scripts, data pipeline, deployment, and conventions.
+- Added a developer-focused tree-style structure map covering docs, scripts, src, static, and key config files.
+- Updated script and deployment notes to match package.json and netlify.toml behavior.
+
+**Consequence / next step:** New contributors can now understand project layout and run/deploy workflow directly from README without hunting through multiple files.

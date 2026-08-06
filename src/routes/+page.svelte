@@ -1060,10 +1060,24 @@
 		.state-story-scene {
 			inset: auto 0 calc(11rem + env(safe-area-inset-bottom)) 0;
 			height: auto;
+			display: grid;
+			justify-items: center;
+			gap: 0.45rem;
 			pointer-events: none;
 		}
 
-		.state-story-image,
+		.state-story-image {
+			position: relative;
+			inset: auto;
+			display: block;
+			width: min(94vw, 34rem);
+			height: min(24svh, 13rem);
+			border-radius: 0.85rem;
+			object-fit: cover;
+			box-shadow: 0 8px 20px rgba(0, 0, 0, 0.24);
+			pointer-events: none;
+		}
+
 		.state-story-scrim {
 			display: none;
 		}
@@ -1081,6 +1095,7 @@
 			padding: 0.9rem;
 			background: color-mix(in srgb, var(--color-surface) 96%, transparent);
 			backdrop-filter: blur(2px) saturate(105%);
+			box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
 			pointer-events: auto;
 		}
 
