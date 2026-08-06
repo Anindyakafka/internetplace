@@ -1038,3 +1038,19 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - Kept story metadata readable with responsive grid behavior across portrait and landscape.
 
 **Consequence / next step:** Phone portrait and landscape should now remain stable, with fewer overlays/collisions and easier lower-map navigation.
+
+---
+
+### 2026-08-06 - Mobile Fallback Controls and In-Frame Map Sizing
+
+**Decision:** Prioritize reliable phone interaction by adding explicit mobile state selection controls and reducing map scale so the map remains in frame in both portrait and landscape.
+
+**Context:** Tapping tiny SVG regions on phone was inconsistent, and landscape still looked unstable because the map was oversized relative to available vertical space.
+
+**Changes made:**
+- Added a mobile state picker (`select`) that triggers the same region story flow as map clicks.
+- Added a compact mobile stats strip (state name, Adivasi %, SC %) and disabled the floating desktop hover HUD on mobile.
+- Repositioned phone overlays (story, picker, stats strip) with safe-area aware spacing to reduce collisions.
+- Reduced mobile map size in portrait and landscape so the map stays visually contained and does not spill far off-screen.
+
+**Consequence / next step:** On phone, users can reliably open any state story even when path tapping is difficult, and the map panel remains substantially more stable and readable across orientations.

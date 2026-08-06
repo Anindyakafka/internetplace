@@ -417,6 +417,14 @@
 
 	$effect(() => {
 		const onScroll = () => {
+			if (window.innerWidth <= 900) {
+				// Keep phone layouts stable; transform-driven map motion causes overlay drift in orientation changes.
+				mapScale = 1;
+				mapShiftX = 0;
+				mapShiftY = 0;
+				return;
+			}
+
 			const doc = document.documentElement;
 			const stageTop = mapStageEl?.offsetTop ?? 0;
 			const stageHeight = mapStageEl?.offsetHeight ?? window.innerHeight * 3.8;
@@ -429,30 +437,7 @@
 			const withinStage = window.scrollY - stageTop;
 			const progress = Math.max(0, Math.min(1, withinStage / effectiveSpan));
 
-			const isLandscapePhone =
-				window.innerWidth <= 900 &&
-				window.innerHeight <= 520 &&
-				window.innerWidth > window.innerHeight;
-			const isPhone = window.innerWidth <= 700;
-			const isTablet = window.innerWidth > 700 && window.innerWidth <= 1100;
-
-			if (isLandscapePhone) {
-				const startScale = 1.36;
-				const endScale = 0.88;
-				mapScale = startScale + (endScale - startScale) * progress;
-				mapShiftX = -2 + progress * 7;
-				mapShiftY = 12 + progress * -34;
-				return;
-			}
-
-			if (isPhone) {
-				const startScale = 1.26;
-				const endScale = 0.9;
-				mapScale = startScale + (endScale - startScale) * progress;
-				mapShiftX = 0;
-				mapShiftY = 10 + progress * -36;
-				return;
-			}
+			const isTablet = window.innerWidth > 900 && window.innerWidth <= 1100;
 
 			if (isTablet) {
 				const startScale = 1.42;
@@ -589,6 +574,22 @@
 
 		</div>
 
+		<div class="mobile-region-picker" aria-label="Mobile region picker">
+			<label for="mobile-region-select">Select a state</label>
+			<select
+				id="mobile-region-select"
+				onchange={(event) => {
+					const regionId = (event.currentTarget as HTMLSelectElement).value;
+					if (regionId) void handleRegionClick(regionId);
+				}}
+			>
+				<option value="">Choose a state</option>
+				{#each regions as region}
+					<option value={region.id}>{region.name}</option>
+				{/each}
+			</select>
+		</div>
+
 		{#if activeRegionName && activeMetric}
 			<div class="hover-hud" aria-live="polite">
 				<p class="hud-region">{activeRegionName}</p>
@@ -603,6 +604,14 @@
 				<p class="hud-value">SC {activeMetric.scShare.toFixed(1)}%</p>
 				<p class="hud-value">Density {activeMetric.densityIndex}</p>
 				<p class="hud-value">Pop {activeMetric.population.toLocaleString('en-IN')}</p>
+			</div>
+		{/if}
+
+		{#if activeRegionName && activeMetric}
+			<div class="mobile-hud" aria-live="polite">
+				<span class="mobile-hud-region">{activeRegionName}</span>
+				<span>Adivasi {activeMetric.adivasiShare.toFixed(1)}%</span>
+				<span>SC {activeMetric.scShare.toFixed(1)}%</span>
 			</div>
 		{/if}
 
@@ -724,6 +733,14 @@
 
 	.story-repo a:hover {
 		border-color: var(--color-border-strong);
+	}
+
+	.mobile-region-picker {
+		display: none;
+	}
+
+	.mobile-hud {
+		display: none;
 	}
 
 	.hover-hud {
@@ -952,7 +969,7 @@
 
 	@media (max-width: 900px) {
 		.map-stage {
-			height: 430svh;
+			height: 235svh;
 			margin-top: -64px;
 		}
 
@@ -962,33 +979,93 @@
 
 		.map-zoom-shell {
 			width: 100vw;
-			height: 88svh;
+			height: 74svh;
 		}
 
 		.india-map {
-			transform-origin: 50% 56%;
+			width: min(96vw, 31rem);
+			transform: none !important;
+			transform-origin: 50% 50%;
 		}
 
 		.hover-hud {
-			top: auto;
-			bottom: calc(3.9rem + env(safe-area-inset-bottom));
-			right: 0.8rem;
-			width: min(13rem, 56vw);
+			display: none;
+		}
+
+		.mobile-hud {
+			display: flex;
+			position: absolute;
+			left: 50%;
+			bottom: calc(4.8rem + env(safe-area-inset-bottom));
+			transform: translateX(-50%);
+			gap: 0.5rem;
+			flex-wrap: wrap;
+			justify-content: center;
+			max-width: 92vw;
+			padding: 0.42rem 0.62rem;
+			border-radius: 999px;
+			font-family: var(--font-mono);
+			font-size: 0.66rem;
+			letter-spacing: 0.03em;
+			background: color-mix(in srgb, var(--color-surface) 90%, transparent);
+			border: 1px solid color-mix(in srgb, var(--color-border) 62%, transparent);
+			backdrop-filter: blur(5px);
+			z-index: 14;
+		}
+
+		.mobile-hud-region {
+			font-weight: 600;
+		}
+
+		.mobile-region-picker {
+			display: grid;
+			position: absolute;
+			left: 50%;
+			bottom: calc(0.9rem + env(safe-area-inset-bottom));
+			transform: translateX(-50%);
+			width: min(92vw, 26rem);
+			gap: 0.3rem;
+			z-index: 18;
+		}
+
+		.mobile-region-picker label {
+			font-family: var(--font-mono);
+			font-size: 0.62rem;
+			letter-spacing: 0.06em;
+			text-transform: uppercase;
+			color: var(--color-text-muted);
+		}
+
+		.mobile-region-picker select {
+			appearance: none;
+			border-radius: 0.75rem;
+			padding: 0.55rem 0.7rem;
+			font-size: 0.84rem;
+			font-family: var(--font-sans);
+			color: var(--color-text);
+			border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+			background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+		}
+
+		.mobile-region-picker select:focus {
+			outline: 2px solid color-mix(in srgb, var(--color-accent) 66%, transparent);
+			outline-offset: 1px;
 		}
 
 		.state-story-content {
 			left: 50%;
 			right: auto;
 			top: auto;
-			bottom: calc(0.8rem + env(safe-area-inset-bottom));
+			bottom: calc(5.5rem + env(safe-area-inset-bottom));
 			transform: translateX(-50%);
 			width: min(94vw, 34rem);
-			max-height: 66svh;
+			max-height: 58svh;
 		}
 
 		.map-instruction {
 			max-width: 92vw;
 			text-align: center;
+			bottom: calc(5.9rem + env(safe-area-inset-bottom));
 		}
 
 		.story-meta {
@@ -1009,7 +1086,7 @@
 
 	@media (max-width: 900px) and (orientation: landscape) {
 		.map-stage {
-			height: 620svh;
+			height: 185svh;
 		}
 
 		.landing-name {
@@ -1018,26 +1095,43 @@
 		}
 
 		.map-zoom-shell {
-			height: 82svh;
+			height: 70svh;
 		}
 
 		.india-map {
-			width: min(88rem, 130vw);
-			transform-origin: 50% 58%;
+			width: min(58svh, 22rem);
+			transform: none !important;
+			transform-origin: 50% 50%;
 		}
 
 		.hover-hud {
-			width: min(13.5rem, 46vw);
+			display: none;
+		}
+
+		.mobile-hud {
+			left: 0.55rem;
+			right: auto;
+			transform: none;
+			bottom: calc(0.55rem + env(safe-area-inset-bottom));
+			max-width: 42vw;
+			justify-content: flex-start;
+		}
+
+		.mobile-region-picker {
+			left: auto;
+			right: 0.55rem;
+			transform: none;
+			width: min(46vw, 20rem);
 			bottom: calc(0.55rem + env(safe-area-inset-bottom));
 		}
 
 		.state-story-content {
 			left: auto;
 			right: 0.55rem;
-			bottom: calc(0.55rem + env(safe-area-inset-bottom));
+			bottom: calc(4.9rem + env(safe-area-inset-bottom));
 			transform: none;
 			width: min(56vw, 28rem);
-			max-height: 76svh;
+			max-height: 68svh;
 			padding: 0.75rem;
 		}
 
@@ -1047,7 +1141,7 @@
 		}
 
 		.map-instruction {
-			bottom: calc(0.5rem + env(safe-area-inset-bottom));
+			display: none;
 			font-size: 0.62rem;
 			padding: 0.35rem 0.6rem;
 		}
