@@ -7,6 +7,27 @@
 	let { children }: { children: Snippet } = $props();
 
 	let scrolled = $state(false);
+	let theme = $state<'light' | 'dark'>('light');
+
+	$effect(() => {
+		if (!browser) return;
+		const stored = localStorage.getItem('theme') as 'light' | 'dark' | null;
+		if (stored) {
+			theme = stored;
+		} else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+			theme = 'dark';
+		}
+	});
+
+	$effect(() => {
+		if (!browser) return;
+		document.documentElement.setAttribute('data-theme', theme);
+		localStorage.setItem('theme', theme);
+	});
+
+	function toggleTheme() {
+		theme = theme === 'light' ? 'dark' : 'light';
+	}
 
 	$effect(() => {
 		const onScroll = () => {
@@ -28,11 +49,59 @@
 
 <div class="site">
 	{#if $page.url.pathname === '/'}
-		<header class="home-header"></header>
+		<header class="home-header">
+			<button
+				class="theme-toggle home-theme-toggle"
+				aria-label="Toggle dark mode"
+				onclick={toggleTheme}
+			>
+				{#if theme === 'light'}
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+					</svg>
+				{:else}
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+						<circle cx="12" cy="12" r="5"></circle>
+						<line x1="12" y1="1" x2="12" y2="3"></line>
+						<line x1="12" y1="21" x2="12" y2="23"></line>
+						<line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+						<line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+						<line x1="1" y1="12" x2="3" y2="12"></line>
+						<line x1="21" y1="12" x2="23" y2="12"></line>
+						<line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+						<line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+					</svg>
+				{/if}
+			</button>
+		</header>
 	{:else}
 		<header class="site-header" class:scrolled>
 			<div class="header-inner">
 				<a class="site-mark" href="/" aria-label="Home"></a>
+
+				<button
+					class="theme-toggle"
+					aria-label="Toggle dark mode"
+					onclick={toggleTheme}
+				>
+					{#if theme === 'light'}
+						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+						</svg>
+					{:else}
+						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+							<circle cx="12" cy="12" r="5"></circle>
+							<line x1="12" y1="1" x2="12" y2="3"></line>
+							<line x1="12" y1="21" x2="12" y2="23"></line>
+							<line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+							<line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+							<line x1="1" y1="12" x2="3" y2="12"></line>
+							<line x1="21" y1="12" x2="23" y2="12"></line>
+							<line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+							<line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+						</svg>
+					{/if}
+				</button>
 			</div>
 		</header>
 	{/if}
@@ -82,8 +151,15 @@
 		left: 0;
 		right: 0;
 		z-index: 160;
-		height: 1px;
+		height: 64px;
 		pointer-events: none;
+	}
+
+	.home-theme-toggle {
+		position: absolute;
+		top: 14px;
+		right: var(--space-l);
+		pointer-events: auto;
 	}
 
 	.site-header {
@@ -110,7 +186,7 @@
 		height: 64px;
 		display: flex;
 		align-items: center;
-		justify-content: flex-start;
+		justify-content: space-between;
 		gap: var(--space-l);
 	}
 
@@ -120,6 +196,29 @@
 		border: 1px dashed var(--color-border-strong);
 		border-radius: 999px;
 		opacity: 0.7;
+	}
+
+	.theme-toggle {
+		background: none;
+		border: none;
+		cursor: pointer;
+		color: var(--color-text-muted);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: var(--space-3xs) var(--space-2xs);
+		border-radius: var(--radius);
+		transition: color var(--transition), background var(--transition);
+	}
+
+	.theme-toggle:hover {
+		color: var(--color-text);
+		background: var(--color-accent-soft);
+	}
+
+	.theme-toggle svg {
+		width: 18px;
+		height: 18px;
 	}
 
 	/* ── Main ── */
@@ -206,6 +305,10 @@
 
 	/* ── Responsive ── */
 	@media (max-width: 640px) {
+		.theme-toggle {
+			padding: var(--space-2xs) var(--space-xs);
+		}
+
 		.footer-inner {
 			grid-template-columns: 1fr;
 			gap: var(--space-l);

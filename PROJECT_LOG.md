@@ -294,6 +294,33 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - *Use larger card-like containers for each group* — rejected to avoid visual bulk and stay close to the compact reference feel.
 
 **Consequence / next step:** The footer now reads as a compact, unified strip and is substantially closer to the requested bottom-section style. Next refinement can focus on pixel-level spacing/typography tuning from visual comparison screenshots.
+
+---
+
+### 2026-08-06 — Footer hard-line pass + theme toggle restored
+
+**Decision:** Push the homepage footer closer to aman.bh with tighter horizontal rhythm and flatter, hard-edge modules; restore the light/dark theme toggle on both home and inner pages.
+
+**Context:** Follow-up feedback requested a denser strip and less rounded treatment, while bringing back the existing theme toggle that had been removed in the prior cleanup pass.
+
+**What changed:**
+
+1. **Tighter strip rhythm (`src/routes/+page.svelte`)**
+  - Reduced footer paddings and inter-column gaps.
+  - Rebalanced strip columns for denser left-to-right flow.
+  - Switched Socials/Misc lists to compact wrapped horizontal link rows.
+
+2. **Hard-line styling (`src/routes/+page.svelte`)**
+  - Removed rounded corners on badges, terminal shell/input, and status panel.
+  - Tightened terminal typography and log/input spacing for a flatter profile.
+  - Converted soft dashed micro-accents to cleaner linear strokes where needed.
+
+3. **Theme toggle return (`src/routes/+layout.svelte`)**
+  - Restored persisted theme logic (`localStorage` + system preference fallback).
+  - Re-added toggle buttons/icons in home header and site header.
+  - Restored associated toggle styles and mobile padding rule.
+
+**Consequence / next step:** Footer now reads tighter and more linear while preserving all requested social/status/terminal functionality, and theme switching is available again.
   - Updated `README.md` with a “Large data workflow (SECC / SHRUG)” section.
 
 **Validation:**
