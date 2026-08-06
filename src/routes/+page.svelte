@@ -553,6 +553,7 @@
 <section class="map-stage" bind:this={mapStageEl}>
 	<div class="map-sticky">
 		<h1 class="landing-name">Anindya Singh</h1>
+		<p class="portrait-only-notice" role="status">Rotate to portrait mode to explore stories.</p>
 
 		<div
 			class="map-zoom-shell"
@@ -740,6 +741,10 @@
 	}
 
 	.mobile-hud {
+		display: none;
+	}
+
+	.portrait-only-notice {
 		display: none;
 	}
 
@@ -967,7 +972,7 @@
 		}
 	}
 
-	@media (max-width: 900px) {
+	@media (max-width: 900px) and (orientation: portrait) {
 		.map-stage {
 			height: 235svh;
 			margin-top: -64px;
@@ -1052,20 +1057,37 @@
 			outline-offset: 1px;
 		}
 
+		.state-story-scene {
+			inset: auto 0 calc(11rem + env(safe-area-inset-bottom)) 0;
+			height: auto;
+			pointer-events: none;
+		}
+
+		.state-story-image,
+		.state-story-scrim {
+			display: none;
+		}
+
 		.state-story-content {
-			left: 50%;
+			position: relative;
+			left: auto;
 			right: auto;
 			top: auto;
-			bottom: calc(5.5rem + env(safe-area-inset-bottom));
-			transform: translateX(-50%);
+			bottom: auto;
+			transform: none;
+			margin: 0 auto;
 			width: min(94vw, 34rem);
-			max-height: 58svh;
+			max-height: 44svh;
+			padding: 0.9rem;
+			background: color-mix(in srgb, var(--color-surface) 96%, transparent);
+			backdrop-filter: blur(2px) saturate(105%);
+			pointer-events: auto;
 		}
 
 		.map-instruction {
 			max-width: 92vw;
 			text-align: center;
-			bottom: calc(5.9rem + env(safe-area-inset-bottom));
+			bottom: calc(6.1rem + env(safe-area-inset-bottom));
 		}
 
 		.story-meta {
@@ -1086,64 +1108,46 @@
 
 	@media (max-width: 900px) and (orientation: landscape) {
 		.map-stage {
-			height: 185svh;
+			height: 100svh;
 		}
 
 		.landing-name {
-			top: 0.55rem;
-			font-size: clamp(1.1rem, 3.4vw, 1.45rem);
+			top: 0.9rem;
+			font-size: clamp(1.05rem, 3.2vw, 1.35rem);
 		}
 
-		.map-zoom-shell {
-			height: 70svh;
+		.map-sticky {
+			place-items: center;
 		}
 
-		.india-map {
-			width: min(58svh, 22rem);
-			transform: none !important;
-			transform-origin: 50% 50%;
+		.portrait-only-notice {
+			display: block;
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+			width: min(88vw, 28rem);
+			padding: 0.9rem 1rem;
+			border-radius: 0.85rem;
+			text-align: center;
+			font-family: var(--font-mono);
+			font-size: 0.74rem;
+			letter-spacing: 0.06em;
+			text-transform: uppercase;
+			color: var(--color-text-muted);
+			background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+			border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+			z-index: 30;
 		}
 
+		.map-zoom-shell,
+		.mobile-region-picker,
+		.mobile-hud,
+		.state-story-scene,
+		.story-loading,
+		.map-instruction,
 		.hover-hud {
 			display: none;
-		}
-
-		.mobile-hud {
-			left: 0.55rem;
-			right: auto;
-			transform: none;
-			bottom: calc(0.55rem + env(safe-area-inset-bottom));
-			max-width: 42vw;
-			justify-content: flex-start;
-		}
-
-		.mobile-region-picker {
-			left: auto;
-			right: 0.55rem;
-			transform: none;
-			width: min(46vw, 20rem);
-			bottom: calc(0.55rem + env(safe-area-inset-bottom));
-		}
-
-		.state-story-content {
-			left: auto;
-			right: 0.55rem;
-			bottom: calc(4.9rem + env(safe-area-inset-bottom));
-			transform: none;
-			width: min(56vw, 28rem);
-			max-height: 68svh;
-			padding: 0.75rem;
-		}
-
-		.story-meta {
-			grid-template-columns: 1fr;
-			gap: 0.16rem;
-		}
-
-		.map-instruction {
-			display: none;
-			font-size: 0.62rem;
-			padding: 0.35rem 0.6rem;
 		}
 	}
 

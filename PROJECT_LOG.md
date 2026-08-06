@@ -1054,3 +1054,19 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - Reduced mobile map size in portrait and landscape so the map stays visually contained and does not spill far off-screen.
 
 **Consequence / next step:** On phone, users can reliably open any state story even when path tapping is difficult, and the map panel remains substantially more stable and readable across orientations.
+
+---
+
+### 2026-08-06 - Portrait-Only Phone Story Layout
+
+**Decision:** Make phone behavior explicitly portrait-first and stop supporting phone landscape for the homepage story experience.
+
+**Context:** Story overlays were still loading in a visually cut/cropped way on phones because the mobile story scene inherited desktop full-screen image layering and compositing. Even after prior adjustments, this remained rough in practical use.
+
+**Changes made:**
+- Added a portrait-only notice for phone landscape and hid interactive map/story overlays in that orientation.
+- Scoped the detailed mobile interaction styles to portrait orientation.
+- Converted mobile story rendering into a compact bottom-sheet style card by hiding the full-scene image/scrim layers on phones.
+- Kept story content scrollable and safe-area aware so long text does not clip.
+
+**Consequence / next step:** Phone portrait is now the supported and stable experience for reading stories; landscape now clearly asks users to rotate instead of showing a broken/cut layout.
