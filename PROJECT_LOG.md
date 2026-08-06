@@ -1007,3 +1007,18 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - Increased the map stage height again to give the sticky map more scrolling distance.
 
 **Consequence / next step:** The story card metadata should read more like a single aligned block, and the scroll should now expose more of the map before the sticky section releases.
+
+---
+
+### 2026-08-06 — Responsive Map Motion Rebalance
+
+**Decision:** Replace the extreme long-scroll behavior with responsive scroll motion profiles and tighten the story metadata row for better readability.
+
+**Context:** The map interaction felt inconsistent across screen sizes: on large screens the long scroll was annoying without adding useful reveal, while on phones navigation felt harder and the motion did not guide users to lower states cleanly.
+
+**Changes made:**
+- Reworked the scroll animation to use device-aware motion curves (phone/tablet/desktop) with stronger vertical panning and saner scale ranges.
+- Reduced the stage-height strategy from extreme values to balanced desktop/mobile ranges while preserving enough runway to reach lower states.
+- Structured the story metadata into a grid row (subtitle, location, Adivasi share) with responsive wrapping and truncation rules.
+
+**Consequence / next step:** Navigation should now feel less exhausting on large screens and clearer on phone sizes, while keeping lower-state access and cleaner story-card hierarchy.

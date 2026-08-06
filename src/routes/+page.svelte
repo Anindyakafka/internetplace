@@ -419,7 +419,7 @@
 		const onScroll = () => {
 			const doc = document.documentElement;
 			const stageTop = mapStageEl?.offsetTop ?? 0;
-			const stageHeight = mapStageEl?.offsetHeight ?? window.innerHeight * 5.5;
+			const stageHeight = mapStageEl?.offsetHeight ?? window.innerHeight * 3.8;
 
 			const stageSpan = Math.max(1, stageHeight - window.innerHeight);
 			const totalSpan = Math.max(1, doc.scrollHeight - window.innerHeight);
@@ -429,13 +429,32 @@
 			const withinStage = window.scrollY - stageTop;
 			const progress = Math.max(0, Math.min(1, withinStage / effectiveSpan));
 
-			// Keep the prior zoomed-in feel while allowing enough scroll to finish.
-			const startScale = 1.72;
-			const endScale = 0.98;
-			mapScale = startScale + (endScale - startScale) * progress;
+			const isPhone = window.innerWidth <= 700;
+			const isTablet = window.innerWidth > 700 && window.innerWidth <= 1100;
 
-			mapShiftX = -6 + progress * 6;
-			mapShiftY = 4 + progress * -6;
+			if (isPhone) {
+				const startScale = 1.22;
+				const endScale = 0.92;
+				mapScale = startScale + (endScale - startScale) * progress;
+				mapShiftX = 0;
+				mapShiftY = 12 + progress * -30;
+				return;
+			}
+
+			if (isTablet) {
+				const startScale = 1.42;
+				const endScale = 0.92;
+				mapScale = startScale + (endScale - startScale) * progress;
+				mapShiftX = -3 + progress * 6;
+				mapShiftY = 8 + progress * -24;
+				return;
+			}
+
+			const startScale = 1.5;
+			const endScale = 0.9;
+			mapScale = startScale + (endScale - startScale) * progress;
+			mapShiftX = -4 + progress * 8;
+			mapShiftY = 6 + progress * -20;
 		};
 
 		onScroll();
@@ -621,7 +640,7 @@
 
 <style>
 	.map-stage {
-		height: 980vh;
+		height: 430vh;
 		background:
 			radial-gradient(circle at 15% 10%, color-mix(in srgb, var(--color-accent-soft) 36%, transparent), transparent 45%),
 			radial-gradient(circle at 88% 84%, color-mix(in srgb, var(--color-accent-soft) 28%, transparent), transparent 34%),
@@ -665,7 +684,7 @@
 	.india-map {
 		width: min(69rem, 95vw);
 		transform: translate(var(--map-shift-x), var(--map-shift-y)) scale(var(--map-scale));
-		transform-origin: 52% 56%;
+		transform-origin: 50% 54%;
 		transition: transform 140ms linear;
 		filter: drop-shadow(0 16px 36px rgba(0, 0, 0, 0.28));
 	}
@@ -810,14 +829,31 @@
 	}
 
 	.story-meta {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.35rem 0.9rem;
-		align-items: baseline;
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		align-items: center;
+		gap: 0.4rem 0.85rem;
+		padding: 0.35rem 0.55rem;
+		border-radius: 0.7rem;
+		border: 1px solid color-mix(in srgb, var(--color-border) 62%, transparent);
+		background: color-mix(in srgb, var(--color-surface) 78%, transparent);
 	}
 
 	.story-meta > p {
 		margin: 0;
+	}
+
+	.story-location {
+		min-width: 0;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.story-stats {
+		text-align: right;
+		font-family: var(--font-mono);
+		font-size: var(--step--2);
 	}
 
 	.state-story-content h2 {
@@ -903,7 +939,7 @@
 
 	@media (max-width: 900px) {
 		.map-stage {
-			height: 900vh;
+			height: 320vh;
 			margin-top: -64px;
 		}
 
@@ -913,7 +949,7 @@
 		}
 
 		.india-map {
-			transform-origin: 50% 60%;
+			transform-origin: 50% 56%;
 		}
 
 		.hover-hud {
@@ -936,6 +972,21 @@
 		.map-instruction {
 			max-width: 92vw;
 			text-align: center;
+		}
+
+		.story-meta {
+			grid-template-columns: 1fr;
+			gap: 0.2rem;
+		}
+
+		.story-location {
+			white-space: normal;
+			overflow: visible;
+			text-overflow: clip;
+		}
+
+		.story-stats {
+			text-align: left;
 		}
 	}
 
