@@ -1132,3 +1132,19 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - Added subtle background texture layers to the map stage (pattern overlays above radial gradients) to move away from a flat backdrop.
 
 **Consequence / next step:** The homepage intro now feels less like a UI tooltip and more like a physical annotation artifact, with motion behavior that supports exploration instead of blocking it.
+
+---
+
+### 2026-08-06 - Site-wide Topographic Texture Rollout
+
+**Decision:** Apply a site-wide old-map/topographic texture treatment with warm-paper light mode, dark-mode counterpart, slow drift motion, and balanced performance settings.
+
+**Context:** The visual direction was aligned to the handcrafted textural language seen in aman.bh, but adapted to this project's editorial map identity. The goal was a textured atmosphere without heavy bitmap assets or performance-heavy effects.
+
+**Changes made:**
+- Added reusable texture tokens in `global.css` for opacity and drift speed.
+- Layered subtle topographic contours (`repeating-radial-gradient`) and grain noise (inline SVG turbulence) as fixed pseudo-element overlays on `body`.
+- Tuned separate dark-mode texture opacity and blend strategy to preserve readability.
+- Added slow drift keyframes for contours and grain, plus reduced-motion fallback to disable texture animation.
+
+**Consequence / next step:** The whole site now has a coherent textured baseline that can be selectively reduced per-page later if any section feels visually overworked.
