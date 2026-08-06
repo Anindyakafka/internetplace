@@ -1116,3 +1116,19 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - Included explicit status language (`expanding` / `planned`) to set expectations for gradual content population.
 
 **Consequence / next step:** Visitors now get an intentional invitation to explore immediately, and there is a structured placeholder hub for upcoming sections and future content growth.
+
+---
+
+### 2026-08-06 - Handwritten Landing Note + Texture Pass
+
+**Decision:** Replace the homepage text bubble with a right-side handwritten-style paper note and make it dismissible via scroll fade or drag-away interaction.
+
+**Context:** The previous note treatment looked like a UI bubble and felt too literal. The desired direction was more tactile and editorial: a pinned field-note object that can leave the screen as users continue exploring.
+
+**Changes made:**
+- Re-styled the landing note into a textured paper card with notebook-line treatment and tape accent, positioned on the right side of the desktop layout.
+- Removed explicit "inspired by writer" attribution text and tightened note copy to be specific to the map's research narrative.
+- Added interaction behavior: note opacity fades as scrolling progresses, and a drag threshold dismisses it with a fly-away motion.
+- Added subtle background texture layers to the map stage (pattern overlays above radial gradients) to move away from a flat backdrop.
+
+**Consequence / next step:** The homepage intro now feels less like a UI tooltip and more like a physical annotation artifact, with motion behavior that supports exploration instead of blocking it.

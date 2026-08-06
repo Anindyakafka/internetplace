@@ -290,6 +290,14 @@
 	let mapScale = $state(2.2);
 	let mapShiftX = $state(0);
 	let mapShiftY = $state(0);
+	let stageProgress = $state(0);
+	let noteScrollOpacity = $state(1);
+	let noteDismissed = $state(false);
+	let noteDragging = $state(false);
+	let noteDragX = $state(0);
+	let noteDragY = $state(0);
+	let noteDragStartX = 0;
+	let noteDragStartY = 0;
 	let mapStageEl: HTMLElement | null = $state(null);
 
 	let regions = $derived.by<Region[]>(() => {
@@ -417,6 +425,13 @@
 
 	$effect(() => {
 		const onScroll = () => {
+			const stageTop = mapStageEl?.offsetTop ?? 0;
+			const stageHeight = mapStageEl?.offsetHeight ?? window.innerHeight * 3.8;
+			const stageSpan = Math.max(1, stageHeight - window.innerHeight);
+			const withinStage = window.scrollY - stageTop;
+			stageProgress = Math.max(0, Math.min(1, withinStage / stageSpan));
+			noteScrollOpacity = noteDismissed ? 0 : Math.max(0, 1 - stageProgress * 1.55);
+
 			if (window.innerWidth <= 900) {
 				// Keep phone layouts stable; transform-driven map motion causes overlay drift in orientation changes.
 				mapScale = 1;
@@ -426,15 +441,9 @@
 			}
 
 			const doc = document.documentElement;
-			const stageTop = mapStageEl?.offsetTop ?? 0;
-			const stageHeight = mapStageEl?.offsetHeight ?? window.innerHeight * 3.8;
-
-			const stageSpan = Math.max(1, stageHeight - window.innerHeight);
 			const totalSpan = Math.max(1, doc.scrollHeight - window.innerHeight);
 			const remainingPageSpan = Math.max(1, totalSpan - stageTop);
 			const effectiveSpan = Math.min(stageSpan, remainingPageSpan);
-
-			const withinStage = window.scrollY - stageTop;
 			const progress = Math.max(0, Math.min(1, withinStage / effectiveSpan));
 
 			const isTablet = window.innerWidth > 900 && window.innerWidth <= 1100;
@@ -463,6 +472,38 @@
 			window.removeEventListener('resize', onScroll);
 		};
 	});
+
+	function handleNotePointerDown(event: PointerEvent) {
+		if (noteDismissed) return;
+		noteDragging = true;
+		noteDragStartX = event.clientX - noteDragX;
+		noteDragStartY = event.clientY - noteDragY;
+		(event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
+	}
+
+	function handleNotePointerMove(event: PointerEvent) {
+		if (!noteDragging || noteDismissed) return;
+		noteDragX = event.clientX - noteDragStartX;
+		noteDragY = event.clientY - noteDragStartY;
+	}
+
+	function handleNotePointerUp(event: PointerEvent) {
+		if (!noteDragging) return;
+		noteDragging = false;
+		(event.currentTarget as HTMLElement).releasePointerCapture(event.pointerId);
+
+		const dragDistance = Math.hypot(noteDragX, noteDragY);
+		if (dragDistance > 130) {
+			noteDismissed = true;
+			noteDragX += Math.sign(noteDragX || 1) * 420;
+			noteDragY -= 220;
+			noteScrollOpacity = 0;
+			return;
+		}
+
+		noteDragX = 0;
+		noteDragY = 0;
+	}
 
 	async function handleRegionClick(regionId: string) {
 		if (selectedRegionId === regionId) {
@@ -553,16 +594,23 @@
 <section class="map-stage" bind:this={mapStageEl}>
 	<div class="map-sticky">
 		<h1 class="landing-name">Anindya Singh</h1>
-		<aside class="landing-note" aria-label="Exploration note">
+		<aside
+			class="landing-note"
+			class:dismissed={noteDismissed}
+			class:dragging={noteDragging}
+			aria-label="Exploration note"
+			onpointerdown={handleNotePointerDown}
+			onpointermove={handleNotePointerMove}
+			onpointerup={handleNotePointerUp}
+			onpointercancel={handleNotePointerUp}
+			style={`--note-opacity:${noteScrollOpacity}; --note-drag-x:${noteDragX}px; --note-drag-y:${noteDragY}px; --note-rot:${noteDragX * 0.045}deg;`}
+		>
 			<p class="landing-note-kicker">Field Note 00</p>
 			<p>
-				Spend a minute clicking around this map. Some states read like surveillance logs,
-				some like dream corridors, some like absurd travel notes, and some like a body
-				waking up in a changed room.
+				Spend a minute clicking around this map. Every state opens a small dossier: who is
+				seen, who is erased, and what the record refuses to confess.
 			</p>
-			<p class="landing-note-meta">
-				Inspired by Orwell, Murakami, Adams, and Kafka.
-			</p>
+			<p>The story may feel bureaucratic, surreal, absurd, or quietly metamorphic.</p>
 			<a class="landing-note-link" href="/sections">Click here to explore the site sections →</a>
 		</aside>
 		<p class="portrait-only-notice" role="status">Rotate to portrait mode to explore stories.</p>
@@ -677,6 +725,20 @@
 	.map-stage {
 		height: 430vh;
 		background:
+			repeating-linear-gradient(
+				45deg,
+				rgba(255, 255, 255, 0.02) 0,
+				rgba(255, 255, 255, 0.02) 2px,
+				transparent 2px,
+				transparent 11px
+			),
+			repeating-linear-gradient(
+				135deg,
+				rgba(12, 26, 74, 0.028) 0,
+				rgba(12, 26, 74, 0.028) 1px,
+				transparent 1px,
+				transparent 8px
+			),
 			radial-gradient(circle at 15% 10%, color-mix(in srgb, var(--color-accent-soft) 36%, transparent), transparent 45%),
 			radial-gradient(circle at 88% 84%, color-mix(in srgb, var(--color-accent-soft) 28%, transparent), transparent 34%),
 			var(--color-bg);
@@ -758,58 +820,97 @@
 
 	.landing-note {
 		position: absolute;
-		left: clamp(0.8rem, 2vw, 1.6rem);
+		right: clamp(0.8rem, 2vw, 1.6rem);
 		top: clamp(5.8rem, 12vh, 8.8rem);
-		width: min(24rem, 36vw);
-		padding: 0.68rem 0.76rem;
-		border-radius: 0.9rem;
-		background: color-mix(in srgb, var(--color-surface) 88%, transparent);
-		border: 1px solid color-mix(in srgb, var(--color-border) 68%, transparent);
-		backdrop-filter: blur(8px);
+		width: min(23rem, 32vw);
+		padding: 0.95rem 1rem 0.9rem;
+		border-radius: 0.2rem;
+		background:
+			repeating-linear-gradient(
+				180deg,
+				rgba(28, 48, 108, 0.08) 0,
+				rgba(28, 48, 108, 0.08) 1px,
+				transparent 1px,
+				transparent 1.48rem
+			),
+			linear-gradient(140deg, rgba(250, 246, 232, 0.98), rgba(239, 231, 205, 0.98));
+		border: 1px solid rgba(88, 72, 42, 0.34);
+		box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
 		z-index: 12;
 		display: grid;
 		gap: 0.45rem;
+		cursor: grab;
+		touch-action: none;
+		opacity: var(--note-opacity);
+		transform: translate(var(--note-drag-x), var(--note-drag-y)) rotate(var(--note-rot));
+		transition: opacity 220ms ease, transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 220ms ease;
+	}
+
+	.landing-note::before {
+		content: '';
+		position: absolute;
+		top: 0.55rem;
+		left: -0.35rem;
+		width: 0.16rem;
+		height: calc(100% - 1.1rem);
+		background: rgba(220, 93, 60, 0.58);
+	}
+
+	.landing-note::after {
+		content: '';
+		position: absolute;
+		top: -0.55rem;
+		left: 1.1rem;
+		width: 3.4rem;
+		height: 1.1rem;
+		background: rgba(255, 245, 201, 0.72);
+		transform: rotate(-4deg);
+		filter: saturate(80%);
+	}
+
+	.landing-note.dragging {
+		cursor: grabbing;
+		box-shadow: 0 20px 34px rgba(0, 0, 0, 0.28);
+	}
+
+	.landing-note.dismissed {
+		pointer-events: none;
 	}
 
 	.landing-note p {
 		margin: 0;
-		font-size: var(--step--1);
+		font-family: 'Segoe Print', 'Bradley Hand', 'Comic Sans MS', cursive;
+		font-size: 0.94rem;
 		line-height: 1.42;
-		color: var(--color-text-muted);
+		color: rgba(34, 30, 20, 0.9);
 	}
 
 	.landing-note-kicker {
-		font-family: var(--font-mono);
-		font-size: var(--step--2);
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 0.67rem;
 		text-transform: uppercase;
 		letter-spacing: 0.08em;
-		color: var(--color-text);
-	}
-
-	.landing-note-meta {
-		font-family: var(--font-mono);
-		font-size: var(--step--2);
-		letter-spacing: 0.04em;
+		color: rgba(42, 36, 24, 0.9);
 	}
 
 	.landing-note-link {
 		display: inline-flex;
 		align-items: center;
 		justify-self: start;
-		font-family: var(--font-mono);
+		font-family: 'JetBrains Mono', monospace;
 		font-size: var(--step--2);
 		text-transform: uppercase;
 		letter-spacing: 0.04em;
 		padding: 0.34rem 0.52rem;
-		border-radius: 999px;
+		border-radius: 0.22rem;
 		text-decoration: none;
-		color: var(--color-text);
-		border: 1px solid color-mix(in srgb, var(--color-border) 72%, transparent);
-		background: color-mix(in srgb, var(--color-surface) 76%, transparent);
+		color: rgba(27, 40, 89, 0.95);
+		border: 1px dashed rgba(27, 40, 89, 0.48);
+		background: rgba(248, 244, 228, 0.7);
 	}
 
 	.landing-note-link:hover {
-		border-color: var(--color-border-strong);
+		border-color: rgba(27, 40, 89, 0.85);
 	}
 
 	.portrait-only-notice {
@@ -1190,15 +1291,18 @@
 
 		.landing-note {
 			left: 50%;
+			right: auto;
 			top: 4.7rem;
-			transform: translateX(-50%);
+			transform: translateX(-50%) translate(var(--note-drag-x), var(--note-drag-y)) rotate(var(--note-rot));
 			width: min(94vw, 30rem);
 			gap: 0.34rem;
 			padding: 0.52rem 0.62rem;
+			cursor: default;
+			touch-action: auto;
 		}
 
 		.landing-note p {
-			font-size: 0.67rem;
+			font-size: 0.72rem;
 			line-height: 1.35;
 		}
 	}
