@@ -79,7 +79,7 @@ html {
 	--shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
 
 	/* Texture system (old-map / topographic) */
-	--texture-noise-opacity: 0.32;
+	--texture-noise-opacity: 0.38;
 	--texture-spot-opacity: 0.1;
 	--texture-speed: 78s;
 }
@@ -103,7 +103,7 @@ html {
 	--shadow-md: 0 2px 8px rgba(0, 0, 0, 0.3);
 
 	/* Dark texture tuning */
-	--texture-noise-opacity: 0.28;
+	--texture-noise-opacity: 0.34;
 	--texture-spot-opacity: 0.07;
 }
 
@@ -143,7 +143,7 @@ body::before {
 
 body::after {
 	background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-	background-size: 240px 240px;
+	background-size: 180px 180px;
 	background-repeat: repeat;
 	opacity: var(--texture-noise-opacity);
 	filter: contrast(1.12) brightness(0.95);

@@ -1193,3 +1193,17 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - Increased homepage `.map-stage` atmospheric overlays with neutral radial layers in `src/routes/+page.svelte`.
 
 **Consequence / next step:** Texture reads more prominently without contour lines or extra warmth; future tuning can now be a simple single-parameter grain-density adjustment.
+
+---
+
+### 2026-08-06 - Additional Grain Bump
+
+**Decision:** Apply the next intensity bump: more grain opacity and finer grain scale.
+
+**Context:** User requested a stronger texture presence after the neutral-grain pass.
+
+**Changes made:**
+- Increased `--texture-noise-opacity` in light and dark themes in `src/lib/styles/global.css`.
+- Reduced grain tile size from `240px` to `180px` for denser visible texture.
+
+**Consequence / next step:** Texture is now materially more prominent while remaining line-free and neutral-toned.
