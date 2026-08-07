@@ -904,13 +904,6 @@
 </section>
 
 <footer class="home-footer" aria-label="Site footer">
-	<div class="footer-video-bg" aria-hidden="true">
-		<video class="footer-video" autoplay muted loop playsinline preload="none">
-			<source src="/videos/intro.web.720.mp4" media="(max-width: 900px)" type="video/mp4" />
-			<source src="/videos/intro.web.mp4" type="video/mp4" />
-		</video>
-	</div>
-
 	<div class="footer-strip">
 		<section class="footer-link-block" aria-labelledby="socials-heading">
 			<h2 id="socials-heading">Socials</h2>
@@ -967,6 +960,13 @@
 			</div>
 		</section>
 	</div>
+
+	<section class="footer-video-reel" aria-label="Footer reel">
+		<video class="footer-video" autoplay muted loop playsinline preload="none">
+			<source src="/videos/intro.web.720.mp4" media="(max-width: 900px)" type="video/mp4" />
+			<source src="/videos/intro.web.mp4" type="video/mp4" />
+		</video>
+	</section>
 </footer>
 
 <style>
@@ -1375,8 +1375,6 @@
 
 	.home-footer {
 		position: relative;
-		overflow: hidden;
-		min-height: clamp(17rem, 34vw, 25rem);
 		padding: clamp(0.82rem, 1.6vw, 1.06rem) clamp(0.75rem, 1.8vw, 1.3rem) clamp(1.05rem, 2.1vw, 1.5rem);
 		border-top: 1px solid color-mix(in srgb, var(--color-border) 78%, transparent);
 		background: linear-gradient(
@@ -1386,33 +1384,23 @@
 		);
 	}
 
-	.footer-video-bg {
-		position: absolute;
-		inset: 0;
-		z-index: 0;
-		pointer-events: none;
-		background: #060b06;
-	}
-
-	.footer-video-bg::after {
-		content: '';
-		position: absolute;
-		inset: 0;
-		background:
-			linear-gradient(180deg, rgba(3, 7, 4, 0.48), rgba(3, 7, 4, 0.66)),
-			radial-gradient(circle at 50% 118%, rgba(2, 7, 4, 0.3), transparent 62%);
-	}
-
 	.footer-strip {
 		max-width: min(74rem, 96vw);
 		margin: 0 auto;
 		display: grid;
 		grid-template-columns: minmax(8.8rem, 0.84fr) minmax(8.8rem, 0.84fr) minmax(8.1rem, 0.62fr) minmax(18.8rem, 1.95fr);
 		gap: clamp(0.42rem, 0.9vw, 0.62rem);
-		align-items: end;
+		align-items: start;
 		padding-bottom: 0.14rem;
-		position: relative;
-		z-index: 1;
+	}
+
+	.footer-video-reel {
+		max-width: min(74rem, 96vw);
+		height: clamp(13rem, 28vw, 22rem);
+		margin: clamp(0.55rem, 1.2vw, 0.8rem) auto 0;
+		border: 1px solid color-mix(in srgb, var(--color-border-strong) 72%, transparent);
+		background: #060b06;
+		overflow: hidden;
 	}
 
 	.footer-video {
@@ -1420,8 +1408,8 @@
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		object-position: center 60%;
-		filter: saturate(0.92) contrast(1.02) brightness(0.84);
+		object-position: center 64%;
+		filter: saturate(0.96) contrast(1.03) brightness(0.88);
 	}
 
 	.footer-link-block h2 {
@@ -1430,7 +1418,7 @@
 		font-size: 0.61rem;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
-		color: color-mix(in srgb, var(--color-text) 88%, rgba(255, 255, 255, 0.18));
+		color: var(--color-text-muted);
 	}
 
 	.footer-link-block ul {
@@ -1445,7 +1433,7 @@
 		font-family: var(--font-sans);
 		font-size: 0.74rem;
 		text-decoration: none;
-		color: color-mix(in srgb, var(--color-text) 96%, rgba(255, 255, 255, 0.32));
+		color: var(--color-text);
 		border-bottom: 1px solid transparent;
 		width: fit-content;
 		line-height: 1.15;
@@ -1548,9 +1536,8 @@
 		margin: 0;
 		padding: 0.34rem 0.4rem;
 		border-radius: 0;
-		border: 1px solid rgba(226, 226, 226, 0.24);
-		background: color-mix(in srgb, var(--color-surface) 42%, rgba(8, 12, 9, 0.62));
-		backdrop-filter: blur(2px);
+		border: 1px solid color-mix(in srgb, var(--color-border-strong) 82%, transparent);
+		background: color-mix(in srgb, var(--color-surface) 90%, transparent);
 	}
 
 	.status-currently {
@@ -1579,7 +1566,7 @@
 	}
 
 	.status-grid span {
-		color: color-mix(in srgb, var(--color-text-muted) 82%, rgba(255, 255, 255, 0.2));
+		color: var(--color-text-muted);
 	}
 
 	@keyframes fadeIn {
@@ -1752,12 +1739,15 @@
 
 		.home-footer {
 			padding-inline: 0.6rem;
-			min-height: 0;
 		}
 
 		.footer-strip {
 			grid-template-columns: 1fr;
 			gap: 0.42rem;
+		}
+
+		.footer-video-reel {
+			height: clamp(9.5rem, 38vw, 14rem);
 		}
 
 		.status-grid {

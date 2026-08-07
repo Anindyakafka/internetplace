@@ -379,6 +379,22 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - Added dark overlay over video for text legibility while preserving motion texture.
 
 **Consequence / next step:** Footer video now behaves as a background canvas behind links/status/terminal, with a stronger visual match to the reference approach.
+
+---
+
+### 2026-08-07 — Footer video moved below terminal block
+
+**Decision:** Reposition the footer video to a dedicated block below the footer content strip instead of using it as a background layer.
+
+**Context:** User requested placement "under the last section" rather than behind links/status/terminal content.
+
+**What changed (`src/routes/+page.svelte`):**
+- Removed absolute `.footer-video-bg` layer from the footer.
+- Added `.footer-video-reel` section after `.footer-strip` so video appears under the last footer section.
+- Restored normal text panel colors since video is no longer behind text.
+- Kept responsive source loading (`intro.web.720.mp4` mobile, `intro.web.mp4` default) and autoplay/muted/loop/playsinline behavior.
+
+**Consequence / next step:** Footer content remains readable on a clean surface, and video is displayed as a separate large block below it.
   - Updated `README.md` with a “Large data workflow (SECC / SHRUG)” section.
 
 **Validation:**
