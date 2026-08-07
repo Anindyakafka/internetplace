@@ -575,6 +575,8 @@
 
 	function handleNotePointerDown(event: PointerEvent) {
 		if (noteDismissed) return;
+		const target = event.target as HTMLElement;
+		if (target.closest('a, button, input, select, textarea')) return;
 		noteDragging = true;
 		noteDragStartX = event.clientX - noteDragX;
 		noteDragStartY = event.clientY - noteDragY;
