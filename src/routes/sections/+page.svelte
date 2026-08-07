@@ -9,7 +9,7 @@
 <section class="page-content sections-page">
 	<header class="sections-hero">
 		<div class="hero-copy">
-			<span class="section-index">Based in Delhi NCR, India</span>
+			<span class="section-index">Based in Kolkata, West Bengal, India</span>
 			<h1>Anindya Singh</h1>
 			<p class="bio-lede">
 				I’m a researcher, data scientist, and writer working at the intersection of economics,
