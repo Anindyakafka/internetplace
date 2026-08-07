@@ -962,9 +962,22 @@
 	</div>
 
 	<section class="footer-video-reel" aria-label="Footer reel">
-		<video class="footer-video" autoplay muted loop playsinline preload="none">
-			<source src="/videos/intro.web.720.mp4" media="(max-width: 900px)" type="video/mp4" />
-			<source src="/videos/intro.web.mp4" type="video/mp4" />
+		<video
+			class="footer-video"
+			autoplay
+			muted
+			loop
+			playsinline
+			preload="auto"
+			onended={(event) => {
+				// Some browsers still hitch at loop boundaries; force immediate replay.
+				const video = event.currentTarget as HTMLVideoElement;
+				video.currentTime = 0;
+				void video.play();
+			}}
+		>
+			<source src="/videos/intro.web.mp4" media="(min-width: 1200px)" type="video/mp4" />
+			<source src="/videos/intro.web.720.mp4" type="video/mp4" />
 		</video>
 	</section>
 </footer>
@@ -1459,7 +1472,7 @@
 	}
 
 	.terminal-log {
-		max-height: 5.35rem;
+		max-height: 6.6rem;
 		overflow: auto;
 		padding-right: 0.14rem;
 		display: grid;

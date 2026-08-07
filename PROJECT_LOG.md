@@ -395,6 +395,22 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - Kept responsive source loading (`intro.web.720.mp4` mobile, `intro.web.mp4` default) and autoplay/muted/loop/playsinline behavior.
 
 **Consequence / next step:** Footer content remains readable on a clean surface, and video is displayed as a separate large block below it.
+
+---
+
+### 2026-08-07 — Loop hitch mitigation + terminal height bump
+
+**Decision:** Reduce perceived lag at footer video loop boundary and increase terminal output area slightly.
+
+**Context:** Video loop restart showed a visible hitch at the end of playback; terminal felt a bit cramped for multi-line output.
+
+**What changed (`src/routes/+page.svelte`):**
+- Updated footer video preload to `auto` for better buffered playback.
+- Added a defensive `onended` replay handler (`currentTime = 0` + `play()`) to reduce browser-specific loop stalls.
+- Adjusted source preference: use 1080p only for wide screens, 720p as default for smoother decode paths.
+- Increased `.terminal-log` max-height from `5.35rem` to `6.6rem`.
+
+**Consequence / next step:** Loop restarts should feel tighter on most systems, and terminal output shows more lines before scrolling.
   - Updated `README.md` with a “Large data workflow (SECC / SHRUG)” section.
 
 **Validation:**
