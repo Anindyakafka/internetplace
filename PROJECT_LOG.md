@@ -363,6 +363,22 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - Styled terminal scrollbar track/corner as transparent and thumb as translucent green.
 
 **Consequence / next step:** Footer footprint is shorter and the terminal behaves more like a usable console during command sessions.
+
+---
+
+### 2026-08-07 — Footer video embed refactor to full-surface background
+
+**Decision:** Replace the small footer video tile with an integrated, full-surface footer background video layer, closer to the aman.bh pattern.
+
+**Context:** The first implementation placed video inside a narrow grid cell, so it read as a small widget instead of a core footer visual surface.
+
+**What changed (`src/routes/+page.svelte`):**
+- Added `.footer-video-bg` as an absolute layer inside `.home-footer` and moved `<video>` there.
+- Kept `autoplay muted loop playsinline preload="none"` and responsive source order (`720p` for small screens, `1080p` fallback).
+- Removed old `.footer-video-panel` tile styles and reduced footer grid back to content columns only.
+- Added dark overlay over video for text legibility while preserving motion texture.
+
+**Consequence / next step:** Footer video now behaves as a background canvas behind links/status/terminal, with a stronger visual match to the reference approach.
   - Updated `README.md` with a “Large data workflow (SECC / SHRUG)” section.
 
 **Validation:**

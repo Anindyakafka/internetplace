@@ -904,14 +904,14 @@
 </section>
 
 <footer class="home-footer" aria-label="Site footer">
-	<div class="footer-strip">
-		<section class="footer-video-panel" aria-label="Footer reel">
-			<video class="footer-video" autoplay muted loop playsinline preload="none">
-				<source src="/videos/intro.web.720.mp4" media="(max-width: 900px)" type="video/mp4" />
-				<source src="/videos/intro.web.mp4" type="video/mp4" />
-			</video>
-		</section>
+	<div class="footer-video-bg" aria-hidden="true">
+		<video class="footer-video" autoplay muted loop playsinline preload="none">
+			<source src="/videos/intro.web.720.mp4" media="(max-width: 900px)" type="video/mp4" />
+			<source src="/videos/intro.web.mp4" type="video/mp4" />
+		</video>
+	</div>
 
+	<div class="footer-strip">
 		<section class="footer-link-block" aria-labelledby="socials-heading">
 			<h2 id="socials-heading">Socials</h2>
 			<ul>
@@ -1375,7 +1375,9 @@
 
 	.home-footer {
 		position: relative;
-		padding: clamp(0.82rem, 1.6vw, 1.06rem) clamp(0.75rem, 1.8vw, 1.3rem) clamp(0.88rem, 1.7vw, 1.15rem);
+		overflow: hidden;
+		min-height: clamp(17rem, 34vw, 25rem);
+		padding: clamp(0.82rem, 1.6vw, 1.06rem) clamp(0.75rem, 1.8vw, 1.3rem) clamp(1.05rem, 2.1vw, 1.5rem);
 		border-top: 1px solid color-mix(in srgb, var(--color-border) 78%, transparent);
 		background: linear-gradient(
 			180deg,
@@ -1384,22 +1386,33 @@
 		);
 	}
 
+	.footer-video-bg {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+		pointer-events: none;
+		background: #060b06;
+	}
+
+	.footer-video-bg::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background:
+			linear-gradient(180deg, rgba(3, 7, 4, 0.48), rgba(3, 7, 4, 0.66)),
+			radial-gradient(circle at 50% 118%, rgba(2, 7, 4, 0.3), transparent 62%);
+	}
+
 	.footer-strip {
 		max-width: min(74rem, 96vw);
 		margin: 0 auto;
 		display: grid;
-		grid-template-columns: minmax(12.5rem, 1.1fr) minmax(8.8rem, 0.84fr) minmax(8.8rem, 0.84fr) minmax(8.1rem, 0.62fr) minmax(18.8rem, 1.95fr);
+		grid-template-columns: minmax(8.8rem, 0.84fr) minmax(8.8rem, 0.84fr) minmax(8.1rem, 0.62fr) minmax(18.8rem, 1.95fr);
 		gap: clamp(0.42rem, 0.9vw, 0.62rem);
-		align-items: start;
+		align-items: end;
 		padding-bottom: 0.14rem;
-	}
-
-	.footer-video-panel {
 		position: relative;
-		height: clamp(5.6rem, 10vw, 7.3rem);
-		border: 1px solid color-mix(in srgb, var(--color-border-strong) 72%, transparent);
-		background: color-mix(in srgb, var(--color-surface-raised) 86%, transparent);
-		overflow: hidden;
+		z-index: 1;
 	}
 
 	.footer-video {
@@ -1407,8 +1420,8 @@
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		object-position: center 68%;
-		filter: saturate(0.95) contrast(1.03);
+		object-position: center 60%;
+		filter: saturate(0.92) contrast(1.02) brightness(0.84);
 	}
 
 	.footer-link-block h2 {
@@ -1417,7 +1430,7 @@
 		font-size: 0.61rem;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
-		color: var(--color-text-muted);
+		color: color-mix(in srgb, var(--color-text) 88%, rgba(255, 255, 255, 0.18));
 	}
 
 	.footer-link-block ul {
@@ -1432,7 +1445,7 @@
 		font-family: var(--font-sans);
 		font-size: 0.74rem;
 		text-decoration: none;
-		color: var(--color-text);
+		color: color-mix(in srgb, var(--color-text) 96%, rgba(255, 255, 255, 0.32));
 		border-bottom: 1px solid transparent;
 		width: fit-content;
 		line-height: 1.15;
@@ -1535,8 +1548,9 @@
 		margin: 0;
 		padding: 0.34rem 0.4rem;
 		border-radius: 0;
-		border: 1px solid color-mix(in srgb, var(--color-border-strong) 82%, transparent);
-		background: color-mix(in srgb, var(--color-surface) 90%, transparent);
+		border: 1px solid rgba(226, 226, 226, 0.24);
+		background: color-mix(in srgb, var(--color-surface) 42%, rgba(8, 12, 9, 0.62));
+		backdrop-filter: blur(2px);
 	}
 
 	.status-currently {
@@ -1565,7 +1579,7 @@
 	}
 
 	.status-grid span {
-		color: var(--color-text-muted);
+		color: color-mix(in srgb, var(--color-text-muted) 82%, rgba(255, 255, 255, 0.2));
 	}
 
 	@keyframes fadeIn {
@@ -1738,6 +1752,7 @@
 
 		.home-footer {
 			padding-inline: 0.6rem;
+			min-height: 0;
 		}
 
 		.footer-strip {
