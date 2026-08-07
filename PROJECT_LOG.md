@@ -1398,3 +1398,32 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - Added responsive footer/terminal/status styles for desktop and mobile.
 
 **Consequence / next step:** Homepage now includes the requested footer system and interaction skeleton; user can later provide video content and optional richer status/weather integrations.
+
+---
+
+### 2026-08-07 - Aman-style terminal command surface + randomized replies
+
+**Decision:** Expand the homepage terminal command parser to mirror the aman-style command surface more closely (including subcommand-like arguments) and randomize responses for repeat use.
+
+**Context:** User requested command and subcommand coverage similar to aman.bh and explicitly asked for creative responses that vary each run instead of static output.
+
+**What changed (`src/routes/+page.svelte`):**
+- Added a response randomizer helper (`pickOne`) for non-deterministic terminal copy.
+- Added route alias mapping for terminal navigation targets.
+- Expanded command handling to include:
+  - `help`
+  - `ls`
+  - `cd <route>` (supports aliases and navigation)
+  - `sudo`
+  - `polly <text>`
+  - `8ball <question>`
+  - `clean`
+  - plus existing `status`, `socials`, `weather`, `about`, `ping`, `clear`
+- Added randomized/creative output pools for `sudo`, `status`, `weather`, `about`, `ping`, unknown command fallback, and others.
+- Preserved terminal auto-scroll and existing footer-terminal UI behavior.
+
+**Validation:**
+- `npm run build` executed successfully after the command-system patch.
+- `get_errors` surfaced existing unrelated nullability warnings in `src/routes/+page.svelte` around `seccCombined` usage; no new diagnostics were introduced by this command parser update.
+
+**Consequence / next step:** The terminal now supports a much broader interactive command surface with varied replies. Next refinement can target stricter one-to-one parity for any remaining aman-specific behaviors discovered during deeper command probing.

@@ -685,6 +685,26 @@
 		terminalLines = [...terminalLines, ...lines];
 	}
 
+	function pickOne(options: string[]) {
+		return options[Math.floor(Math.random() * options.length)] ?? options[0];
+	}
+
+	const terminalRoutes: Record<string, string> = {
+		'/': '/',
+		home: '/',
+		about: '/about',
+		work: '/work',
+		writing: '/writing',
+		colophon: '/colophon',
+		sections: '/sections',
+		map: '/map',
+		tracks: '/tracks',
+		notes: '/writing',
+		'blog-roll': '/work',
+		blog: '/writing',
+		contact: 'mailto:anindya2232@gmail.com'
+	};
+
 	$effect(() => {
 		if (!browser || !terminalLogEl) return;
 		terminalLines;
@@ -701,27 +721,117 @@
 		appendTerminalLines([`${terminalPrompt} ${command}`]);
 
 		const [base, ...rest] = command.toLowerCase().split(/\s+/);
+		const argument = rest.join(' ').trim();
 		switch (base) {
 			case 'help':
 				appendTerminalLines([
-						'Available commands for the computational proletariat:',
-						'- help: show this anti-bourgeois manual',
-						'- status: check if the comrade operator is online',
-						'- socials: reveal all approved communication channels',
-						'- weather: inspect Kolkata atmosphere conditions',
-						'- about: brief ideological firmware summary',
-						'- clear: erase terminal history without revisionism',
-						'- ping: verify the network still serves the people'
+					'Available commands for the computational proletariat:',
+					'- help: show command registry',
+					'- cd <route>: navigate (about, work, writing, colophon, sections, map, contact)',
+					'- ls: list available routes',
+					'- sudo: attempt superuser mode (you will be judged)',
+					'- polly <text>: have polly imitate your line',
+					'- 8ball <question>: yes/no oracle with attitude',
+					'- clear: clear screen',
+					'- clean: clear terminal history',
+					'- status: check if operator is online',
+					'- socials: reveal communication channels',
+					'- weather: inspect Kolkata atmosphere conditions',
+					'- about: brief ideological firmware summary',
+					'- ping: verify the network still serves the people'
+				]);
+				break;
+			case 'ls':
+				appendTerminalLines([
+					pickOne([
+						'📂 Directory of anti-bourgeois hyperlinks:',
+						'📂 Route commons currently available:',
+						'📂 Public navigation infrastructure:'
+					]),
+					'about work writing colophon sections map contact'
+				]);
+				break;
+			case 'cd': {
+				if (!argument) {
+					appendTerminalLines([
+						'cd requires a destination. Example: cd work',
+						'Valid: about work writing colophon sections map contact / home'
+					]);
+					break;
+				}
+
+				const target = terminalRoutes[argument] ?? terminalRoutes[argument.replace(/^\//, '')];
+				if (!target) {
+					appendTerminalLines([
+						`No such route: ${argument}`,
+						'Try ls before issuing spatial commands, comrade bourgeoisie.'
+					]);
+					break;
+				}
+
+				appendTerminalLines([
+					pickOne([
+						`Routing collective transport to ${target}`,
+						`Reassigning coordinates → ${target}`,
+						`Mobilizing navigation cadres to ${target}`
+					])
+				]);
+
+				if (browser) {
+					window.location.href = target;
+				}
+				break;
+			}
+			case 'sudo':
+				appendTerminalLines([
+					pickOne([
+						'Lmao, what are you trying to sudo, bourgeoisie? Credentials denied.',
+						'Superuser mode refused. Means of production are not yours.',
+						'Nice try. Root belongs to the collective, not private ambition.'
+					])
+				]);
+				break;
+			case 'polly':
+				if (!argument) {
+					appendTerminalLines(['Usage: polly <text to imitate>']);
+					break;
+				}
+				appendTerminalLines([
+					pickOne([
+						`Polly says: "${argument.toUpperCase()}"`,
+						`Polly (unimpressed): "${argument} ... wow, historic."`,
+						`Polly echoes: "${argument.split('').reverse().join('')}"`
+					])
+				]);
+				break;
+			case '8ball':
+				if (!argument) {
+					appendTerminalLines(['Usage: 8ball <yes/no question>']);
+					break;
+				}
+				appendTerminalLines([
+					`Question: ${argument}`,
+					pickOne([
+						'8BALL: Yes. But only after committee review.',
+						'8BALL: No. History has voted otherwise.',
+						'8BALL: Ask again when the material conditions improve.',
+						'8BALL: Outlook uncertain. Organize first, decide later.',
+						'8BALL: Absolutely. Seize the moment, not just the means.'
+					])
 				]);
 				break;
 			case 'status':
 				appendTerminalLines([
 					`CURRENTLY: ${operatorOnline ? 'ONLINE' : 'OFFLINE'}`,
-						'OPERATOR: COMRADE ANINDYA',
+					'OPERATOR: COMRADE ANINDYA',
 					`STATUS: ${operatorOnline ? 'SCRIBBLING' : 'DEAD'}`,
 					`LOCALTIME: ${istTimeLabel}`,
-						`WEATHER: ${weatherLabel}`,
-						'NOTE: bourgeois productivity metrics remain rejected.'
+					`WEATHER: ${weatherLabel}`,
+					pickOne([
+						'NOTE: bourgeois productivity metrics remain rejected.',
+						'NOTE: deadlines acknowledged, hierarchy ignored.',
+						'NOTE: output exists, managerial theatre does not.'
+					])
 				]);
 				break;
 			case 'socials':
@@ -736,24 +846,52 @@
 			case 'weather':
 				appendTerminalLines([
 					`KOLKATA WEATHER: ${weatherLabel}`,
-						'Even the monsoon is more accountable than most ruling classes.'
+					pickOne([
+						'Even the monsoon is more accountable than most ruling classes.',
+						'Forecast says humidity and class contradiction both remain high.',
+						'Atmospheric pressure stable. Social pressure: escalating.'
+					])
 				]);
 				break;
 			case 'about':
 				appendTerminalLines([
-						'CHHIPI v2.2: a sarcastic terminal for maps, memory, and anti-bourgeois commentary.'
+					pickOne([
+						'CHHIPI v3.0: a sarcastic shell for maps, memory, and organized dissent.',
+						'CHHIPI v3.0: terminal interface for field notes and anti-bourgeois diagnostics.',
+						'CHHIPI v3.0: where navigation meets snark and class analysis.'
+					])
 				]);
 				break;
 			case 'ping':
-					appendTerminalLines(['pong. Infrastructure still resists privatization.']);
+				appendTerminalLines([
+					pickOne([
+						'pong. Infrastructure still resists privatization.',
+						'pong. Packets delivered by unionized electrons.',
+						'pong. Network alive, bourgeois latency ignored.'
+					])
+				]);
 				break;
 			case 'clear':
 				terminalLines = [];
 				break;
+			case 'clean':
+				terminalLines = [];
+				appendTerminalLines([
+					pickOne([
+						'History cleaned. Archives remain with the people.',
+						'Terminal memory reset. Ideology cache untouched.',
+						'Logs purged. Material evidence redistributed.'
+					])
+				]);
+				break;
 			default:
 				appendTerminalLines([
 					`Unknown command: ${base}${rest.length ? ` ${rest.join(' ')}` : ''}`,
-						"Type 'help', bourgeoisie, and try collective discipline next time."
+					pickOne([
+						"Type 'help', bourgeoisie, and try collective discipline next time.",
+						"Command not found. Even chaos has a syntax.",
+						"No such command. Consult help before improvising capitalism."
+					])
 				]);
 		}
 	}
