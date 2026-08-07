@@ -1427,3 +1427,25 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - `get_errors` surfaced existing unrelated nullability warnings in `src/routes/+page.svelte` around `seccCombined` usage; no new diagnostics were introduced by this command parser update.
 
 **Consequence / next step:** The terminal now supports a much broader interactive command surface with varied replies. Next refinement can target stricter one-to-one parity for any remaining aman-specific behaviors discovered during deeper command probing.
+
+---
+
+### 2026-08-07 - Field-note sections link routing reliability fix
+
+**Decision:** Harden the homepage field-note "Click here to explore the site sections" navigation so it routes reliably even when note drag pointer handlers are active.
+
+**Context:** The field-note CTA was visible but could fail to route to `/sections` under pointer interaction conditions.
+
+**What changed (`src/routes/+page.svelte`):**
+- Added `goto` import from `$app/navigation`.
+- Added explicit navigation handler (`navigateToSectionsFromNote`) that:
+  - prevents default anchor behavior,
+  - stops pointer event bubbling into note drag handlers,
+  - and routes with `goto('/sections')`.
+- Added `onpointerdown`/`onpointerup` stop-propagation guards on the field-note anchor.
+
+**Validation:**
+- Local preview test confirmed clicking the field-note link now navigates from `/` to `/sections/`.
+- Build succeeded after the patch.
+
+**Consequence / next step:** Field-note CTA behavior is now robust against drag-interaction interference; deploy/sync to propagate the fix to Netlify.

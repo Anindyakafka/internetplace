@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
+	import { goto } from '$app/navigation';
 	import { projects } from '$data/projects';
 	import { indiaMap } from '$lib/actions/india-map';
 
@@ -575,6 +576,8 @@
 
 	function handleNotePointerDown(event: PointerEvent) {
 		if (noteDismissed) return;
+		const target = event.target as HTMLElement;
+		if (target.closest('a, button, input, select, textarea')) return;
 		noteDragging = true;
 		noteDragStartX = event.clientX - noteDragX;
 		noteDragStartY = event.clientY - noteDragY;
@@ -901,6 +904,13 @@
 		terminalInput = '';
 	}
 
+	function navigateToSectionsFromNote(event: MouseEvent | PointerEvent) {
+		event.preventDefault();
+		event.stopPropagation();
+		noteDragging = false;
+		void goto('/sections');
+	}
+
 </script>
 
 <svelte:head>
@@ -931,7 +941,15 @@
 				seen, who is erased, and what the record refuses to confess.
 			</p>
 			<p>The story may feel bureaucratic, surreal, absurd, or quietly metamorphic.</p>
-			<a class="landing-note-link" href="/sections">Click here to explore the site sections →</a>
+			<a
+				class="landing-note-link"
+				href="/sections"
+				onpointerdown={(event) => event.stopPropagation()}
+				onpointerup={(event) => event.stopPropagation()}
+				onclick={navigateToSectionsFromNote}
+			>
+				Click here to explore the site sections →
+			</a>
 		</aside>
 		<p class="portrait-only-notice" role="status">Rotate to portrait mode to explore stories.</p>
 
