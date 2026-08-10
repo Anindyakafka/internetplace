@@ -74,7 +74,7 @@
 </main>
 
 <style>
-	.tracks-page { max-width: var(--max-width); margin-inline: auto; padding: var(--space-3xl) var(--space-l); }
+	.tracks-page { max-width: 88rem; margin-inline: auto; padding: var(--space-3xl) var(--space-l); }
 	.tracks-hero { max-width: 56rem; padding: var(--space-xl) 0 var(--space-2xl); }
 	.eyebrow, .method-label { margin: 0 0 var(--space-s); font-family: var(--font-mono); font-size: var(--step--1); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-accent); }
 	.tracks-hero h1 { max-width: 13ch; margin: 0; font-family: var(--font-serif); font-size: clamp(3.2rem, 8vw, 7rem); font-weight: 500; line-height: 0.94; letter-spacing: -0.045em; }
