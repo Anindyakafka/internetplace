@@ -245,37 +245,39 @@
 </article>
 
 <style>
-	.track-entry { display: grid; gap: var(--space-l); padding-block: var(--space-2xl); border-top: 1px solid var(--color-border); }
-	.track-header { display: flex; align-items: start; justify-content: space-between; gap: var(--space-l); }
+	.track-entry { min-width: 0; display: grid; gap: var(--space-l); padding-block: var(--space-2xl); border-top: 1px solid var(--color-border); }
+	.track-header { min-width: 0; display: flex; align-items: start; justify-content: space-between; gap: var(--space-l); }
+	.track-header > div { min-width: 0; }
 	.track-kicker, .track-header > time { margin: 0 0 var(--space-2xs); font-family: var(--font-mono); font-size: var(--step--2); letter-spacing: 0.07em; text-transform: uppercase; color: var(--color-accent); }
 	.track-header h2 { margin: 0; font-family: var(--font-serif); font-size: var(--step-4); font-weight: 500; line-height: 1.05; }
 	.track-description { max-width: 40rem; margin: var(--space-xs) 0 0; color: var(--color-text-muted); line-height: 1.6; }
 	.track-header > time { color: var(--color-text-muted); white-space: nowrap; }
-	.map-frame { position: relative; width: min(92rem, calc(100vw - 2rem)); justify-self: center; min-height: min(70svh, 47rem); overflow: hidden; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); }
+	.map-frame { position: relative; width: 100%; min-width: 0; min-height: min(76svh, 52rem); overflow: hidden; box-sizing: border-box; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); }
 	.map { position: absolute; inset: 0; z-index: 0; }
 	.map-state { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; margin: 0; background: var(--color-surface); font-family: var(--font-mono); font-size: var(--step--1); color: var(--color-text-muted); }
 	.map-error { color: #a33; }
 	.layer-state { position: absolute; z-index: 500; top: var(--space-xs); left: 50%; transform: translateX(-50%); margin: 0; padding: 0.38rem 0.62rem; border: 1px solid rgba(40, 38, 31, 0.2); border-radius: 999px; background: rgba(250, 247, 237, 0.88); color: #373329; box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1); backdrop-filter: blur(5px); font-family: var(--font-mono); font-size: var(--step--2); white-space: nowrap; pointer-events: none; }
 	.track-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; border-block: 1px solid var(--color-border); }
-	.track-stats div { padding: var(--space-s); border-right: 1px solid var(--color-border); }
+	.track-stats div { min-width: 0; padding: var(--space-s); border-right: 1px solid var(--color-border); }
 	.track-stats div:last-child { border-right: 0; }
 	.track-stats dt { font-family: var(--font-mono); font-size: var(--step--2); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-muted); }
-	.track-stats dd { margin: var(--space-3xs) 0 0; font-family: var(--font-serif); font-size: var(--step-2); }
+	.track-stats dd { margin: var(--space-3xs) 0 0; overflow-wrap: anywhere; font-family: var(--font-serif); font-size: var(--step-2); }
 	.observations { display: grid; gap: var(--space-s); }
 	.observations h3 { margin: 0; font-family: var(--font-mono); font-size: var(--step--1); text-transform: uppercase; letter-spacing: 0.07em; color: var(--color-text-muted); }
 	.observation-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: var(--space-s); }
-	.observation-grid figure { margin: 0; display: grid; align-content: end; min-height: 8rem; padding: var(--space-s); border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); overflow: hidden; }
+	.observation-grid figure { min-width: 0; margin: 0; display: grid; align-content: end; min-height: 8rem; padding: var(--space-s); border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); overflow: hidden; }
 	.observation-grid .observation-with-image { grid-column: span 2; padding: 0; }
 	.observation-grid img { width: 100%; height: min(52svh, 32rem); object-fit: cover; }
 	.observation-grid figcaption { padding: var(--space-s); }
 	.observation-grid figure:not(.observation-with-image) figcaption { padding: 0; }
-	.observation-grid p { margin: 0; font-family: var(--font-serif); font-size: var(--step-1); line-height: 1.35; }
+	.observation-grid p { margin: 0; overflow-wrap: anywhere; font-family: var(--font-serif); font-size: var(--step-1); line-height: 1.35; }
 	.observation-grid time { display: block; margin-top: var(--space-xs); font-family: var(--font-mono); font-size: var(--step--2); color: var(--color-text-muted); }
 	:global(.leaflet-control-attribution) { font-size: 9px !important; }
 	@media (max-width: 680px) {
 		.track-header { display: grid; }
+		.track-header > time { white-space: normal; }
 		.track-header h2 { font-size: var(--step-3); }
-		.map-frame { width: calc(100vw - 1rem); min-height: 58svh; }
+		.map-frame { width: 100%; min-height: 64svh; }
 		.track-stats { grid-template-columns: 1fr 1fr; }
 		.track-stats div:nth-child(2) { border-right: 0; }
 		.track-stats div:nth-child(-n + 2) { border-bottom: 1px solid var(--color-border); }

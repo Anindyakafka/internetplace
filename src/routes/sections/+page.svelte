@@ -90,6 +90,7 @@
 	}
 
 	.sections-page {
+		min-width: 0;
 		padding-top: var(--space-3xl);
 		padding-bottom: var(--space-3xl);
 		display: grid;
@@ -104,6 +105,7 @@
 	}
 
 	.sections-hero {
+		min-width: 0;
 		display: grid;
 		grid-template-columns: minmax(0, 1.2fr) minmax(16rem, 0.8fr);
 		align-items: center;
@@ -111,6 +113,7 @@
 	}
 
 	.hero-copy {
+		min-width: 0;
 		display: grid;
 		gap: var(--space-s);
 	}
@@ -169,12 +172,14 @@
 	}
 
 	.sections-grid {
+		min-width: 0;
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(16.5rem, 1fr));
 		gap: var(--space-l);
 	}
 
 	.section-card {
+		min-width: 0;
 		display: grid;
 		align-content: start;
 		gap: var(--space-s);
@@ -191,12 +196,15 @@
 	}
 
 	.section-card p {
+		overflow-wrap: anywhere;
 		font-size: var(--step--1);
 		line-height: 1.52;
 		color: var(--color-text-muted);
 	}
 
 	.section-link {
+		max-width: 100%;
+		overflow-wrap: anywhere;
 		justify-self: start;
 		font-family: var(--font-mono);
 		font-size: var(--step--1);
