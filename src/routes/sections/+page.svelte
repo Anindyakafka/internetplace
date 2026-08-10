@@ -64,6 +64,14 @@
 		</article>
 
 		<article class="section-card">
+			<h2>Local Lines</h2>
+			<p>
+				A calculated live portrait of suburban trains moving across a historical map of Bengal.
+			</p>
+			<a href="/trains" class="section-link">Open the railway map →</a>
+		</article>
+
+		<article class="section-card">
 			<h2>About & Coordinates</h2>
 			<p>
 				Bio, background, and research orientation. Useful if you are landing here for the first
