@@ -36,3 +36,6 @@ src/data/shrug-secc-parsed-urban-csv/
 file_list.txt
 temp_build_output.txt
 
+
+# Local Netlify folder
+.netlify

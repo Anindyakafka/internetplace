@@ -33,6 +33,10 @@ Run development server:
 
 		npm run dev
 
+Run the site with Netlify Functions (required for live train status):
+
+		npm run dev:netlify
+
 Build production output:
 
 		npm run build
@@ -41,6 +45,8 @@ Preview built site locally:
 
 		npm run preview
 
+The preview command serves only the static build. Requests to `/.netlify/functions/*` return 404 there by design; use `npm run dev:netlify` to test those endpoints locally.
+
 Run type and Svelte checks:
 
 		npm run check
@@ -48,6 +54,7 @@ Run type and Svelte checks:
 ## Available Scripts
 
 - npm run dev: start local dev server
+- npm run dev:netlify: start the site with the local Netlify Functions runtime
 - npm run data:prepare: generate state summary data from local SECC CSVs
 - npm run build: run data prep, then build static site
 - npm run preview: serve the latest built output from build/
