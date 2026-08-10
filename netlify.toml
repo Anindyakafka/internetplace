@@ -2,6 +2,9 @@
   command = "npm run build"
   publish = "build"
 
+[functions]
+  directory = "netlify/functions"
+
 # SPA fallback: serve 404.html for any route that doesn't match a static file.
 # This handles client-side routing and missing prerendered pages.
 [[redirects]]
