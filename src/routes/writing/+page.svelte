@@ -190,12 +190,11 @@
 	{/if}
 
 	<section class="writing-collab">
-		<h2 class="collab-title">Want to collaborate on a piece?</h2>
+		<h2 class="collab-title">Want to exchange ideas?</h2>
 		<p class="collab-text">
-			I'm always open to co-authoring essays, building interactive demos, or writing
-			about interesting datasets. If you have an idea, let's talk.
+			If something here connects with your own questions or interests, I would be glad to hear from you.
 		</p>
-		<a class="text-link" href="mailto:hello@anindyasingh.dev">Get in touch →</a>
+		<a class="text-link" href="/about#contact">Get in touch →</a>
 	</section>
 </section>
 

@@ -74,7 +74,7 @@
 </main>
 
 <style>
-	.tracks-page { max-width: var(--max-width); margin-inline: auto; padding: var(--space-3xl) var(--space-l); }
+	.tracks-page { width: 100%; max-width: var(--max-width); margin-inline: auto; padding: var(--space-3xl) var(--space-l); box-sizing: border-box; }
 	.tracks-hero { max-width: 56rem; padding: var(--space-xl) 0 var(--space-2xl); }
 	.eyebrow, .method-label { margin: 0 0 var(--space-s); font-family: var(--font-mono); font-size: var(--step--1); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-accent); }
 	.tracks-hero h1 { max-width: 13ch; margin: 0; font-family: var(--font-serif); font-size: clamp(3.2rem, 8vw, 7rem); font-weight: 500; line-height: 0.94; letter-spacing: -0.045em; }
@@ -85,6 +85,7 @@
 	.error { color: #a33; }
 	@media (max-width: 680px) {
 		.tracks-page { padding-inline: var(--space-m); }
+		.tracks-hero h1, .tracks-hero p, .method-note p { overflow-wrap: anywhere; }
 		.method-note { grid-template-columns: 1fr; gap: var(--space-xs); }
 	}
 </style>

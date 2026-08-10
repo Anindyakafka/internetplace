@@ -705,7 +705,7 @@
 		notes: '/writing',
 		'blog-roll': '/work',
 		blog: '/writing',
-		contact: 'mailto:anindya2232@gmail.com'
+		contact: '/about#contact'
 	};
 
 	$effect(() => {
@@ -843,7 +843,7 @@
 					'GitHub: https://github.com/anindyakafka',
 					'Instagram: https://www.instagram.com/anindya.hajabarala/',
 					'Twitter: https://x.com/Kafkanindya7',
-					'Email: mailto:anindya2232@gmail.com'
+					'Contact: /about#contact'
 				]);
 				break;
 			case 'weather':
