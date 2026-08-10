@@ -203,44 +203,10 @@
 	</div>
 </section>
 
-<!-- ───────────── Awards ───────────── -->
-<section class="page-content awards-section" style="border-top: 1px solid var(--color-border);">
-	<header class="section-header">
-		<span class="section-index">04</span>
-		<h2 class="section-title">Recognition</h2>
-	</header>
-	<div class="awards-list">
-		<div class="award-item">
-			<div class="award-marker">
-				<span class="award-star">★</span>
-			</div>
-			<div class="award-content">
-				<h3 class="award-title">Top 100 — IIT Madras Data Science Competition</h3>
-				<p class="award-desc">
-					Ranked among the top 100 participants nationwide in competitive
-					data science challenge.
-				</p>
-			</div>
-		</div>
-		<div class="award-item">
-			<div class="award-marker">
-				<span class="award-star">★</span>
-			</div>
-			<div class="award-content">
-				<h3 class="award-title">Prince Claus Seeds Award</h3>
-				<p class="award-desc">
-					Recipient of the Prince Claus Seeds Award, recognising emerging
-					cultural practitioners.
-				</p>
-			</div>
-		</div>
-	</div>
-</section>
-
 <!-- ───────────── Contact CTA ───────────── -->
 <section class="page-content contact-cta" id="contact">
 	<div class="contact-inner">
-		<span class="section-index">05</span>
+		<span class="section-index">04</span>
 		<h2 class="contact-title">Have something meaningful in mind?</h2>
 		<p class="contact-desc">
 			I am always glad to hear from people led by curiosity, shared interests, or a clear
@@ -580,55 +546,6 @@
 		border: 1px solid var(--color-border);
 		border-radius: var(--radius);
 		color: var(--color-text);
-	}
-
-	/* ───────── Awards Section ───────── */
-	.awards-section {
-		padding-block: var(--space-3xl);
-	}
-
-	.awards-list {
-		display: flex;
-		flex-direction: column;
-		gap: var(--space-l);
-	}
-
-	.award-item {
-		display: flex;
-		gap: var(--space-m);
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-lg);
-		padding: var(--space-l);
-		transition: border-color var(--transition), transform var(--transition);
-	}
-
-	.award-item:hover {
-		border-color: var(--color-accent);
-		transform: translateY(-2px);
-	}
-
-	.award-marker {
-		font-size: var(--step-2);
-		color: var(--color-accent);
-		flex-shrink: 0;
-	}
-
-	.award-star {
-		line-height: 1;
-	}
-
-	.award-title {
-		font-size: var(--step-1);
-		font-weight: 600;
-		margin-bottom: var(--space-2xs);
-	}
-
-	.award-desc {
-		font-size: var(--step-0);
-		line-height: 1.6;
-		color: var(--color-text-muted);
-		max-width: 60ch;
 	}
 
 	/* ───────── Contact CTA ───────── */
