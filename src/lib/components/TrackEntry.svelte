@@ -28,7 +28,7 @@
 	const folder = $derived(entry.file.replace(/\.gpx$/i, ''));
 	const baseUrl = $derived(`/tracks/source/${folder}`);
 	const gpxUrl = $derived(`${baseUrl}/${entry.file}`);
-	const geoJsonUrl = '/tracks/source/maps/delhi.geojson';
+	const historicalMapUrl = 'https://geo.nls.uk/mapdata3/india-combined/{z}/{x}/{y}.png';
 
 	function haversine(a: TrackPoint, b: TrackPoint): number {
 		const radius = 6371;
@@ -80,14 +80,9 @@
 
 		void (async () => {
 		try {
-			const [response, geoJsonResponse, L] = await Promise.all([
-				fetch(gpxUrl),
-				fetch(geoJsonUrl),
-				import('leaflet')
-			]);
+			const [response, L] = await Promise.all([fetch(gpxUrl), import('leaflet')]);
 			if (disposed) return;
 			if (!response.ok) throw new Error(`Could not load ${entry.file}`);
-			if (!geoJsonResponse.ok) throw new Error('Could not load the Delhi map layer.');
 
 			const xml = new DOMParser().parseFromString(await response.text(), 'application/xml');
 			if (xml.querySelector('parsererror')) throw new Error('The GPX file could not be parsed.');
@@ -131,27 +126,14 @@
 				maxZoom: 20
 			}).addTo(map);
 
-			const delhiLayerPane = map.createPane('delhi-layer');
-			delhiLayerPane.style.zIndex = '350';
-			const delhiGeoJson = (await geoJsonResponse.json()) as GeoJSON.GeoJsonObject;
-			L.geoJSON(delhiGeoJson, {
-				pane: 'delhi-layer',
-				style: {
-					color: '#6f654d',
-					weight: 1.25,
-					opacity: 0.72,
-					fillColor: '#c8bea4',
-					fillOpacity: 0.16
-				},
-				pointToLayer: (_feature, latLng) =>
-					L.circleMarker(latLng, {
-						pane: 'delhi-layer',
-						radius: 3,
-						weight: 1,
-						color: '#6f654d',
-						fillColor: '#c8bea4',
-						fillOpacity: 0.72
-					})
+			const historicalMapPane = map.createPane('historical-map');
+			historicalMapPane.style.zIndex = '250';
+			L.tileLayer(historicalMapUrl, {
+				pane: 'historical-map',
+				opacity: 0.74,
+				maxZoom: 18,
+				attribution:
+					'Historical map courtesy of the <a href="https://maps.nls.uk/">National Library of Scotland</a>'
 			}).addTo(map);
 
 			const coordinates = trackPoints.map((point) => [point.lat, point.lon] as [number, number]);
