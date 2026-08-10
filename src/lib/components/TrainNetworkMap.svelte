@@ -6,12 +6,18 @@
 	let { network, selectedId = null, onselect = (_id: string) => {} }: { network: SealdahNetwork; selectedId?: string | null; onselect?: (id: string) => void } = $props();
 	let mapElement: HTMLDivElement;
 	let showModern = $state(false);
-	let historicalOpacity = $state(0.88);
 	let map: import('leaflet').Map | null = null;
 	let historicalLayer: import('leaflet').TileLayer | null = null;
 	let modernLayer: import('leaflet').TileLayer | null = null;
 	let trainMarkers = new Map<string, import('leaflet').Marker>();
 	let animationFrame = 0;
+
+	function toggleModern() {
+		showModern = !showModern;
+		if (!map || !modernLayer) return;
+		if (showModern) modernLayer.addTo(map);
+		else if (map.hasLayer(modernLayer)) map.removeLayer(modernLayer);
+	}
 
 	const palette = ['#c94b3a','#247ba0','#3f826d','#8a5a9b','#d18b2c','#4c6b4f','#a84965'];
 	let validCorridors = $derived(network.corridors.filter((corridor) => corridor.coordinates.length > 1));
@@ -59,8 +65,9 @@
 			map=L.map(mapElement,{zoomControl:false,scrollWheelZoom:true,minZoom:6,maxZoom:16,preferCanvas:true}); L.control.zoom({position:'bottomright'}).addTo(map);
 			const allPoints=validCorridors.flatMap((corridor)=>corridor.coordinates.map(([lng,lat])=>[lat,lng] as [number,number]));
 			map.fitBounds(L.latLngBounds(allPoints),{padding:[24,24]});
-			historicalLayer=L.tileLayer('https://geo.nls.uk/mapdata3/india-combined/{z}/{x}/{y}.png',{maxZoom:16,opacity:historicalOpacity,attribution:'Historical map tiles © National Library of Scotland'}).addTo(map);
-			modernLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,opacity:.82,attribution:'© OpenStreetMap contributors'});
+			historicalLayer=L.tileLayer('https://geo.nls.uk/mapdata3/india-combined/{z}/{x}/{y}.png',{maxZoom:16,opacity:.88,attribution:'Historical map tiles © National Library of Scotland'}).addTo(map);
+			modernLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,opacity:1,attribution:'© OpenStreetMap contributors'});
+			if (showModern) modernLayer.addTo(map);
 			validCorridors.forEach((corridor,index)=>{const points=paths.get(corridor.code)!.latLng; L.polyline(points,{color:'#f8f2df',weight:4,opacity:.55}).addTo(map!); L.polyline(points,{color:palette[index%palette.length],weight:2,opacity:.82}).bindTooltip(`${corridor.name} · ${corridor.serviceCount} services`).addTo(map!); const end=points.at(-1)!; const icon=L.divIcon({className:'station-icon-shell',html:'<span class="station-icon"></span>',iconSize:[10,10],iconAnchor:[5,5]}); L.marker(end,{icon,title:corridor.name}).bindTooltip(`<strong>${corridor.name}</strong><br>${corridor.code}`).addTo(map!);});
 			const sealdah=paths.values().next().value?.latLng[0]; if(sealdah){const icon=L.divIcon({className:'station-icon-shell',html:'<span class="station-icon station-icon--hub"></span>',iconSize:[14,14],iconAnchor:[7,7]});L.marker(sealdah,{icon,title:'Sealdah'}).bindTooltip('<strong>Sealdah</strong><br>SDAH').addTo(map);}
 			const update=()=>{
@@ -72,11 +79,10 @@
 		return()=>{disposed=true;cancelAnimationFrame(animationFrame);map?.remove();map=null;};
 	});
 
-	$effect(()=>{if(!map||!historicalLayer||!modernLayer)return;historicalLayer.setOpacity(historicalOpacity);if(showModern&&!map.hasLayer(modernLayer))modernLayer.addTo(map);if(!showModern&&map.hasLayer(modernLayer))map.removeLayer(modernLayer);});
 </script>
 
-<div class="map-shell"><div class="map-controls" aria-label="Map display controls"><label><input type="checkbox" bind:checked={showModern}/> Modern map</label><label class="opacity-control"><span>Historical layer</span><input type="range" min="0.25" max="1" step="0.05" bind:value={historicalOpacity}/></label></div><div class="train-map" bind:this={mapElement} aria-label="Animated map of suburban trains to and from Sealdah"></div></div>
+<div class="map-shell"><div class="map-controls" aria-label="Map display controls"><label><input type="checkbox" checked={showModern} onchange={toggleModern}/> Modern map</label></div><div class="train-map" bind:this={mapElement} aria-label="Animated map of suburban trains to and from Sealdah"></div></div>
 
 <style>
-	.map-shell{position:relative;min-width:0;height:clamp(36rem,75vh,54rem);overflow:hidden;border:1px solid var(--color-border);border-radius:var(--radius);background:#d7cfb6}.train-map{width:100%;height:100%}.map-controls{position:absolute;z-index:700;top:var(--space-s);right:var(--space-s);display:grid;gap:.55rem;width:min(14rem,calc(100% - 2rem));padding:.7rem .8rem;font:500 var(--step--1)/1.2 var(--font-sans);color:#28251e;background:rgba(250,246,233,.9);border:1px solid rgba(49,44,34,.2);border-radius:var(--radius);backdrop-filter:blur(8px)}.map-controls label{display:flex;align-items:center;gap:.5rem}.opacity-control{display:grid!important}.opacity-control input{width:100%;accent-color:#d84b35}:global(.station-icon-shell),:global(.train-icon-shell){background:transparent!important;border:0!important}:global(.station-icon){display:block;width:8px;height:8px;box-sizing:border-box;background:#faf6e9;border:2px solid #292722;border-radius:50%}:global(.station-icon--hub){width:13px;height:13px;border-radius:3px;border-width:3px}:global(.train-token){width:16px;height:7px;padding:0;position:relative;border:1px solid #292722;border-radius:4px;background:#f2c84b;box-shadow:0 1px 2px rgba(0,0,0,.22);cursor:pointer}:global(.train-token span){position:absolute;inset:1.5px 4px;border-radius:2px;background:rgba(41,39,34,.7)}:global(.train-token--to-sealdah){background:#66c7c1}:global(.train-token.is-selected){transform:scale(1.35);filter:drop-shadow(0 0 2px white)}:global(.leaflet-tooltip){font-family:var(--font-sans);border:1px solid rgba(40,37,30,.2);background:#faf6e9;color:#28251e;box-shadow:0 3px 12px rgba(0,0,0,.13)}:global(.leaflet-control-attribution){font-size:9px}@media(max-width:700px){.map-shell{height:68vh;min-height:30rem}}
+	.map-shell{position:relative;min-width:0;height:clamp(36rem,75vh,54rem);overflow:hidden;border:1px solid var(--color-border);border-radius:var(--radius);background:#d7cfb6}.train-map{width:100%;height:100%}.map-controls{position:absolute;z-index:700;top:var(--space-s);right:var(--space-s);padding:.7rem .8rem;font:500 var(--step--1)/1.2 var(--font-sans);color:#28251e;background:rgba(250,246,233,.9);border:1px solid rgba(49,44,34,.2);border-radius:var(--radius);backdrop-filter:blur(8px)}.map-controls label{display:flex;align-items:center;gap:.5rem;cursor:pointer}.map-controls input{accent-color:#d84b35}:global(.station-icon-shell),:global(.train-icon-shell){background:transparent!important;border:0!important}:global(.station-icon){display:block;width:8px;height:8px;box-sizing:border-box;background:#faf6e9;border:2px solid #292722;border-radius:50%}:global(.station-icon--hub){width:13px;height:13px;border-radius:3px;border-width:3px}:global(.train-token){width:16px;height:7px;padding:0;position:relative;border:1px solid #292722;border-radius:4px;background:#f2c84b;box-shadow:0 1px 2px rgba(0,0,0,.22);cursor:pointer}:global(.train-token span){position:absolute;inset:1.5px 4px;border-radius:2px;background:rgba(41,39,34,.7)}:global(.train-token--to-sealdah){background:#66c7c1}:global(.train-token.is-selected){transform:scale(1.35);filter:drop-shadow(0 0 2px white)}:global(.leaflet-tooltip){font-family:var(--font-sans);border:1px solid rgba(40,37,30,.2);background:#faf6e9;color:#28251e;box-shadow:0 3px 12px rgba(0,0,0,.13)}:global(.leaflet-control-attribution){font-size:9px}@media(max-width:700px){.map-shell{height:68vh;min-height:30rem}}
 </style>
