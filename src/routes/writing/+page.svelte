@@ -12,6 +12,16 @@
 
 	const entries: WritingEntry[] = [
 		{
+			slug: '/writing/scenery-as-weapon/',
+			title: 'Scenery as Weapon',
+			blurb: 'How aesthetic order and administrative classification erase political life—from electoral rolls and deletion lists to censor-board cuts and contested archives.',
+			date: '2026-08-07',
+			category: 'essay',
+			readTime: '14 min',
+			featured: true,
+			status: 'published'
+		},
+		{
 			slug: '/writing/pretext-demo/',
 			title: 'Pretext Demo',
 			blurb: 'Obstacle-aware text reflow experiment using @chenglou/pretext — long-form text that flows around figures, pull quotes, and arbitrary shapes.',

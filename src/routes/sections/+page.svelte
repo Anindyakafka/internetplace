@@ -1,22 +1,32 @@
 <svelte:head>
-	<title>Sections — Anindya Singh</title>
+	<title>Anindya Singh — Researcher, data scientist, and writer</title>
 	<meta
 		name="description"
-		content="A living skeleton of this website's sections: data work, writing, personal notes, and professional documentation."
+		content="Anindya Singh is a researcher, data scientist, and writer working across economics, data, and social impact."
 	/>
 </svelte:head>
 
 <section class="page-content sections-page">
 	<header class="sections-hero">
-		<span class="section-index">◇ Sections</span>
-		<h1>Site Atlas (Skeleton)</h1>
-		<p>
-			This is the staging ground for what comes next: more data-driven work, more long-form
-			articles, and clearer pathways between personal and professional threads.
-		</p>
-		<p class="hero-note">
-			Start anywhere. Return often. This map will keep changing.
-		</p>
+		<div class="hero-copy">
+			<span class="section-index">Based in Kolkata, West Bengal, India</span>
+			<h1>Anindya Singh</h1>
+			<p class="bio-lede">
+				I’m a researcher, data scientist, and writer working at the intersection of economics,
+				data, and social impact.
+			</p>
+			<p>
+				My work brings empirical methods into conversation with questions about labour,
+				identity, information, and the ways policy shapes everyday life. I build research tools,
+				work with large public datasets, and write about the human stories held inside them.
+			</p>
+			<p class="hero-note">Explore my work, writing, methods, and field notes below.</p>
+		</div>
+
+		<figure class="hero-portrait">
+			<img src="/images/anindya2.png" alt="Anindya Singh wearing a colourful ceremonial hat outdoors" />
+			<figcaption>Anindya Singh · Research, data, and writing</figcaption>
+		</figure>
 	</header>
 
 	<div class="sections-grid">
@@ -46,12 +56,11 @@
 		</article>
 
 		<article class="section-card">
-			<h2>Personal Field Notes</h2>
+			<h2>Tracks & Loiterings</h2>
 			<p>
-				A future space for process diaries, reading fragments, and small observations from
-				the field.
+				Walks, journeys, GPS traces, photographs, and small observations recorded along the way.
 			</p>
-			<p class="status">Status: planned</p>
+			<a href="/tracks" class="section-link">Open track archive →</a>
 		</article>
 
 		<article class="section-card">
@@ -95,7 +104,13 @@
 	}
 
 	.sections-hero {
-		max-width: min(46rem, 100%);
+		display: grid;
+		grid-template-columns: minmax(0, 1.2fr) minmax(16rem, 0.8fr);
+		align-items: center;
+		gap: clamp(var(--space-xl), 6vw, var(--space-3xl));
+	}
+
+	.hero-copy {
 		display: grid;
 		gap: var(--space-s);
 	}
@@ -110,6 +125,39 @@
 	.sections-hero p {
 		font-size: var(--step-0);
 		line-height: 1.6;
+		color: var(--color-text-muted);
+	}
+
+	.sections-hero .bio-lede {
+		font-family: var(--font-serif);
+		font-size: var(--step-2);
+		line-height: 1.35;
+		color: var(--color-text);
+	}
+
+	.hero-portrait {
+		margin: 0;
+		display: grid;
+		gap: var(--space-2xs);
+	}
+
+	.hero-portrait img {
+		display: block;
+		width: 100%;
+		aspect-ratio: 4 / 5;
+		object-fit: cover;
+		object-position: center 34%;
+		border-radius: var(--radius-lg);
+		border: 1px solid var(--color-border);
+		filter: saturate(0.9) contrast(1.03);
+	}
+
+	.hero-portrait figcaption {
+		font-family: var(--font-mono);
+		font-size: var(--step--2);
+		line-height: 1.4;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
 		color: var(--color-text-muted);
 	}
 
@@ -172,6 +220,18 @@
 	@media (max-width: 640px) {
 		.sections-page {
 			padding-top: var(--space-2xl);
+		}
+
+		.sections-hero {
+			grid-template-columns: 1fr;
+		}
+
+		.hero-portrait {
+			grid-row: 1;
+		}
+
+		.hero-portrait img {
+			max-height: 72svh;
 		}
 	}
 </style>
