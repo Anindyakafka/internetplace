@@ -129,7 +129,7 @@
 				</div>
 				<div class="footer-col">
 					<p class="footer-label">Location</p>
-					<p class="footer-text">Delhi NCR, India</p>
+					<p class="footer-text">West Bengal, India</p>
 				</div>
 			</div>
 			<p class="footer-copy">© {new Date().getFullYear()} Anindya Singh</p>

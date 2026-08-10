@@ -21,7 +21,7 @@
 			</h1>
 			<p class="bio-lede">
 				Researcher, data scientist, and writer working at the intersection of
-				economics, data, and social impact. Based in Delhi NCR, India.
+				economics, data, and social impact. Based in West Bengal, India.
 			</p>
 			<p class="bio-paragraph">
 				My work sits where rigorous empirical methods meet real-world questions about
@@ -32,7 +32,7 @@
 			<div class="bio-meta">
 				<div class="bio-meta-item">
 					<span class="bio-meta-label">Based in</span>
-					<span class="bio-meta-value">Delhi NCR, India</span>
+					<span class="bio-meta-value">West Bengal, India</span>
 				</div>
 				<div class="bio-meta-item">
 					<span class="bio-meta-label">Focus</span>
