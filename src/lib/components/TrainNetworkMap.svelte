@@ -14,9 +14,8 @@
 
 	function toggleModern() {
 		showModern = !showModern;
-		if (!map || !modernLayer) return;
-		if (showModern) modernLayer.addTo(map);
-		else if (map.hasLayer(modernLayer)) map.removeLayer(modernLayer);
+		if (!historicalLayer) return;
+		historicalLayer.setOpacity(showModern ? 0 : 0.88);
 	}
 
 	const palette = ['#c94b3a','#247ba0','#3f826d','#8a5a9b','#d18b2c','#4c6b4f','#a84965'];
@@ -65,9 +64,13 @@
 			map=L.map(mapElement,{zoomControl:false,scrollWheelZoom:true,minZoom:6,maxZoom:16,preferCanvas:true}); L.control.zoom({position:'bottomright'}).addTo(map);
 			const allPoints=validCorridors.flatMap((corridor)=>corridor.coordinates.map(([lng,lat])=>[lat,lng] as [number,number]));
 			map.fitBounds(L.latLngBounds(allPoints),{padding:[24,24]});
-			historicalLayer=L.tileLayer('https://geo.nls.uk/mapdata3/india-combined/{z}/{x}/{y}.png',{maxZoom:16,opacity:.88,attribution:'Historical map tiles © National Library of Scotland'}).addTo(map);
-			modernLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,opacity:1,attribution:'© OpenStreetMap contributors'});
-			if (showModern) modernLayer.addTo(map);
+			modernLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,opacity:1,attribution:'© OpenStreetMap contributors'}).addTo(map);
+			historicalLayer=L.tileLayer('https://geo.nls.uk/mapdata3/india-combined/{z}/{x}/{y}.png',{maxZoom:16,opacity:showModern?0:.88,attribution:'Historical map tiles © National Library of Scotland'}).addTo(map);
+			historicalLayer.on('tileerror',(event)=>{
+				const tile=event.tile as HTMLImageElement;
+				const {x,y,z}=event.coords;
+				if(!tile.dataset.fallback){tile.dataset.fallback='osm';tile.src=`https://a.tile.openstreetmap.org/${z}/${x}/${y}.png`;}
+			});
 			validCorridors.forEach((corridor,index)=>{const points=paths.get(corridor.code)!.latLng; L.polyline(points,{color:'#f8f2df',weight:4,opacity:.55}).addTo(map!); L.polyline(points,{color:palette[index%palette.length],weight:2,opacity:.82}).bindTooltip(`${corridor.name} · ${corridor.serviceCount} services`).addTo(map!); const end=points.at(-1)!; const icon=L.divIcon({className:'station-icon-shell',html:'<span class="station-icon"></span>',iconSize:[10,10],iconAnchor:[5,5]}); L.marker(end,{icon,title:corridor.name}).bindTooltip(`<strong>${corridor.name}</strong><br>${corridor.code}`).addTo(map!);});
 			const sealdah=paths.values().next().value?.latLng[0]; if(sealdah){const icon=L.divIcon({className:'station-icon-shell',html:'<span class="station-icon station-icon--hub"></span>',iconSize:[14,14],iconAnchor:[7,7]});L.marker(sealdah,{icon,title:'Sealdah'}).bindTooltip('<strong>Sealdah</strong><br>SDAH').addTo(map);}
 			const update=()=>{
