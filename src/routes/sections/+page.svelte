@@ -56,12 +56,11 @@
 		</article>
 
 		<article class="section-card">
-			<h2>Personal Field Notes</h2>
+			<h2>Tracks & Loiterings</h2>
 			<p>
-				A future space for process diaries, reading fragments, and small observations from
-				the field.
+				Walks, journeys, GPS traces, photographs, and small observations recorded along the way.
 			</p>
-			<p class="status">Status: planned</p>
+			<a href="/tracks" class="section-link">Open track archive →</a>
 		</article>
 
 		<article class="section-card">
