@@ -124,7 +124,7 @@
 					<p class="footer-label">Elsewhere</p>
 					<div class="footer-links">
 						<a href="https://github.com/Anindyakafka" target="_blank" rel="noopener">GitHub</a>
-						<a href="mailto:hello@anindyasingh.dev">Email</a>
+						<a href="mailto:anindya2232@gmail.com">Email</a>
 					</div>
 				</div>
 				<div class="footer-col">

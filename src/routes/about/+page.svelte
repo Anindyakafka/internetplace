@@ -58,7 +58,7 @@
 			</div>
 			<div class="bio-card-divider"></div>
 			<div class="bio-card-tag-row">
-				<span class="tag">Available for collaboration</span>
+				<span class="tag">Open to thoughtful conversations</span>
 			</div>
 		</div>
 	</div>
@@ -238,18 +238,17 @@
 </section>
 
 <!-- ───────────── Contact CTA ───────────── -->
-<section class="page-content contact-cta">
+<section class="page-content contact-cta" id="contact">
 	<div class="contact-inner">
 		<span class="section-index">05</span>
-		<h2 class="contact-title">Let's work together.</h2>
+		<h2 class="contact-title">Have something meaningful in mind?</h2>
 		<p class="contact-desc">
-			Open to research collaborations, data consulting, and writing commissions.
-			Whether you have a dataset that needs taming or a story that needs telling,
-			I'd love to hear from you.
+			I am always glad to hear from people led by curiosity, shared interests, or a clear
+			intention. This is not a commercial services page&mdash;write because the idea matters.
 		</p>
 		<div class="contact-actions">
-			<a class="btn btn--primary" href="mailto:hello@anindyasingh.dev">
-				Get in touch
+			<a class="btn btn--primary" href="mailto:anindya2232@gmail.com">
+				Email me
 				<svg viewBox="0 0 16 16" width="14" height="14"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
 			</a>
 			<a class="btn btn--ghost" href="/work">
@@ -257,6 +256,28 @@
 				<svg viewBox="0 0 16 16" width="14" height="14"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
 			</a>
 		</div>
+
+		<form class="contact-form" name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
+			<input type="hidden" name="form-name" value="contact" />
+			<p class="form-trap" aria-hidden="true">
+				<label>Leave this field empty <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+			</p>
+			<div class="form-row">
+				<label>
+					<span>Name</span>
+					<input name="name" autocomplete="name" required />
+				</label>
+				<label>
+					<span>Email</span>
+					<input name="email" type="email" autocomplete="email" required />
+				</label>
+			</div>
+			<label>
+				<span>What would you like to talk about?</span>
+				<textarea name="message" rows="6" required></textarea>
+			</label>
+			<button class="btn btn--primary" type="submit">Send message</button>
+		</form>
 	</div>
 </section>
 
@@ -645,6 +666,61 @@
 		flex-wrap: wrap;
 	}
 
+	.contact-form {
+		display: grid;
+		gap: var(--space-m);
+		margin-top: var(--space-2xl);
+		padding: var(--space-xl);
+		text-align: left;
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius);
+	}
+
+	.form-row {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--space-m);
+	}
+
+	.contact-form label {
+		display: grid;
+		gap: var(--space-2xs);
+		font-size: var(--step--1);
+		font-weight: 500;
+	}
+
+	.contact-form input,
+	.contact-form textarea {
+		width: 100%;
+		box-sizing: border-box;
+		padding: 0.75rem;
+		font: inherit;
+		color: var(--color-text);
+		background: var(--color-background);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius);
+	}
+
+	.contact-form textarea {
+		resize: vertical;
+	}
+
+	.contact-form input:focus,
+	.contact-form textarea:focus {
+		outline: 2px solid var(--color-accent);
+		outline-offset: 2px;
+	}
+
+	.contact-form .btn {
+		justify-self: start;
+	}
+
+	.form-trap {
+		position: absolute;
+		left: -10000px;
+	}
+
 	/* ───────── Buttons ───────── */
 	.btn {
 		display: inline-flex;
@@ -697,6 +773,14 @@
 		.contact-actions {
 			flex-direction: column;
 			align-items: stretch;
+		}
+
+		.form-row {
+			grid-template-columns: 1fr;
+		}
+
+		.contact-form {
+			padding: var(--space-l);
 		}
 	}
 

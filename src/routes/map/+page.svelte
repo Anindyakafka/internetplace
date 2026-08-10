@@ -358,8 +358,8 @@
 					</div>
 
 					<p class="sidebar-footer-text">
-						Working on something in a new region?
-						<a href="mailto:hello@anindyasingh.dev">Let's collaborate</a>.
+						Does this map connect with something you are exploring?
+						<a href="/about#contact">Start a conversation</a>.
 					</p>
 				</div>
 		</aside>

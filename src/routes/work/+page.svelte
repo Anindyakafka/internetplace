@@ -123,10 +123,10 @@
 	</div>
 
 	<section class="work-collab">
-		<h2 class="collab-title">Open to collaboration</h2>
+		<h2 class="collab-title">Start a conversation</h2>
 		<p class="collab-text">
-			Working on something at the intersection of data, research, and civic tech?
-			<a href="mailto:hello@anindyasingh.dev" class="text-link">Get in touch.</a>
+			If this work overlaps with something you care about, or prompts a thought worth sharing,
+			<a href="/about#contact" class="text-link">get in touch.</a>
 		</p>
 	</section>
 </section>
