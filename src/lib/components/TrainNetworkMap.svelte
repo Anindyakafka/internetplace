@@ -77,15 +77,15 @@
 				attribution: '© OpenStreetMap contributors'
 			});
 
-			L.polyline(routeCoordinates, { color: '#f8f2df', weight: 9, opacity: 0.82 }).addTo(map);
-			L.polyline(routeCoordinates, { color: '#d84b35', weight: 5, opacity: 1 }).addTo(map);
+			L.polyline(routeCoordinates, { color: '#f8f2df', weight: 5, opacity: 0.72 }).addTo(map);
+			L.polyline(routeCoordinates, { color: '#c94b3a', weight: 2.5, opacity: 0.96 }).addTo(map);
 
 			stations.forEach((station) => {
 				const icon = L.divIcon({
 					className: 'station-icon-shell',
 					html: `<span class="station-icon station-icon--${station.shape}" aria-hidden="true"></span>`,
-					iconSize: [18, 18],
-					iconAnchor: [9, 9]
+					iconSize: [12, 12],
+					iconAnchor: [6, 6]
 				});
 				L.marker([station.lat, station.lng], { icon, keyboard: true, title: station.name })
 					.bindTooltip(`<strong>${station.name}</strong><br><span>${station.code}</span>`, { direction: 'top', offset: [0, -8] })
@@ -96,8 +96,8 @@
 				const icon = L.divIcon({
 					className: 'train-icon-shell',
 					html: `<button class="train-token train-token--${service.direction}${service.id === selectedId ? ' is-selected' : ''}" aria-label="${service.label}"><span></span></button>`,
-					iconSize: [30, 20],
-					iconAnchor: [15, 10]
+					iconSize: [19, 10],
+					iconAnchor: [10, 5]
 				});
 				const marker = L.marker(positionAlongRoute(service.id === selectedId && liveProgress !== null ? liveProgress : serviceProgress(service), service.direction === 'southbound'), {
 					icon,
@@ -162,17 +162,16 @@
 	.opacity-control { display: grid !important; }
 	.opacity-control input { width: 100%; accent-color: #d84b35; }
 	:global(.station-icon-shell), :global(.train-icon-shell) { background: transparent !important; border: 0 !important; }
-	:global(.station-icon) { display: block; width: 14px; height: 14px; box-sizing: border-box; background: #faf6e9; border: 3px solid #25231f; box-shadow: 0 1px 0 rgba(255,255,255,.8); }
+	:global(.station-icon) { display: block; width: 9px; height: 9px; box-sizing: border-box; background: #faf6e9; border: 2px solid #292722; }
 	:global(.station-icon--circle) { border-radius: 50%; }
 	:global(.station-icon--square) { border-radius: 2px; }
 	:global(.station-icon--diamond) { transform: rotate(45deg); border-radius: 2px; }
-	:global(.station-icon--triangle) { width: 0; height: 0; background: transparent; border: 0; border-left: 9px solid transparent; border-right: 9px solid transparent; border-bottom: 16px solid #25231f; position: relative; left: -2px; top: -2px; }
-	:global(.train-token) { width: 30px; height: 19px; padding: 0; position: relative; border: 3px solid #25231f; border-radius: 7px; background: #ffd447; box-shadow: 0 2px 5px rgba(0,0,0,.28); cursor: pointer; transition: scale .15s ease, filter .15s ease; }
-	:global(.train-token span), :global(.train-token::before) { content: ''; position: absolute; top: 4px; width: 5px; height: 5px; border-radius: 50%; background: #25231f; }
-	:global(.train-token span) { left: 5px; }
-	:global(.train-token::before) { right: 5px; }
+	:global(.station-icon--triangle) { width: 0; height: 0; background: transparent; border: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 11px solid #292722; position: relative; left: -1px; top: -1px; }
+	:global(.train-token) { width: 19px; height: 9px; padding: 0; position: relative; border: 1.5px solid #292722; border-radius: 5px; background: #f2c84b; box-shadow: 0 1px 2px rgba(0,0,0,.24); cursor: pointer; transition: transform .15s ease, filter .15s ease; }
+	:global(.train-token span) { position: absolute; inset: 2px 4px; border-radius: 2px; background: rgba(41,39,34,.72); }
+	:global(.train-token::before) { content: none; }
 	:global(.train-token--southbound) { background: #66c7c1; }
-	:global(.train-token.is-selected) { scale: 1.3; filter: drop-shadow(0 0 5px #fff); }
+	:global(.train-token.is-selected) { transform: scale(1.22); filter: drop-shadow(0 0 2px rgba(255,255,255,.9)); }
 	:global(.leaflet-tooltip) { font-family: var(--font-sans); border: 1px solid rgba(40,37,30,.2); background: #faf6e9; color: #28251e; box-shadow: 0 3px 12px rgba(0,0,0,.13); }
 	:global(.leaflet-control-attribution) { font-size: 9px; }
 	@media (max-width: 700px) { .map-shell { height: 68vh; min-height: 30rem; } }
