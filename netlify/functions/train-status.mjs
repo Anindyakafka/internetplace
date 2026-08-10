@@ -1,12 +1,10 @@
-const ALLOWED_TRAINS = new Set(['31601', '31602', '31611', '31612']);
-
 export default async (request) => {
 	const url = new URL(request.url);
 	const number = url.searchParams.get('number') ?? '';
 	const apiKey = process.env.RAILRADAR_API_KEY;
 
-	if (!ALLOWED_TRAINS.has(number)) {
-		return Response.json({ error: 'Train is not enabled for this prototype.' }, { status: 400 });
+	if (!/^3\d{4}$/.test(number)) {
+		return Response.json({ error: 'Enter a valid five-digit suburban train number.' }, { status: 400 });
 	}
 
 	if (!apiKey) {
