@@ -28,6 +28,7 @@
 	const folder = $derived(entry.file.replace(/\.gpx$/i, ''));
 	const baseUrl = $derived(`/tracks/source/${folder}`);
 	const gpxUrl = $derived(`${baseUrl}/${entry.file}`);
+	const geoJsonUrl = '/tracks/source/maps/delhi.geojson';
 
 	function haversine(a: TrackPoint, b: TrackPoint): number {
 		const radius = 6371;
@@ -79,9 +80,14 @@
 
 		void (async () => {
 		try {
-			const [response, L] = await Promise.all([fetch(gpxUrl), import('leaflet')]);
+			const [response, geoJsonResponse, L] = await Promise.all([
+				fetch(gpxUrl),
+				fetch(geoJsonUrl),
+				import('leaflet')
+			]);
 			if (disposed) return;
 			if (!response.ok) throw new Error(`Could not load ${entry.file}`);
+			if (!geoJsonResponse.ok) throw new Error('Could not load the Delhi map layer.');
 
 			const xml = new DOMParser().parseFromString(await response.text(), 'application/xml');
 			if (xml.querySelector('parsererror')) throw new Error('The GPX file could not be parsed.');
@@ -123,6 +129,29 @@
 				attribution:
 					'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
 				maxZoom: 20
+			}).addTo(map);
+
+			const delhiLayerPane = map.createPane('delhi-layer');
+			delhiLayerPane.style.zIndex = '350';
+			const delhiGeoJson = (await geoJsonResponse.json()) as GeoJSON.GeoJsonObject;
+			L.geoJSON(delhiGeoJson, {
+				pane: 'delhi-layer',
+				style: {
+					color: '#6f654d',
+					weight: 1.25,
+					opacity: 0.72,
+					fillColor: '#c8bea4',
+					fillOpacity: 0.16
+				},
+				pointToLayer: (_feature, latLng) =>
+					L.circleMarker(latLng, {
+						pane: 'delhi-layer',
+						radius: 3,
+						weight: 1,
+						color: '#6f654d',
+						fillColor: '#c8bea4',
+						fillOpacity: 0.72
+					})
 			}).addTo(map);
 
 			const coordinates = trackPoints.map((point) => [point.lat, point.lon] as [number, number]);
