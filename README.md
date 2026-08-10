@@ -54,7 +54,7 @@ Run type and Svelte checks:
 - npm run check: sync kit types and run svelte-check
 - npm run check:watch: run checks in watch mode
 
-## Data Pipeline (SECC / SHRUG)
+## Data Pipeline (SECC / SHRUG).
 
 This project supports very large local CSV inputs without committing raw data to Git.
 
