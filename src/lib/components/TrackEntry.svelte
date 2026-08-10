@@ -28,6 +28,7 @@
 	const folder = $derived(entry.file.replace(/\.gpx$/i, ''));
 	const baseUrl = $derived(`/tracks/source/${folder}`);
 	const gpxUrl = $derived(`${baseUrl}/${entry.file}`);
+	const historicalMapUrl = 'https://geo.nls.uk/mapdata3/india-combined/{z}/{x}/{y}.png';
 
 	function haversine(a: TrackPoint, b: TrackPoint): number {
 		const radius = 6371;
@@ -123,6 +124,16 @@
 				attribution:
 					'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
 				maxZoom: 20
+			}).addTo(map);
+
+			const historicalMapPane = map.createPane('historical-map');
+			historicalMapPane.style.zIndex = '250';
+			L.tileLayer(historicalMapUrl, {
+				pane: 'historical-map',
+				opacity: 0.74,
+				maxZoom: 18,
+				attribution:
+					'Historical map courtesy of the <a href="https://maps.nls.uk/">National Library of Scotland</a>'
 			}).addTo(map);
 
 			const coordinates = trackPoints.map((point) => [point.lat, point.lon] as [number, number]);
