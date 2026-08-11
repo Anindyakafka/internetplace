@@ -1449,3 +1449,120 @@ Plus an **About** page (from the CV) and a **Colophon** (indieweb-style, credits
 - Build succeeded after the patch.
 
 **Consequence / next step:** Field-note CTA behavior is now robust against drag-interaction interference; deploy/sync to propagate the fix to Netlify.
+
+---
+
+### 2026-08-08 — Sections hub populated and contact language corrected
+
+**Decision:** Turn `/sections` from a skeleton index into a personal gateway with Anindya's biography, portrait, and links to the site's growing bodies of work. Reframe contact language around shared purpose rather than paid services.
+
+**Context:** The sections page needed to establish who the site belongs to before presenting its indexes. Several inherited contact blocks also implied writing commissions and commercial consulting that Anindya does not offer.
+
+**Changes made:**
+- Added the portrait at `static/images/anindya2.png` and a biographical introduction to `/sections`.
+- Connected Writing, Work, About, Colophon, Tracks, and later transport experiments from the sections grid.
+- Replaced the fictional `hello@anindyasingh.dev` address with `anindya2232@gmail.com` while keeping the address visually concealed behind intentional contact actions.
+- Removed writing-commission and fee-for-service language; retained invitations for research and general project collaboration grounded in shared intention.
+- Temporarily removed the Recognition section from About.
+
+**Consequence / next step:** `/sections` is now the site's main human-readable index and can host prominent notices for long-term projects.
+
+---
+
+### 2026-08-08 — Writing archive curated and long-form layout experiments
+
+**Decision:** Narrow the public writing index to substantive pieces and continue experimenting with Pretext for wider, responsive editorial layouts.
+
+**Context:** Several demonstration or technical-placeholder articles made the writing section feel less intentional. The Dadri methodology note also cropped text at narrower widths, while other long-form pages felt unnecessarily constrained on laptops.
+
+**Changes made:**
+- Removed `Fluid Smoke: WebGL Meets Typography`, `R × QGIS Interop for Survey Data`, the Pretext demo, and `A Reproducible QGIS Workflow` from the public writing index.
+- Kept *Scenery as Weapon* unchanged.
+- Corrected horizontal overflow and cropped prose in the Dadri methodology page.
+- Iterated on obstacle-aware Pretext reflow and a fluid-smoke backdrop for the remaining experimental long-form pages.
+
+**Consequence / next step:** The writing index is more selective. Pretext remains experimental and will be revisited rather than treated as settled infrastructure.
+
+---
+
+### 2026-08-09 — Tracks archive and historical Delhi overlay
+
+**Decision:** Create `/tracks` as a full-track archive using GPX sources, with one folder per journey and room for photographs and audio. Use historical NLS tiles as an optional cartographic layer.
+
+**Context:** Anindya supplied GPX files and `gpx_source.csv`, requested that tracks never be trimmed, and anticipated attaching photographs and voice recordings later.
+
+**Changes made:**
+- Added the tracks source structure under `static/tracks/source/` and rendered complete GPX geometries.
+- Built track metadata and presentation components for multiple journeys.
+- Added the National Library of Scotland historical India tile layer over OpenStreetMap using `https://geo.nls.uk/mapdata3/india-combined/{z}/{x}/{y}.png`.
+- Kept OpenStreetMap beneath the historical layer so uncovered historical tiles fall back to a modern map rather than blank white areas.
+- Enabled cursor-hover scroll zoom and balanced map height/responsive containment so content does not extend beyond the viewport.
+
+**Consequence / next step:** Additional journeys can be added as self-contained source folders with GPX, imagery, audio, and metadata.
+
+---
+
+### 2026-08-10 — Sealdah local-train network visualization
+
+**Decision:** Build a calculated visualization of suburban services beginning or ending at Sealdah, using timetable and route geometry rather than claiming precise GPS positions.
+
+**Context:** Available railway services did not provide a dependable complete live feed for every West Bengal local train. A delayed or calculated representation was acceptable if its limitations remained explicit.
+
+**Changes made:**
+- Added `/trains`, `TrainNetworkMap.svelte`, the Sealdah network types, preparation scripts, and generated network data.
+- Assembled corridors, stations, services, directions, and timetable-derived positions.
+- Placed the network over the NLS historical map with OpenStreetMap fallback and a modern-map toggle.
+- Redesigned train tokens as thin Mini-Metro-inspired markers aligned to route geometry.
+- Added distinct directions and a legend for trains moving toward or away from Sealdah.
+- Added search, terminal-corridor filtering, selected-service details, and optional live-status correction through a Netlify function.
+- Expanded the project from an initial Sealdah subset toward a broader West Bengal local-train data preparation workflow.
+
+**Consequence / next step:** Continue scheduled network refreshes, validate corridor coverage, and distinguish calculated from reported states everywhere the data appears.
+
+---
+
+### 2026-08-11 — Delhi realtime feed reclassified as public-transit vehicles
+
+**Decision:** Stop presenting Delhi Open Transit Data's realtime VehiclePositions feed as Delhi Metro data and repurpose it as an exploratory Delhi public-transit vehicle visualization.
+
+**Context:** Decoding the feed produced roughly four thousand simultaneous entities with vehicle labels resembling Delhi registration plates and more than a thousand route identifiers. The official documentation describes the realtime feed as Delhi bus data; DMRC is supplied separately as static GTFS. The apparent abundance of “metros” and the chaotic map were therefore consequences of a source-identification error, not merely marker styling.
+
+**Changes made:**
+- Removed the misleading `/metro` live visualization and `dmrc-vehicles` function.
+- Added `/vehicles` and `netlify/functions/delhi-vehicles.mjs`, retaining compatibility with the already configured API environment variable.
+- Kept the NLS historical map as the default with a working modern OpenStreetMap toggle.
+- Replaced large bubbles with one tiny rectangular mark per transit vehicle.
+- Fixed zoom crashes by replacing thousands of per-marker canvas renderers with one shared Leaflet canvas renderer.
+- Enabled tooltips only at close zoom and increased bus rectangles by 50% after visual review.
+- Updated the Sections card and homepage terminal route from Metro to Vehicles.
+
+**Alternatives considered:**
+- *Continue calling the feed DMRC and merely cluster it* — rejected as factually wrong.
+- *Fabricate or infer Metro routes from the bus feed* — rejected.
+- *Build the Metro network immediately from third-party data* — deferred until an official DMRC static GTFS package is collected and its terms are understood.
+
+**Consequence / next step:** `/vehicles` is an honest visualization of Delhi transit activity. Delhi Metro remains a possible future static/timetable project rather than a false realtime claim.
+
+---
+
+### 2026-08-11 — Annihilation Atlas founded
+
+**Decision:** Establish **Annihilation Atlas** as the site's central long-term project: an explicitly anti-caste, anti-jati, minority-aligned and Marxian observatory of land, labour, classification, segregation, resistance, and memory.
+
+**Context:** A conventional caste map risks freezing administrative categories, enabling surveillance, treating hierarchy as culture, or making oppressed communities visible only through injury. The project instead needs to expose caste as material and social domination while keeping anti-caste struggle and knowledge at its centre. Marxian analysis will be used to study ownership, labour, exploitation, and accumulation without reducing caste to class.
+
+**Changes made:**
+- Created `/annihilation-atlas` as a public founding document rather than an internal placeholder.
+- Published the project's ideological position, evidence principles, and non-negotiable refusals.
+- Explicitly prohibited surname-to-caste inference, individual/community surveillance, jati ranking, false-precision caste maps, and the publication of sensitive material merely because it is available.
+- Defined an evidence record around source, place, period, classifier, absence, uncertainty, and contestation.
+- Defined Prototype I, *What the Map Cannot Say*, through five linked rooms: Map, Measure, File, Absence, and Struggle.
+- Added a data desk covering Census SC/ST tables, PLFS, Agriculture Census, NCRB reports, sanitation-work records, NFHS, geographic concordances, and movement counter-archives.
+- Added a prominent “The real deal” note beside Anindya's portrait on `/sections`, identifying the Atlas as the undertaking around which the rest of the site will gather.
+
+**Alternatives considered:**
+- *Begin with an all-India caste dashboard* — rejected because it would allow interface scale to outrun conceptual, geographic, and ethical rigor.
+- *Treat official classifications as neutral demographic facts* — rejected.
+- *Collect every available dataset before choosing a question* — rejected in favour of one situated place and one material relation.
+
+**Consequence / next step:** Choose Prototype I's first place and material question, then collect source files intact with questionnaires, codebooks, methodology, licence, provenance, and access notes. Dadri is a strong candidate because existing field knowledge can discipline the map rather than leaving it detached from lived context.
