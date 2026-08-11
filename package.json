@@ -8,6 +8,7 @@
     "dev:netlify": "npx --yes netlify-cli dev",
     "data:prepare": "node scripts/prepare-secc-state-summary.mjs",
     "data:trains": "node scripts/prepare-sealdah-network.mjs",
+    "data:trains:west-bengal": "node scripts/prepare-west-bengal-trains.mjs",
     "build": "npm run data:prepare && vite build",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
