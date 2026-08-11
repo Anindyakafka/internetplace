@@ -72,12 +72,12 @@
 		</article>
 
 		<article class="section-card">
-			<h2>Delhi Metro Live</h2>
+			<h2>Delhi Vehicles</h2>
 			<p>
-				A live map of DMRC vehicle positions, refreshed from Delhi Open Transit Data.
+				A subtle, live view of Delhi transit movement over a historical map.
 				Station and official line geometry will follow from the static GTFS archive.
 			</p>
-			<a href="/metro" class="section-link">Open the metro map →</a>
+			<a href="/vehicles" class="section-link">Open the vehicle map →</a>
 		</article>
 
 		<article class="section-card">
