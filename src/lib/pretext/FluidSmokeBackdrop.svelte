@@ -48,10 +48,10 @@
 					const plume = Math.sin(nx * 8 + time + Math.sin(ny * 7 - time * .7))
 						+ Math.cos(ny * 10 - time * .8 + Math.sin(nx * 9));
 					const falloff = Math.sin(Math.PI * nx) * Math.sin(Math.PI * ny);
-					const density = Math.max(0, (plume * .32 + .28) * falloff);
-					if (density < .18) continue;
+					const density = Math.max(0, (plume * .3 + .32) * falloff);
+					if (density < .16) continue;
 					const item = palette[Math.min(palette.length - 1, Math.floor(density * palette.length))];
-					ctx.fillStyle = `rgba(137, 91, 72, ${Math.min(.32, density * .24)})`;
+					ctx.fillStyle = `rgba(126, 78, 62, ${Math.min(.3, density * .28)})`;
 					ctx.fillText(item.char, x + Math.sin(y * .025 + time) * 12, y);
 				}
 			}
@@ -69,6 +69,6 @@
 <canvas bind:this={canvas} class="fluid-smoke" aria-hidden="true"></canvas>
 
 <style>
-	.fluid-smoke { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .75; }
-	@media (max-width: 799px) { .fluid-smoke { opacity: .42; } }
+	.fluid-smoke { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .2; }
+	@media (max-width: 799px) { .fluid-smoke { opacity: .1; } }
 </style>

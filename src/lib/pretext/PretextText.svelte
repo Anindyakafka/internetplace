@@ -44,12 +44,14 @@
 	let cursorObstacle = $state<{ x: number; y: number; radius: number } | null>(null);
 	let pointerFrame = 0;
 	let prepared = $derived.by<PreparedTextWithSegments>(() => {
-		const options = letterSpacing !== undefined ? { letterSpacing } : undefined;
+		const options = letterSpacing !== undefined
+			? { letterSpacing, whiteSpace: 'pre-wrap' as const }
+			: { whiteSpace: 'pre-wrap' as const };
 		return prepareWithSegments(text, font, options);
 	});
 
 	function handlePointerMove(event: PointerEvent) {
-		if (!cursorAvoidance || !matchMedia('(min-width: 800px) and (pointer: fine) and (prefers-reduced-motion: no-preference)').matches) return;
+		if (!cursorAvoidance || event.pointerType === 'touch' || !matchMedia('(min-width: 800px)').matches) return;
 		cancelAnimationFrame(pointerFrame);
 		pointerFrame = requestAnimationFrame(() => {
 			const rect = container.getBoundingClientRect();
