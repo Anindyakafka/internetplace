@@ -23,10 +23,18 @@
 			<p class="hero-note">Explore my work, writing, methods, and field notes below.</p>
 		</div>
 
-		<figure class="hero-portrait">
-			<img src="/images/anindya2.png" alt="Anindya Singh wearing a colourful ceremonial hat outdoors" />
-			<figcaption>Anindya Singh · Research, data, and writing</figcaption>
-		</figure>
+		<div class="hero-portrait">
+			<figure class="portrait-frame">
+				<img src="/images/anindya2.png" alt="Anindya Singh wearing a colourful ceremonial hat outdoors" />
+				<figcaption>Anindya Singh · Research, data, and writing</figcaption>
+			</figure>
+			<aside class="atlas-note">
+				<span>The real deal</span>
+				<h2>Annihilation Atlas</h2>
+				<p>An anti-caste observatory of land, labour, classification, segregation, resistance, and memory. This is the long project around which the rest of this site will begin to gather.</p>
+				<a href="/annihilation-atlas">Enter the project →</a>
+			</aside>
+		</div>
 	</header>
 
 	<div class="sections-grid">
@@ -156,6 +164,11 @@
 	}
 
 	.hero-portrait {
+		display: grid;
+		gap: var(--space-2xs);
+	}
+
+	.portrait-frame {
 		margin: 0;
 		display: grid;
 		gap: var(--space-2xs);
@@ -179,6 +192,43 @@
 		letter-spacing: 0.04em;
 		text-transform: uppercase;
 		color: var(--color-text-muted);
+	}
+
+	.atlas-note {
+		margin-top: var(--space-m);
+		padding: var(--space-l);
+		border: 1px solid var(--color-accent);
+		border-radius: var(--radius-lg);
+		background: color-mix(in srgb, var(--color-accent) 7%, var(--color-surface));
+	}
+
+	.atlas-note span {
+		font-family: var(--font-mono);
+		font-size: var(--step--2);
+		text-transform: uppercase;
+		letter-spacing: .1em;
+		color: var(--color-accent);
+	}
+
+	.atlas-note h2 {
+		margin-top: var(--space-2xs);
+		font-family: var(--font-serif);
+		font-size: var(--step-2);
+	}
+
+	.sections-hero .atlas-note p {
+		margin-block: var(--space-s);
+		font-size: var(--step--1);
+		line-height: 1.5;
+	}
+
+	.atlas-note a {
+		font-family: var(--font-mono);
+		font-size: var(--step--1);
+		text-transform: uppercase;
+		letter-spacing: .04em;
+		text-decoration: none;
+		color: var(--color-accent);
 	}
 
 	.hero-note {
