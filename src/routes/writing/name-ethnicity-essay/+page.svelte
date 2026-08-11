@@ -52,18 +52,21 @@ I no longer work on this project. Not because I think the research questions are
 	</header>
 
 	<div class="pretext-body">
-		<PretextText text={essay} font={BODY_FONT} lineHeight={LINE_HEIGHT} {obstacles} />
+		<PretextText text={essay} font={BODY_FONT} lineHeight={LINE_HEIGHT} {obstacles} cursorAvoidance />
 	</div>
 </article>
 
 <style>
 	.page-content {
-		max-width: var(--measure);
+		width: 100%;
+		max-width: 76rem;
 		margin-inline: auto;
 		padding: 4rem 1.5rem 6rem;
+		box-sizing: border-box;
 	}
 
 	.entry-header {
+		max-width: 54rem;
 		margin-bottom: 3rem;
 	}
 
@@ -92,8 +95,21 @@ I no longer work on this project. Not because I think the research questions are
 
 	.pretext-body {
 		position: relative;
-		overflow: hidden;
+		width: 100%;
+		min-width: 0;
+		overflow: visible;
 		min-height: 400px;
+	}
+
+	@media (max-width: 640px) {
+		.page-content {
+			padding-inline: var(--space-m);
+		}
+
+		.entry-header h1,
+		.dek {
+			overflow-wrap: anywhere;
+		}
 	}
 
 

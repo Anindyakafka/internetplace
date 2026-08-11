@@ -22,6 +22,8 @@
 		class?: string;
 		/** Optional letter-spacing to pass through to pretext. */
 		letterSpacing?: number;
+		/** Reflow nearby lines away from the pointer on wide, fine-pointer screens. */
+		cursorAvoidance?: boolean;
 	}
 
 	let {
@@ -30,7 +32,8 @@
 		lineHeight,
 		obstacles = [],
 		class: className = '',
-		letterSpacing
+		letterSpacing,
+		cursorAvoidance = false
 	}: Props = $props();
 
 	let container: HTMLDivElement;
@@ -38,26 +41,53 @@
 	// Layout state — updated inside $effect on resize / prop change
 	let lines = $state<{ text: string; y: number; width: number; x: number }[]>([]);
 	let totalHeight = $state(0);
+	let cursorObstacle = $state<Obstacle | null>(null);
+	let pointerFrame = 0;
+	let prepared = $derived.by<PreparedTextWithSegments>(() => {
+		const options = letterSpacing !== undefined ? { letterSpacing } : undefined;
+		return prepareWithSegments(text, font, options);
+	});
+
+	function handlePointerMove(event: PointerEvent) {
+		if (!cursorAvoidance || !matchMedia('(min-width: 800px) and (pointer: fine) and (prefers-reduced-motion: no-preference)').matches) return;
+		cancelAnimationFrame(pointerFrame);
+		pointerFrame = requestAnimationFrame(() => {
+			const rect = container.getBoundingClientRect();
+			const x = event.clientX - rect.left;
+			const y = event.clientY - rect.top;
+			if (x < 0 || x > rect.width || y < 0 || y > rect.height) return;
+			const radiusX = 76;
+			const radiusY = 52;
+			const side = x <= rect.width / 2 ? 'left' : 'right';
+			cursorObstacle = {
+				y0: Math.max(0, y - radiusY),
+				y1: y + radiusY,
+				side,
+				width: Math.min(rect.width * 0.58, side === 'left' ? x + radiusX : rect.width - x + radiusX)
+			};
+		});
+	}
+
+	function handlePointerLeave() {
+		cancelAnimationFrame(pointerFrame);
+		cursorObstacle = null;
+	}
 
 	$effect(() => {
 		if (!container) return;
 
 		// Track values we depend on so the effect re-runs when they change.
-		const _text = text;
-		const _font = font;
 		const _lh = lineHeight;
 		const _obs = obstacles;
-		const _ls = letterSpacing;
-
-		// Phase 1: prepare (segment + measure) — call once per text/font change.
-		const options = _ls !== undefined ? { letterSpacing: _ls } : undefined;
-		const prepared: PreparedTextWithSegments = prepareWithSegments(_text, _font, options);
+		const _cursorObstacle = cursorObstacle;
+		const _prepared = prepared;
 
 		const doLayout = () => {
 			const containerWidth = container.clientWidth;
 
-			const lineWidthForY = buildLineWidthForY(containerWidth, _obs);
-			const leftOffsetForY = buildLeftOffsetForY(_obs);
+			const activeObstacles = _cursorObstacle ? [..._obs, _cursorObstacle] : _obs;
+			const lineWidthForY = buildLineWidthForY(containerWidth, activeObstacles);
+			const leftOffsetForY = buildLeftOffsetForY(activeObstacles);
 
 			const out: { text: string; y: number; width: number; x: number }[] = [];
 			let cursor: LayoutCursor = { segmentIndex: 0, graphemeIndex: 0 };
@@ -70,10 +100,10 @@
 					continue;
 				}
 
-				const range: LayoutLineRange | null = layoutNextLineRange(prepared, cursor, availWidth);
+				const range: LayoutLineRange | null = layoutNextLineRange(_prepared, cursor, availWidth);
 				if (range === null) break;
 
-				const line = materializeLineRange(prepared, range);
+				const line = materializeLineRange(_prepared, range);
 				const x = leftOffsetForY(y);
 				out.push({ text: line.text, y, width: range.width, x });
 
@@ -95,7 +125,15 @@
 	});
 </script>
 
-<div bind:this={container} class="pretext-text {className}" style="height: {totalHeight}px; font: {font}; line-height: {lineHeight}px; letter-spacing: {letterSpacing ?? 0}px;">
+<div
+	bind:this={container}
+	role="document"
+	class="pretext-text {className}"
+	class:cursor-aware={cursorAvoidance}
+	style="height: {totalHeight}px; font: {font}; line-height: {lineHeight}px; letter-spacing: {letterSpacing ?? 0}px;"
+	onpointermove={handlePointerMove}
+	onpointerleave={handlePointerLeave}
+>
 	{#each lines as line (line.y)}
 		<span class="pretext-line" style="top: {line.y}px; left: {line.x}px;">{line.text}</span>
 	{/each}
@@ -113,5 +151,16 @@
 		position: absolute;
 		white-space: pre;
 		overflow: visible;
+		transition: left 110ms ease;
+	}
+
+	.cursor-aware {
+		cursor: default;
+	}
+
+	@media (max-width: 799px), (pointer: coarse), (prefers-reduced-motion: reduce) {
+		.pretext-line {
+			transition: none;
+		}
 	}
 </style>

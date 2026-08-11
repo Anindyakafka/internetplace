@@ -50,20 +50,21 @@ What follows is an account of that methodology — not as a recipe to be followe
 	</header>
 
 	<div class="pretext-body">
-		<PretextText text={essay} font={BODY_FONT} lineHeight={LINE_HEIGHT} {obstacles} />
+		<PretextText text={essay} font={BODY_FONT} lineHeight={LINE_HEIGHT} {obstacles} cursorAvoidance />
 	</div>
 </article>
 
 <style>
 	.page-content {
 		width: 100%;
-		max-width: var(--measure);
+		max-width: 76rem;
 		margin-inline: auto;
 		padding: 4rem 1.5rem 6rem;
 		box-sizing: border-box;
 	}
 
 	.entry-header {
+		max-width: 54rem;
 		margin-bottom: 3rem;
 	}
 
@@ -96,6 +97,12 @@ What follows is an account of that methodology — not as a recipe to be followe
 		min-width: 0;
 		overflow: visible;
 		min-height: 400px;
+	}
+
+	@media (min-width: 1100px) {
+		.pretext-body {
+			font-size: 1.05rem;
+		}
 	}
 
 	@media (max-width: 640px) {
