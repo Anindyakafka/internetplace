@@ -7,7 +7,7 @@
 		type LayoutCursor,
 		type LayoutLineRange
 	} from '@chenglou/pretext';
-	import { buildLineWidthForY, buildLeftOffsetForY, type Obstacle } from './obstacles';
+	import type { Obstacle } from './obstacles';
 
 	interface Props {
 		/** Raw text content to lay out. */
@@ -41,7 +41,7 @@
 	// Layout state — updated inside $effect on resize / prop change
 	let lines = $state<{ text: string; y: number; width: number; x: number }[]>([]);
 	let totalHeight = $state(0);
-	let cursorObstacle = $state<Obstacle | null>(null);
+	let cursorObstacle = $state<{ x: number; y: number; radius: number } | null>(null);
 	let pointerFrame = 0;
 	let prepared = $derived.by<PreparedTextWithSegments>(() => {
 		const options = letterSpacing !== undefined ? { letterSpacing } : undefined;
@@ -56,15 +56,7 @@
 			const x = event.clientX - rect.left;
 			const y = event.clientY - rect.top;
 			if (x < 0 || x > rect.width || y < 0 || y > rect.height) return;
-			const radiusX = 76;
-			const radiusY = 52;
-			const side = x <= rect.width / 2 ? 'left' : 'right';
-			cursorObstacle = {
-				y0: Math.max(0, y - radiusY),
-				y1: y + radiusY,
-				side,
-				width: Math.min(rect.width * 0.58, side === 'left' ? x + radiusX : rect.width - x + radiusX)
-			};
+			cursorObstacle = { x, y, radius: 68 };
 		});
 	}
 
@@ -85,29 +77,44 @@
 		const doLayout = () => {
 			const containerWidth = container.clientWidth;
 
-			const activeObstacles = _cursorObstacle ? [..._obs, _cursorObstacle] : _obs;
-			const lineWidthForY = buildLineWidthForY(containerWidth, activeObstacles);
-			const leftOffsetForY = buildLeftOffsetForY(activeObstacles);
-
 			const out: { text: string; y: number; width: number; x: number }[] = [];
 			let cursor: LayoutCursor = { segmentIndex: 0, graphemeIndex: 0 };
 			let y = 0;
+			let finished = false;
 
-			while (true) {
-				const availWidth = lineWidthForY(y);
-				if (availWidth <= 0) {
-					y += _lh;
-					continue;
+			while (!finished) {
+				let left = 0;
+				let right = containerWidth;
+				for (const obstacle of _obs) {
+					if (y > obstacle.y1 || y + _lh < obstacle.y0) continue;
+					if (obstacle.side === 'left') left += obstacle.width;
+					else right -= obstacle.width;
+				}
+				let slots = [{ left, right }];
+				if (_cursorObstacle) {
+					const bandCenter = y + _lh / 2;
+					const dy = Math.abs(bandCenter - _cursorObstacle.y);
+					if (dy < _cursorObstacle.radius) {
+						const dx = Math.sqrt(_cursorObstacle.radius ** 2 - dy ** 2) + 16;
+						const blockedLeft = _cursorObstacle.x - dx;
+						const blockedRight = _cursorObstacle.x + dx;
+						slots = slots.flatMap((slot) => {
+							if (blockedRight <= slot.left || blockedLeft >= slot.right) return [slot];
+							return [
+								{ left: slot.left, right: Math.min(slot.right, blockedLeft) },
+								{ left: Math.max(slot.left, blockedRight), right: slot.right }
+							].filter((part) => part.right - part.left >= 72);
+						});
+					}
 				}
 
-				const range: LayoutLineRange | null = layoutNextLineRange(_prepared, cursor, availWidth);
-				if (range === null) break;
-
-				const line = materializeLineRange(_prepared, range);
-				const x = leftOffsetForY(y);
-				out.push({ text: line.text, y, width: range.width, x });
-
-				cursor = range.end;
+				for (const slot of slots) {
+					const range: LayoutLineRange | null = layoutNextLineRange(_prepared, cursor, slot.right - slot.left);
+					if (range === null) { finished = true; break; }
+					const line = materializeLineRange(_prepared, range);
+					out.push({ text: line.text, y, width: range.width, x: slot.left });
+					cursor = range.end;
+				}
 				y += _lh;
 			}
 

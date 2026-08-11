@@ -1,9 +1,10 @@
 <script lang="ts">
 	import BackLink from '$lib/components/BackLink.svelte';
 	import PretextText from '$lib/pretext/PretextText.svelte';
+	import FluidSmokeBackdrop from '$lib/pretext/FluidSmokeBackdrop.svelte';
 	import type { Obstacle } from '$lib/pretext/obstacles';
 
-	const BODY_FONT = '400 18px/1.6 Newsreader, serif';
+	const BODY_FONT = '400 18px Newsreader, serif';
 	const LINE_HEIGHT = 30;
 
 	const essay = `Dadri is a tehsil in the district of Gautam Buddh Nagar, Uttar Pradesh, sitting at the edge of the National Capital Region where the sprawl of Delhi gives way to the flat, irrigated farmland of the western Gangetic plain. The landscape here is not picturesque in any obvious sense. There are no hills, no forests, no dramatic water features. But it is dense with economic activity, social friction, and the residue of a long agrarian history that is being overwritten, parcel by parcel, into something else entirely.
@@ -41,21 +42,26 @@ What follows is an account of that methodology — not as a recipe to be followe
 </svelte:head>
 
 <article class="page-content">
-	<BackLink href="/writing">← Writing</BackLink>
+	<FluidSmokeBackdrop />
+	<div class="article-layer">
+		<BackLink href="/writing">← Writing</BackLink>
 
-	<header class="entry-header">
-		<span class="entry-meta-bar">Essay · 2024</span>
-		<h1>Fieldwork in Dadri: A Methodology Note</h1>
-		<p class="dek">On combining surveys, oral histories, and spatial analysis in a peri-urban field site.</p>
-	</header>
+		<header class="entry-header">
+			<span class="entry-meta-bar">Essay · 2024</span>
+			<h1>Fieldwork in Dadri: A Methodology Note</h1>
+			<p class="dek">On combining surveys, oral histories, and spatial analysis in a peri-urban field site.</p>
+		</header>
 
-	<div class="pretext-body">
-		<PretextText text={essay} font={BODY_FONT} lineHeight={LINE_HEIGHT} {obstacles} cursorAvoidance />
+		<div class="pretext-body">
+			<PretextText text={essay} font={BODY_FONT} lineHeight={LINE_HEIGHT} {obstacles} cursorAvoidance />
+		</div>
 	</div>
 </article>
 
 <style>
 	.page-content {
+		position: relative;
+		isolation: isolate;
 		width: 100%;
 		max-width: 76rem;
 		margin-inline: auto;
@@ -98,6 +104,8 @@ What follows is an account of that methodology — not as a recipe to be followe
 		overflow: visible;
 		min-height: 400px;
 	}
+
+	.article-layer { position: relative; z-index: 1; }
 
 	@media (min-width: 1100px) {
 		.pretext-body {

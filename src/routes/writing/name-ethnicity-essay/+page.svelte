@@ -1,9 +1,10 @@
 <script lang="ts">
 	import BackLink from '$lib/components/BackLink.svelte';
 	import PretextText from '$lib/pretext/PretextText.svelte';
+	import FluidSmokeBackdrop from '$lib/pretext/FluidSmokeBackdrop.svelte';
 	import type { Obstacle } from '$lib/pretext/obstacles';
 
-	const BODY_FONT = '400 18px/1.6 Newsreader, serif';
+	const BODY_FONT = '400 18px Newsreader, serif';
 	const LINE_HEIGHT = 30;
 
 	const essay = `What is in a name? For economists, demographers, and sociologists studying South Asia, the answer is: quite a lot. Names in the subcontinent carry dense information about caste, religion, region, language, and sometimes even family occupation. A surname like Iyer places a person in Tamil Brahmin society; Ansari points to a North Indian Muslim weaving community; Banerjee, written either way, marks a Bengali upper-caste Hindu family.
@@ -43,27 +44,34 @@ I no longer work on this project. Not because I think the research questions are
 </svelte:head>
 
 <article class="page-content">
-	<BackLink href="/writing">← Writing</BackLink>
+	<FluidSmokeBackdrop />
+	<div class="article-layer">
+		<BackLink href="/writing">← Writing</BackLink>
 
-	<header class="entry-header">
-		<span class="entry-meta-bar">Essay · 2024</span>
-		<h1>What's in a Name? Ethnicity Detection and its Discontents</h1>
-		<p class="dek">Building a name-to-ethnicity classifier for South Asian names, and what it revealed about identity as a statistical object.</p>
-	</header>
+		<header class="entry-header">
+			<span class="entry-meta-bar">Essay · 2024</span>
+			<h1>What's in a Name? Ethnicity Detection and its Discontents</h1>
+			<p class="dek">Building a name-to-ethnicity classifier for South Asian names, and what it revealed about identity as a statistical object.</p>
+		</header>
 
-	<div class="pretext-body">
-		<PretextText text={essay} font={BODY_FONT} lineHeight={LINE_HEIGHT} {obstacles} cursorAvoidance />
+		<div class="pretext-body">
+			<PretextText text={essay} font={BODY_FONT} lineHeight={LINE_HEIGHT} {obstacles} cursorAvoidance />
+		</div>
 	</div>
 </article>
 
 <style>
 	.page-content {
+		position: relative;
+		isolation: isolate;
 		width: 100%;
 		max-width: 76rem;
 		margin-inline: auto;
 		padding: 4rem 1.5rem 6rem;
 		box-sizing: border-box;
 	}
+
+	.article-layer { position: relative; z-index: 1; }
 
 	.entry-header {
 		max-width: 54rem;
