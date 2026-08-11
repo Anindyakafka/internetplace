@@ -703,6 +703,7 @@
 		map: '/map',
 		tracks: '/tracks',
 		trains: '/trains',
+		metro: '/metro',
 		notes: '/writing',
 		'blog-roll': '/work',
 		blog: '/writing',
@@ -731,7 +732,7 @@
 				appendTerminalLines([
 					'Available commands for the computational proletariat:',
 					'- help: show command registry',
-					'- cd <route>: navigate (about, work, writing, colophon, sections, map, trains, contact)',
+					'- cd <route>: navigate (about, work, writing, colophon, sections, map, trains, metro, contact)',
 					'- ls: list available routes',
 					'- sudo: attempt superuser mode (you will be judged)',
 					'- polly <text>: have polly imitate your line',
@@ -752,14 +753,14 @@
 						'📂 Route commons currently available:',
 						'📂 Public navigation infrastructure:'
 					]),
-					'about work writing colophon sections map trains contact'
+					'about work writing colophon sections map trains metro contact'
 				]);
 				break;
 			case 'cd': {
 				if (!argument) {
 					appendTerminalLines([
 						'cd requires a destination. Example: cd work',
-						'Valid: about work writing colophon sections map trains contact / home'
+						'Valid: about work writing colophon sections map trains metro contact / home'
 					]);
 					break;
 				}

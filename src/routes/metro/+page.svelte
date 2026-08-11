@@ -42,7 +42,11 @@
 						} else marker.setLatLng(point);
 					});
 					markers.forEach((marker, id) => { if (!active.has(id)) { marker.remove(); markers.delete(id); } });
-				} catch (cause) { feedState = 'error'; error = cause instanceof Error ? cause.message : 'Live DMRC data is unavailable.'; }
+				} catch (cause) {
+					feedState = 'error';
+					const message = cause instanceof Error ? cause.message : '';
+					error = message.includes('404') ? 'Live functions are unavailable in Vite Preview; run npm run dev:netlify.' : message || 'Live DMRC data is unavailable.';
+				}
 			};
 			void refresh(); timer = setInterval(refresh, 20_000);
 		});
