@@ -56,9 +56,11 @@ What follows is an account of that methodology — not as a recipe to be followe
 
 <style>
 	.page-content {
+		width: 100%;
 		max-width: var(--measure);
 		margin-inline: auto;
 		padding: 4rem 1.5rem 6rem;
+		box-sizing: border-box;
 	}
 
 	.entry-header {
@@ -90,8 +92,21 @@ What follows is an account of that methodology — not as a recipe to be followe
 
 	.pretext-body {
 		position: relative;
-		overflow: hidden;
+		width: 100%;
+		min-width: 0;
+		overflow: visible;
 		min-height: 400px;
+	}
+
+	@media (max-width: 640px) {
+		.page-content {
+			padding-inline: var(--space-m);
+		}
+
+		.entry-header h1,
+		.dek {
+			overflow-wrap: anywhere;
+		}
 	}
 
 

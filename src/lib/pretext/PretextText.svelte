@@ -95,7 +95,7 @@
 	});
 </script>
 
-<div bind:this={container} class="pretext-text {className}" style="height: {totalHeight}px;">
+<div bind:this={container} class="pretext-text {className}" style="height: {totalHeight}px; font: {font}; line-height: {lineHeight}px; letter-spacing: {letterSpacing ?? 0}px;">
 	{#each lines as line (line.y)}
 		<span class="pretext-line" style="top: {line.y}px; left: {line.x}px;">{line.text}</span>
 	{/each}
@@ -104,12 +104,14 @@
 <style>
 	.pretext-text {
 		position: relative;
-		overflow: hidden;
+		width: 100%;
+		min-width: 0;
+		overflow: visible;
 	}
 
 	.pretext-line {
 		position: absolute;
 		white-space: pre;
-		overflow: hidden;
+		overflow: visible;
 	}
 </style>

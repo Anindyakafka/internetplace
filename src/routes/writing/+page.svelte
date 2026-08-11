@@ -22,16 +22,6 @@
 			status: 'published'
 		},
 		{
-			slug: '/writing/pretext-demo/',
-			title: 'Pretext Demo',
-			blurb: 'Obstacle-aware text reflow experiment using @chenglou/pretext — long-form text that flows around figures, pull quotes, and arbitrary shapes.',
-			date: '2025-06-28',
-			category: 'demo',
-			readTime: '5 min',
-			featured: true,
-			status: 'published'
-		},
-		{
 			slug: '/writing/dadri-methodology/',
 			title: 'Fieldwork in Dadri: A Methodology Note',
 			blurb: 'Methodology from fieldwork in Dadri, western Uttar Pradesh: 214 household surveys across seven villages, satellite imagery analysis across two decades, oral histories, and the politics of land records in a peri-urban landscape.',
@@ -50,31 +40,6 @@
 			readTime: '12 min',
 			status: 'published'
 		},
-		{
-			slug: '/writing/qgis-workflow/',
-			title: 'A Reproducible QGIS Workflow for Electoral Roll Data',
-			blurb: 'Notes from processing 2002 West Bengal electoral rolls — geocoding, deduplication, and building shapefiles that can be version-controlled.',
-			date: '2024-09-20',
-			category: 'note',
-			readTime: '8 min',
-			status: 'published'
-		},
-		{
-			slug: '/writing/fluid-smoke/',
-			title: 'Fluid Smoke: WebGL Meets Typography',
-			blurb: 'An exploration of the Somnai pretext-demos fluid smoke effect — how fragment shaders can create living, breathing text backgrounds.',
-			date: '2025-07-01',
-			category: 'experiment',
-			status: 'planned'
-		},
-		{
-			slug: '/writing/r-qgis-interop/',
-			title: 'R × QGIS Interop for Survey Data',
-			blurb: 'Practical patterns for moving between R data frames and QGIS projects when working with large-scale household survey geodata.',
-			date: '2024-06-10',
-			category: 'note',
-			status: 'draft'
-		}
 	];
 
 	type Filter = 'all' | 'essay' | 'note' | 'demo' | 'experiment';
@@ -82,9 +47,6 @@
 	const filters: { id: Filter; label: string }[] = [
 		{ id: 'all', label: 'All' },
 		{ id: 'essay', label: 'Essays' },
-		{ id: 'note', label: 'Notes' },
-		{ id: 'demo', label: 'Demos' },
-		{ id: 'experiment', label: 'Experiments' }
 	];
 
 	let activeFilter = $state<Filter>('all');
