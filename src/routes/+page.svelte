@@ -1559,7 +1559,7 @@
 		max-width: min(74rem, 96vw);
 		margin: 0 auto;
 		display: grid;
-		grid-template-columns: minmax(8.8rem, 0.84fr) minmax(8.8rem, 0.84fr) minmax(8.1rem, 0.62fr) minmax(18.8rem, 1.95fr);
+		grid-template-columns: minmax(8.8rem, 1fr) minmax(8.8rem, 1fr) minmax(10rem, 1fr) minmax(19rem, 25rem);
 		gap: clamp(0.42rem, 0.9vw, 0.62rem);
 		align-items: start;
 		padding-bottom: 0.14rem;
@@ -1615,13 +1615,18 @@
 	}
 
 	.chhipi-terminal {
-		max-width: none;
+		width: 100%;
+		max-width: 25rem;
 		margin: 0;
+		justify-self: end;
 		display: grid;
 		gap: 0.24rem;
 	}
 
 	.terminal-shell {
+		min-height: 10.5rem;
+		display: flex;
+		flex-direction: column;
 		border: 1px solid rgba(98, 155, 94, 0.62);
 		border-radius: 0;
 		background: linear-gradient(180deg, #081109, #060b06);
@@ -1630,7 +1635,8 @@
 	}
 
 	.terminal-log {
-		max-height: 6.6rem;
+		height: 8.75rem;
+		min-height: 0;
 		overflow: auto;
 		padding-right: 0.14rem;
 		display: grid;
@@ -1667,6 +1673,7 @@
 	}
 
 	.terminal-input-row {
+		flex: 0 0 auto;
 		margin-top: 0.28rem;
 		padding-top: 0.22rem;
 		border-top: 1px solid rgba(98, 155, 94, 0.35);
@@ -1915,6 +1922,19 @@
 		.footer-strip {
 			grid-template-columns: 1fr;
 			gap: 0.42rem;
+		}
+
+		.chhipi-terminal {
+			max-width: none;
+			justify-self: stretch;
+		}
+
+		.terminal-shell {
+			min-height: 12rem;
+		}
+
+		.terminal-log {
+			height: 9.75rem;
 		}
 
 		.footer-video-reel {
