@@ -24,7 +24,9 @@ async function get(path, attempt = 0) {
 
 const previous = JSON.parse(await readFile(output, 'utf8').catch(() => '{"routes":[]}'));
 const geometryByPair = new Map((previous.routes ?? []).map((route) => [route.pair, route]));
-const serviceById = new Map();
+// Station boards can occasionally be partial. Begin with the durable cache and
+// let fresh records replace matching trains instead of erasing absent trains.
+const serviceById = new Map((previous.services ?? []).map((service) => [service.id, service]));
 
 const sealdah = JSON.parse(await readFile(resolve(root, 'static/data/sealdah-network.json'), 'utf8').catch(() => '{"corridors":[]}'));
 for (const corridor of sealdah.corridors ?? []) {
@@ -36,7 +38,7 @@ for (const corridor of sealdah.corridors ?? []) {
 }
 
 if (process.env.TRAIN_DATA_OFFLINE === '1') {
-	for (const service of previous.services ?? []) serviceById.set(service.id, service);
+	console.log(`Offline mode: retaining ${serviceById.size} cached services.`);
 } else {
 	for (const hub of hubs) {
 		console.log(`Fetching ${hub} station board…`);
@@ -58,7 +60,7 @@ if (process.env.TRAIN_DATA_OFFLINE === '1') {
 const services = [...serviceById.values()];
 const routeGroups = Map.groupBy(services, (service) => `${service.source.code}→${service.destination.code}`);
 let fetched = 0;
-const maxNewRoutes = Number(process.env.MAX_NEW_TRAIN_ROUTES ?? 35);
+const maxNewRoutes = process.env.TRAIN_DATA_OFFLINE === '1' ? 0 : Number(process.env.MAX_NEW_TRAIN_ROUTES ?? 35);
 
 const prioritizedRouteGroups = [...routeGroups.entries()].sort(([pairA], [pairB]) => {
 	const aIsSealdah = pairA.includes('SDAH');
@@ -80,11 +82,13 @@ for (const [pair, pairServices] of prioritizedRouteGroups) {
 }
 
 const routes = [...geometryByPair.values()].filter((route) => route.coordinates?.length > 1);
+const coveredPairs = new Set(routes.map((route) => route.pair));
+const routesRemaining = [...routeGroups.keys()].filter((pair) => !coveredPairs.has(pair)).length;
 await writeFile(output, `${JSON.stringify({
 	generatedAt: new Date().toISOString(),
 	hubs,
-	counts: { services: services.length, routes: routes.length, routesRemaining: Math.max(0, routeGroups.size - routes.length) },
+	counts: { services: services.length, routes: routes.length, routesRemaining },
 	services,
 	routes
 }, null, 2)}\n`);
-console.log(`Wrote ${services.length} services, ${routes.length}/${routeGroups.size} routes; run again to resume missing routes.`);
+console.log(`Wrote ${services.length} services and ${routes.length} cached routes; ${routesRemaining} known route pairs remain.`);
