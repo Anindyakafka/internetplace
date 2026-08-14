@@ -1,15 +1,17 @@
 # What I Need From Anindya
 
-## Decisions before analysis
+## Decisions recorded for Prototype I
 
-Please provide a short answer to each item. Rough answers are enough initially.
+The initial direction is now set:
 
-1. **First place:** Where should Prototype I begin? Dadri is the current recommendation because you have situated field knowledge there, but another place is valid if you can explain the relationship.
-2. **First material relation:** Choose one primary subject: land, labour/wages, occupational segregation, housing/spatial segregation, education, sanitation work, public resources, or another tightly framed relation.
-3. **Period:** Contemporary snapshot, change between two dates, or a longer historical transition?
-4. **Your relationship to the place:** What have you researched, observed, written, or personally experienced there?
-5. **Languages:** Which source languages can you work with directly, and where will translation/review be required?
-6. **Public voice:** Should Prototype I use first-person field narration, institutional research prose, or both in clearly separated layers?
+1. **First place:** Dadri, Gautam Buddha Nagar.
+2. **Material scope:** Land, labour, caste/jati, communalism, ecology, state/capital, social reproduction, and resistance as connected domains.
+3. **Period:** The contemporary condition understood through historical transition.
+4. **Relationship:** Anindya was part of the Dadri Forecast collective. A fuller positionality and permissions note is still required.
+5. **Languages:** Still to be answered. This means the languages in which Anindya can confidently read and evaluate a source without translation, for example Hindi, English, Bengali, or Urdu.
+6. **Public voice:** Both first-person situated narration and institutional research prose, clearly distinguished.
+
+The working research and collection plans are in `PROTOTYPE_I_DADRI_BRIEF.md` and `DADRI_DATA_REQUEST.md`.
 
 ## Files to collect first
 
