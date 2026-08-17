@@ -89,6 +89,15 @@
 		</article>
 
 		<article class="section-card">
+			<h2>Legal Explorer</h2>
+			<p>
+				Search parliamentary bills from 1952 onward and trace their passage, assent,
+				committees, resulting Acts, and available official documents.
+			</p>
+			<a href="/legal-explorer" class="section-link">Open the legal record →</a>
+		</article>
+
+		<article class="section-card">
 			<h2>About & Coordinates</h2>
 			<p>
 				Bio, background, and research orientation. Useful if you are landing here for the first
