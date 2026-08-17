@@ -47,10 +47,10 @@
 	<section class="prototype ruled">
 		<div>
 			<p class="section-number">04 · Prototype I</p>
-			<h2>What the map cannot say</h2>
+			<h2>Dadri: what the map cannot say</h2>
 		</div>
 		<div class="prototype-copy">
-			<p>The first release will be deliberately bounded: one place and one material question, joined to a classification history, an archive of absence, and a history of resistance.</p>
+			<p>The first release begins in Dadri, Gautam Buddha Nagar, and grows from Anindya's participation in the Dadri Forecast collective. It follows the historical transition of land, labour, caste and jati power, communalism, ecology, development, and collective resistance. The Atlas draws from that situated relationship without claiming to speak for the collective or for Dadri.</p>
 			<ol>
 				<li><strong>The Map</strong><span>A spatial claim that reveals its own limits.</span></li>
 				<li><strong>The Measure</strong><span>Land, labour, occupation, housing, or education.</span></li>
