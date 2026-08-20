@@ -59,6 +59,11 @@
 		};
 	}
 
+	function imageLinkFrom(node: Element): string | undefined {
+		const link = node.getElementsByTagNameNS('*', 'link')[0]?.getAttribute('href')?.trim();
+		return link && /\.(?:avif|gif|jpe?g|png|webp)$/i.test(link) ? link : undefined;
+	}
+
 	function formatDuration(minutes: number): string {
 		const hours = Math.floor(minutes / 60);
 		const remainder = Math.round(minutes % 60);
@@ -92,11 +97,11 @@
 			if (trackPoints.length < 2) throw new Error('This GPX file has no usable track.');
 
 			waypoints = Array.from(xml.getElementsByTagNameNS('*', 'wpt')).map((node) => {
-				const link = node.getElementsByTagNameNS('*', 'link')[0]?.getAttribute('href');
+				const imageLink = imageLinkFrom(node);
 				return {
 					...pointFrom(node),
 					name: textFrom(node, 'name') ?? 'Waypoint',
-					imageUrl: link ? `${baseUrl}/${link}` : undefined
+					imageUrl: imageLink ? `${baseUrl}/${imageLink}` : undefined
 				};
 			});
 
