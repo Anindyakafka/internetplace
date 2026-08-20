@@ -1556,6 +1556,7 @@
 	}
 
 	.footer-strip {
+		min-width: 0;
 		max-width: min(74rem, 96vw);
 		margin: 0 auto;
 		display: grid;
@@ -1615,6 +1616,7 @@
 	}
 
 	.chhipi-terminal {
+		min-width: 0;
 		width: 100%;
 		max-width: 25rem;
 		margin: 0;
@@ -1624,6 +1626,10 @@
 	}
 
 	.terminal-shell {
+		min-width: 0;
+		max-width: 100%;
+		overflow: hidden;
+		box-sizing: border-box;
 		min-height: 10.5rem;
 		display: flex;
 		flex-direction: column;
@@ -1635,6 +1641,10 @@
 	}
 
 	.terminal-log {
+		width: 100%;
+		min-width: 0;
+		max-width: 100%;
+		box-sizing: border-box;
 		height: 8.75rem;
 		min-height: 0;
 		overflow: auto;
@@ -1664,15 +1674,21 @@
 	}
 
 	.terminal-log p {
+		min-width: 0;
+		max-width: 100%;
 		margin: 0;
 		font-family: 'Courier New', 'JetBrains Mono', monospace;
 		font-size: 0.64rem;
 		line-height: 1.16;
 		color: #9ce889;
-		white-space: pre;
+		white-space: pre-wrap;
+		overflow-wrap: anywhere;
+		word-break: break-word;
 	}
 
 	.terminal-input-row {
+		min-width: 0;
+		max-width: 100%;
 		flex: 0 0 auto;
 		margin-top: 0.28rem;
 		padding-top: 0.22rem;
@@ -1690,6 +1706,9 @@
 	}
 
 	.terminal-input-row input {
+		min-width: 0;
+		max-width: 100%;
+		box-sizing: border-box;
 		width: 100%;
 		border: 1px solid rgba(75, 131, 76, 0.72);
 		border-radius: 0;
