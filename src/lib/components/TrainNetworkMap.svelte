@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
-	import type { SealdahNetwork, SealdahService } from '$lib/trains/sealdah-network';
+	import type { SealdahNetwork, SealdahService, WestBengalRailways } from '$lib/trains/sealdah-network';
 
-	let { network, selectedId = null, onselect = (_id: string) => {} }: { network: SealdahNetwork; selectedId?: string | null; onselect?: (id: string) => void } = $props();
+	let { network, railways = null, selectedId = null, onselect = (_id: string) => {} }: { network: SealdahNetwork; railways?: WestBengalRailways | null; selectedId?: string | null; onselect?: (id: string) => void } = $props();
 	let mapElement: HTMLDivElement;
 	let showModern = $state(false);
 	let map: import('leaflet').Map | null = null;
@@ -67,7 +67,8 @@
 		void import('leaflet').then((leaflet)=>{
 			if(disposed)return; const L=leaflet.default; void import('leaflet/dist/leaflet.css');
 			map=L.map(mapElement,{zoomControl:false,scrollWheelZoom:true,minZoom:6,maxZoom:16,preferCanvas:true}); L.control.zoom({position:'bottomright'}).addTo(map);
-			const allPoints=validCorridors.flatMap((corridor)=>corridor.coordinates.map(([lng,lat])=>[lat,lng] as [number,number]));
+			const statewidePoints=(railways?.tracks ?? []).flatMap((track)=>track.coordinates.map(([lng,lat])=>[lat,lng] as [number,number]));
+			const allPoints=statewidePoints.length ? statewidePoints : validCorridors.flatMap((corridor)=>corridor.coordinates.map(([lng,lat])=>[lat,lng] as [number,number]));
 			map.fitBounds(L.latLngBounds(allPoints),{padding:[24,24]});
 			modernLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,opacity:1,attribution:'© OpenStreetMap contributors'}).addTo(map);
 			historicalLayer=L.tileLayer('https://geo.nls.uk/mapdata3/india-combined/{z}/{x}/{y}.png',{maxZoom:16,opacity:showModern?0:.88,attribution:'Historical map tiles © National Library of Scotland'}).addTo(map);
@@ -75,6 +76,18 @@
 				const tile=event.tile as HTMLImageElement;
 				const {x,y,z}=event.coords;
 				if(!tile.dataset.fallback){tile.dataset.fallback='osm';tile.src=`https://a.tile.openstreetmap.org/${z}/${x}/${y}.png`;}
+			});
+			const railwayRenderer=L.canvas({padding:.35});
+			(railways?.tracks ?? []).forEach((track)=>{
+				const points=track.coordinates.map(([lng,lat])=>[lat,lng] as [number,number]);
+				L.polyline(points,{renderer:railwayRenderer,color:'#292722',weight:2.2,opacity:.68,interactive:false}).addTo(map!);
+				L.polyline(points,{renderer:railwayRenderer,color:'#f4edda',weight:.8,opacity:.9,interactive:false,dashArray:'3 3'}).addTo(map!);
+			});
+			const stationLayer=L.layerGroup().addTo(map!);
+			(railways?.stations ?? []).forEach((station)=>{
+				const [lng,lat]=station.coordinates;
+				const label=station.code ? `<strong>${station.name}</strong><br>${station.code}${station.zone ? ` · ${station.zone}` : ''}` : `<strong>${station.name}</strong>`;
+				L.circleMarker([lat,lng],{renderer:railwayRenderer,radius:station.type==='halt'?2.2:2.8,weight:1,color:'#292722',fillColor:station.type==='halt'?'#f2c84b':'#faf6e9',fillOpacity:.95}).bindTooltip(label,{sticky:true}).addTo(stationLayer);
 			});
 			validCorridors.forEach((corridor,index)=>{const points=paths.get(corridor.code)!.latLng; L.polyline(points,{color:'#f8f2df',weight:4,opacity:.55}).addTo(map!); L.polyline(points,{color:palette[index%palette.length],weight:2,opacity:.82}).bindTooltip(`${corridor.name} · ${corridor.serviceCount} services`).addTo(map!); const end=points.at(-1)!; const icon=L.divIcon({className:'station-icon-shell',html:'<span class="station-icon"></span>',iconSize:[10,10],iconAnchor:[5,5]}); L.marker(end,{icon,title:corridor.name}).bindTooltip(`<strong>${corridor.name}</strong><br>${corridor.code}`).addTo(map!);});
 			const hubPoint=paths.values().next().value?.latLng[0]; if(hubPoint){const icon=L.divIcon({className:'station-icon-shell',html:'<span class="station-icon station-icon--hub"></span>',iconSize:[14,14],iconAnchor:[7,7]});L.marker(hubPoint,{icon,title:network.station.name}).bindTooltip(`<strong>${network.station.name}</strong><br>${network.station.code}`).addTo(map);}
