@@ -39,7 +39,7 @@
 
 	<div class="sections-grid">
 		<article class="section-card">
-			<img class="card-image" src="/images/sections/data-methods.jpg" alt="Survey sheets, hand-drawn charts, maps, and punched data cards arranged on a research table" loading="lazy" />
+			<img class="card-image" src="/images/sections/data-methods.jpg?v=2" alt="A clipped survey sheet with a hand-drawn scatterplot" loading="lazy" />
 			<h2>Data & Methods</h2>
 			<p>
 				Pipelines, reproducibility notes, maps, and empirical tools. This area will expand with
@@ -49,7 +49,7 @@
 		</article>
 
 		<article class="section-card">
-			<img class="card-image" src="/images/sections/writing-essays.jpg" alt="An annotated manuscript, typewriter, maps, and printed fragments" loading="lazy" />
+			<img class="card-image" src="/images/sections/writing-essays.jpg?v=2" alt="An open manuscript with one editorial mark and a fountain pen" loading="lazy" />
 			<h2>Writing & Essays</h2>
 			<p>
 				Published essays, methodology notes, and experiments in long-form argument.
@@ -58,7 +58,7 @@
 		</article>
 
 		<article class="section-card">
-			<img class="card-image" src="/images/sections/professional-work.jpg" alt="Research plans, field equipment, diagrams, and analytical charts on a working desk" loading="lazy" />
+			<img class="card-image" src="/images/sections/professional-work.jpg?v=2" alt="A field notebook containing a technical diagram beside a ruler" loading="lazy" />
 			<h2>Professional Work</h2>
 			<p>
 				Project implementations, collaborations, and production-grade research tooling.
@@ -67,7 +67,7 @@
 		</article>
 
 		<article class="section-card">
-			<img class="card-image" src="/images/sections/tracks-loiterings.jpg" alt="Worn walking shoes, a stitched route map, and three small photographs" loading="lazy" />
+			<img class="card-image" src="/images/sections/tracks-loiterings.jpg?v=2" alt="A folded map with a stitched route and one photograph" loading="lazy" />
 			<h2>Tracks & Loiterings</h2>
 			<p>
 				Walks, journeys, GPS traces, photographs, and small observations recorded along the way.
@@ -95,7 +95,7 @@
 		</article>
 
 		<article class="section-card">
-			<img class="card-image" src="/images/sections/legal-explorer.jpg" alt="Parliamentary papers connected by red threads and archival diagrams" loading="lazy" />
+			<img class="card-image" src="/images/sections/legal-explorer.jpg?v=2" alt="Two archival papers joined by a single red thread" loading="lazy" />
 			<h2>Legal Explorer</h2>
 			<p>
 				Search parliamentary bills from 1952 onward and trace their passage, assent,
@@ -105,7 +105,7 @@
 		</article>
 
 		<article class="section-card">
-			<img class="card-image" src="/images/sections/about-coordinates.jpg" alt="A researcher's hands among notebooks, maps, a camera, and a compass" loading="lazy" />
+			<img class="card-image" src="/images/sections/about-coordinates.jpg?v=2" alt="A worn field notebook beside a brass compass" loading="lazy" />
 			<h2>About & Coordinates</h2>
 			<p>
 				Bio, background, and research orientation. Useful if you are landing here for the first
@@ -115,7 +115,7 @@
 		</article>
 
 		<article class="section-card">
-			<img class="card-image" src="/images/sections/colophon.jpg" alt="Letterpress blocks, paper grids, printing rollers, and registration marks" loading="lazy" />
+			<img class="card-image" src="/images/sections/colophon.jpg?v=2" alt="A letterpress block beside a simple registration proof" loading="lazy" />
 			<h2>How This Site Is Built</h2>
 			<p>
 				Stack choices, typography, and design logic. The technical and editorial backbone.
