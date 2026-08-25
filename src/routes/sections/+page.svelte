@@ -38,7 +38,7 @@
 	</header>
 
 	<div class="sections-grid">
-		<article class="section-card">
+		<article class="section-card section-card--data">
 			<img class="card-image" src="/images/sections/data-methods.jpg?v=2" alt="A clipped survey sheet with a hand-drawn scatterplot" loading="lazy" />
 			<h2>Data & Methods</h2>
 			<p>
@@ -48,7 +48,7 @@
 			<p class="status">Status: expanding</p>
 		</article>
 
-		<article class="section-card">
+		<article class="section-card section-card--writing">
 			<img class="card-image" src="/images/sections/writing-essays.jpg?v=2" alt="An open manuscript with one editorial mark and a fountain pen" loading="lazy" />
 			<h2>Writing & Essays</h2>
 			<p>
@@ -57,7 +57,7 @@
 			<a href="/writing" class="section-link">Open writing index →</a>
 		</article>
 
-		<article class="section-card">
+		<article class="section-card section-card--work">
 			<img class="card-image" src="/images/sections/professional-work.jpg?v=2" alt="A field notebook containing a technical diagram beside a ruler" loading="lazy" />
 			<h2>Professional Work</h2>
 			<p>
@@ -66,7 +66,7 @@
 			<a href="/work" class="section-link">Open work index →</a>
 		</article>
 
-		<article class="section-card">
+		<article class="section-card section-card--tracks">
 			<img class="card-image" src="/images/sections/tracks-loiterings.jpg?v=2" alt="A folded map with a stitched route and one photograph" loading="lazy" />
 			<h2>Tracks & Loiterings</h2>
 			<p>
@@ -75,7 +75,7 @@
 			<a href="/tracks" class="section-link">Open track archive →</a>
 		</article>
 
-		<article class="section-card">
+		<article class="section-card section-card--trains">
 			<img class="card-image" src="/images/sections/local-lines.jpg" alt="A branching railway network drawn over an archival map of Bengal" loading="lazy" />
 			<h2>Local Lines</h2>
 			<p>
@@ -84,7 +84,7 @@
 			<a href="/trains" class="section-link">Open the railway map →</a>
 		</article>
 
-		<article class="section-card">
+		<article class="section-card section-card--vehicles">
 			<img class="card-image" src="/images/sections/delhi-vehicles.jpg" alt="Small buses moving along routes on a faded historical map of Delhi" loading="lazy" />
 			<h2>Delhi Vehicles</h2>
 			<p>
@@ -94,7 +94,7 @@
 			<a href="/vehicles" class="section-link">Open the vehicle map →</a>
 		</article>
 
-		<article class="section-card">
+		<article class="section-card section-card--legal">
 			<img class="card-image" src="/images/sections/legal-explorer.jpg?v=2" alt="Two archival papers joined by a single red thread" loading="lazy" />
 			<h2>Legal Explorer</h2>
 			<p>
@@ -104,7 +104,7 @@
 			<a href="/legal-explorer" class="section-link">Open the legal record →</a>
 		</article>
 
-		<article class="section-card">
+		<article class="section-card section-card--about">
 			<img class="card-image" src="/images/sections/about-coordinates.jpg?v=2" alt="A worn field notebook beside a brass compass" loading="lazy" />
 			<h2>About & Coordinates</h2>
 			<p>
@@ -114,7 +114,7 @@
 			<a href="/about" class="section-link">Open about page →</a>
 		</article>
 
-		<article class="section-card">
+		<article class="section-card section-card--colophon">
 			<img class="card-image" src="/images/sections/colophon.jpg?v=2" alt="A letterpress block beside a simple registration proof" loading="lazy" />
 			<h2>How This Site Is Built</h2>
 			<p>
@@ -259,8 +259,15 @@
 	.sections-grid {
 		min-width: 0;
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(16.5rem, 1fr));
-		gap: var(--space-l);
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		grid-template-areas:
+			"write write write write write data data data data data data data"
+			"write write write write write work work work work work work work"
+			"track track track track track track train train train train train train"
+			"legal legal legal legal legal legal legal legal vehicle vehicle vehicle vehicle"
+			"about about about about colo colo colo colo colo colo colo colo";
+		gap: clamp(1rem, 2.2vw, 2rem);
+		align-items: stretch;
 	}
 
 	.section-card {
@@ -276,6 +283,26 @@
 		overflow: hidden;
 		transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
 	}
+
+	.section-card--data { grid-area: data; border-radius: 0; transform: rotate(.35deg); }
+	.section-card--writing { grid-area: write; border-radius: .2rem 2.5rem .2rem .2rem; transform: rotate(-.45deg); }
+	.section-card--work { grid-area: work; border-radius: 0; border-left: .55rem solid var(--color-accent); }
+	.section-card--tracks { grid-area: track; border-radius: 2.8rem .2rem 2.8rem .2rem; transform: rotate(.25deg); }
+	.section-card--trains { grid-area: train; border-radius: 999px 999px 1rem 1rem; }
+	.section-card--vehicles { grid-area: vehicle; border-radius: .2rem; border-style: dashed; }
+	.section-card--legal { grid-area: legal; border-radius: 0; box-shadow: .7rem .7rem 0 color-mix(in srgb, var(--color-border) 60%, transparent); }
+	.section-card--about { grid-area: about; border-radius: 50% 50% 1rem 1rem / 2rem 2rem 1rem 1rem; }
+	.section-card--colophon { grid-area: colo; border-radius: 0; border-width: 2px; }
+
+	.section-card--writing .card-image { aspect-ratio: 3 / 4; }
+	.section-card--data .card-image { aspect-ratio: 16 / 7; }
+	.section-card--work .card-image { aspect-ratio: 16 / 6; }
+	.section-card--tracks .card-image { aspect-ratio: 16 / 8; }
+	.section-card--trains .card-image { aspect-ratio: 16 / 8; border-radius: 999px 999px 0 0; }
+	.section-card--legal .card-image { aspect-ratio: 16 / 7; }
+	.section-card--vehicles .card-image { aspect-ratio: 1 / 1; }
+	.section-card--about .card-image { aspect-ratio: 4 / 5; border-radius: 50% 50% 0 0 / 2rem 2rem 0 0; }
+	.section-card--colophon .card-image { aspect-ratio: 16 / 5; object-position: center 58%; }
 
 	.section-card:has(.section-link):hover {
 		transform: translateY(-3px);
@@ -368,5 +395,15 @@
 		.hero-portrait img {
 			max-height: 72svh;
 		}
+
+		.sections-grid {
+			grid-template-columns: 1fr;
+			grid-template-areas: "write" "data" "work" "track" "train" "vehicle" "legal" "about" "colo";
+		}
+
+		.section-card { transform: none; }
+		.section-card--writing .card-image,
+		.section-card--vehicles .card-image,
+		.section-card--about .card-image { aspect-ratio: 4 / 3; border-radius: 0; }
 	}
 </style>

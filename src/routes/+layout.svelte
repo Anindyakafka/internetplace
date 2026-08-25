@@ -107,7 +107,7 @@
 		</header>
 	{/if}
 
-	<main class="site-main">
+	<main class="site-main identity-{$page.url.pathname.split('/').filter(Boolean)[0] ?? 'home'}">
 		{@render children()}
 	</main>
 
@@ -203,6 +203,96 @@
 	/* ── Main ── */
 	.site-main {
 		flex: 1;
+		position: relative;
+		isolation: isolate;
+	}
+
+	/* Each section is framed as a different working object. */
+	.site-main:global(.identity-writing) {
+		background-image: repeating-linear-gradient(0deg, transparent 0 31px, color-mix(in srgb, var(--color-border) 38%, transparent) 31px 32px);
+	}
+	.site-main:global(.identity-writing) :global(.writing-header) {
+		max-width: 56rem;
+		margin-left: clamp(0rem, 8vw, 8rem);
+		transform: rotate(-.35deg);
+	}
+	.site-main:global(.identity-writing) :global(.entry-card:nth-child(even)) { transform: translateY(2rem) rotate(.25deg); }
+	.site-main:global(.identity-writing) :global(.entry-card:nth-child(odd)) { transform: rotate(-.2deg); }
+
+	.site-main:global(.identity-work) {
+		background-image: linear-gradient(color-mix(in srgb, var(--color-accent) 6%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--color-accent) 6%, transparent) 1px, transparent 1px);
+		background-size: 24px 24px;
+	}
+	.site-main:global(.identity-work) :global(.work-header) { border-left: .7rem solid var(--color-accent); padding-left: clamp(1rem, 4vw, 3rem); }
+	.site-main:global(.identity-work) :global(.project-card) { border-radius: 0; border-top-width: 3px; }
+	.site-main:global(.identity-work) :global(.project-card:nth-child(3n + 2)) { transform: translateY(1.5rem); }
+
+	.site-main:global(.identity-tracks) {
+		background-image: radial-gradient(circle at 12% 18%, color-mix(in srgb, var(--color-accent) 9%, transparent) 0 2px, transparent 3px), radial-gradient(circle at 78% 62%, color-mix(in srgb, var(--color-text) 7%, transparent) 0 1px, transparent 2px);
+		background-size: 7rem 7rem, 4rem 4rem;
+	}
+	.site-main:global(.identity-tracks) :global(.tracks-hero) { max-width: 48rem; margin-left: clamp(0rem, 10vw, 10rem); transform: rotate(.3deg); }
+	.site-main:global(.identity-tracks) :global(.method-note) { border-style: dashed; transform: rotate(-.35deg); }
+	.site-main:global(.identity-tracks) :global(.tracks-feed > :nth-child(even)) { margin-left: clamp(0rem, 7vw, 7rem); }
+
+	.site-main:global(.identity-trains) { background: linear-gradient(180deg, color-mix(in srgb, #152018 8%, var(--color-bg)), var(--color-bg) 38rem); }
+	.site-main:global(.identity-trains) :global(.page-intro) { border: 1px solid var(--color-border-strong); border-radius: 999px 999px 0 0; padding: clamp(1.2rem, 4vw, 3rem); background: var(--color-surface); }
+	.site-main:global(.identity-trains) :global(.totals) { border-top: 2px solid var(--color-text); border-bottom: 2px solid var(--color-text); }
+	.site-main:global(.identity-trains) :global(.network-layout) { box-shadow: 0 1.2rem 0 color-mix(in srgb, var(--color-text) 12%, transparent); }
+
+	.site-main:global(.identity-vehicles) {
+		background-image: radial-gradient(circle, color-mix(in srgb, var(--color-border-strong) 58%, transparent) 1.2px, transparent 1.5px);
+		background-size: 1.2rem 1.2rem;
+		background-position: -.6rem -.6rem;
+	}
+	.site-main:global(.identity-vehicles) :global(.vehicle-page) { background: color-mix(in srgb, #d7b64a 10%, var(--color-bg)); border-inline: 1px dashed var(--color-border-strong); }
+	.site-main:global(.identity-vehicles) :global(.vehicle-page > header) { display: grid; grid-template-columns: minmax(12rem, .75fr) minmax(18rem, 1.25fr); gap: 1rem 4rem; align-items: end; }
+	.site-main:global(.identity-vehicles) :global(.vehicle-page > header h1) { grid-row: span 3; font-size: clamp(3rem, 9vw, 8rem); line-height: .82; }
+	.site-main:global(.identity-vehicles) :global(.map-shell) { border-style: dashed; }
+
+	.site-main:global(.identity-legal-explorer) { background: color-mix(in srgb, #201b17 8%, var(--color-bg)); }
+	.site-main:global(.identity-legal-explorer) :global(.hero) { transform: rotate(-.25deg); box-shadow: .8rem .8rem 0 color-mix(in srgb, var(--color-text) 12%, transparent); background: var(--color-surface); padding: clamp(1rem, 4vw, 3rem); }
+	.site-main:global(.identity-legal-explorer) :global(.desk) { border-radius: 0; border-top: .5rem solid #701f28; }
+	.site-main:global(.identity-legal-explorer) :global(.record) { border-left: 3px solid transparent; }
+	.site-main:global(.identity-legal-explorer) :global(.record:hover),
+	.site-main:global(.identity-legal-explorer) :global(.record.selected) { border-left-color: #701f28; }
+
+	.site-main:global(.identity-about) {
+		background-image: linear-gradient(90deg, transparent 0 7%, color-mix(in srgb, var(--color-accent) 18%, transparent) 7% calc(7% + 1px), transparent calc(7% + 1px));
+	}
+	.site-main:global(.identity-about) :global(.bio-grid) { align-items: stretch; }
+	.site-main:global(.identity-about) :global(.bio-text) { padding: clamp(1rem, 4vw, 3rem); border: 1px solid var(--color-border); transform: rotate(-.25deg); background: var(--color-surface); }
+	.site-main:global(.identity-about) :global(.bio-card) { border-radius: 50% 50% 1rem 1rem / 3rem 3rem 1rem 1rem; transform: rotate(.5deg); }
+	.site-main:global(.identity-about) :global(.timeline-section:nth-of-type(even)) { margin-left: clamp(0rem, 8vw, 8rem); }
+
+	.site-main:global(.identity-colophon) {
+		background-image: linear-gradient(90deg, color-mix(in srgb, var(--color-border) 35%, transparent) 1px, transparent 1px), linear-gradient(color-mix(in srgb, var(--color-border) 35%, transparent) 1px, transparent 1px);
+		background-size: 1.5rem 1.5rem;
+	}
+	.site-main:global(.identity-colophon)::before { content: '✚'; position: absolute; top: 2rem; left: 2rem; font: 2rem var(--font-mono); color: var(--color-accent); }
+	.site-main:global(.identity-colophon) :global(.colophon-hero) { border: 2px solid var(--color-text); padding: clamp(1rem, 4vw, 3rem); background: var(--color-bg); }
+	.site-main:global(.identity-colophon) :global(.tech-card) { border-radius: 0; }
+	.site-main:global(.identity-colophon) :global(.tech-card:nth-child(even)) { transform: translateY(1.5rem); }
+
+	.site-main:global(.identity-map) { background: color-mix(in srgb, #c7b98c 8%, var(--color-bg)); }
+	.site-main:global(.identity-map) :global(.map-hero) { border-bottom: .35rem double var(--color-border-strong); }
+	.site-main:global(.identity-map) :global(.map-container) { transform: rotate(-.15deg); box-shadow: .8rem .8rem 0 color-mix(in srgb, var(--color-text) 10%, transparent); }
+
+	.site-main:global(.identity-annihilation-atlas) { background: linear-gradient(90deg, #741f26 0 clamp(.35rem, 1vw, .8rem), var(--color-bg) clamp(.35rem, 1vw, .8rem)); }
+	.site-main:global(.identity-annihilation-atlas) :global(.atlas-hero) { border-top: .8rem solid #741f26; }
+	.site-main:global(.identity-annihilation-atlas) :global(.ruled) { border-color: #741f26; }
+	.site-main:global(.identity-annihilation-atlas) :global(.source-grid article:nth-child(odd)) { transform: rotate(-.2deg); }
+	.site-main:global(.identity-annihilation-atlas) :global(.source-grid article:nth-child(even)) { transform: rotate(.2deg); }
+
+	@media (max-width: 700px) {
+		.site-main:global(.identity-writing) :global(.entry-card),
+		.site-main:global(.identity-work) :global(.project-card),
+		.site-main:global(.identity-tracks) :global(.tracks-feed > *),
+		.site-main:global(.identity-legal-explorer) :global(.hero),
+		.site-main:global(.identity-about) :global(.bio-text),
+		.site-main:global(.identity-colophon) :global(.tech-card) { transform: none; margin-left: 0; }
+		.site-main:global(.identity-vehicles) :global(.vehicle-page > header) { grid-template-columns: 1fr; }
+		.site-main:global(.identity-vehicles) :global(.vehicle-page > header h1) { grid-row: auto; font-size: clamp(3rem, 18vw, 6rem); }
 	}
 
 	/* ── Responsive ── */
