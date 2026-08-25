@@ -4,114 +4,6 @@
 		<name>2026-08-19_15-52-13</name>
 		<keywords>osmtracker</keywords>
 	</metadata>
-	<wpt lat="28.57917277" lon="77.2157633">
-		<ele>173.7352294921875</ele>
-		<time>2026-08-19T10:38:21Z</time>
-		<name><![CDATA[Grade 3]]></name>
-		<sat>28</sat>
-	</wpt>
-	<wpt lat="28.57917277" lon="77.2157633">
-		<ele>173.7352294921875</ele>
-		<time>2026-08-19T10:38:21Z</time>
-		<name><![CDATA[Grade 5]]></name>
-		<sat>28</sat>
-	</wpt>
-	<wpt lat="28.57917277" lon="77.2157633">
-		<ele>173.7352294921875</ele>
-		<time>2026-08-19T10:38:21Z</time>
-		<name><![CDATA[Grade 2]]></name>
-		<sat>28</sat>
-	</wpt>
-	<wpt lat="28.57917277" lon="77.2157633">
-		<ele>173.7352294921875</ele>
-		<time>2026-08-19T10:38:21Z</time>
-		<name><![CDATA[Grade 2]]></name>
-		<sat>28</sat>
-	</wpt>
-	<wpt lat="28.57917292" lon="77.21576338">
-		<ele>173.7515869140625</ele>
-		<time>2026-08-19T10:38:23Z</time>
-		<name><![CDATA[Grade 3]]></name>
-		<sat>27</sat>
-	</wpt>
-	<wpt lat="28.57917292" lon="77.21576338">
-		<ele>173.7515869140625</ele>
-		<time>2026-08-19T10:38:23Z</time>
-		<name><![CDATA[Grade 3]]></name>
-		<sat>27</sat>
-	</wpt>
-	<wpt lat="28.57917299" lon="77.21576328">
-		<ele>173.7706298828125</ele>
-		<time>2026-08-19T10:38:25Z</time>
-		<name><![CDATA[Living street]]></name>
-		<sat>31</sat>
-	</wpt>
-	<wpt lat="28.57917299" lon="77.21576328">
-		<ele>173.7706298828125</ele>
-		<time>2026-08-19T10:38:25Z</time>
-		<name><![CDATA[Steps]]></name>
-		<sat>31</sat>
-	</wpt>
-	<wpt lat="28.57917299" lon="77.21576328">
-		<ele>173.7706298828125</ele>
-		<time>2026-08-19T10:38:25Z</time>
-		<name><![CDATA[Cycleway]]></name>
-		<sat>31</sat>
-	</wpt>
-	<wpt lat="28.57917304" lon="77.2157633">
-		<ele>173.77764892578125</ele>
-		<time>2026-08-19T10:38:26Z</time>
-		<name><![CDATA[Bridleway]]></name>
-		<sat>31</sat>
-	</wpt>
-	<wpt lat="28.57917304" lon="77.2157633">
-		<ele>173.77764892578125</ele>
-		<time>2026-08-19T10:38:26Z</time>
-		<name><![CDATA[Grade 5]]></name>
-		<sat>31</sat>
-	</wpt>
-	<wpt lat="28.57917304" lon="77.2157633">
-		<ele>173.77764892578125</ele>
-		<time>2026-08-19T10:38:26Z</time>
-		<name><![CDATA[Grade 5]]></name>
-		<sat>31</sat>
-	</wpt>
-	<wpt lat="28.57917304" lon="77.2157633">
-		<ele>173.77764892578125</ele>
-		<time>2026-08-19T10:38:26Z</time>
-		<name><![CDATA[Grade 2]]></name>
-		<sat>31</sat>
-	</wpt>
-	<wpt lat="28.57917306" lon="77.21576331">
-		<ele>173.7783203125</ele>
-		<time>2026-08-19T10:38:27Z</time>
-		<name><![CDATA[Bridleway]]></name>
-		<sat>31</sat>
-	</wpt>
-	<wpt lat="28.57917309" lon="77.2157633">
-		<ele>173.78143310546875</ele>
-		<time>2026-08-19T10:38:28Z</time>
-		<name><![CDATA[Pedestrian]]></name>
-		<sat>31</sat>
-	</wpt>
-	<wpt lat="28.57917314" lon="77.2157634">
-		<ele>173.77911376953125</ele>
-		<time>2026-08-19T10:38:33Z</time>
-		<name><![CDATA[Grade 5]]></name>
-		<sat>32</sat>
-	</wpt>
-	<wpt lat="28.57917314" lon="77.2157634">
-		<ele>173.77911376953125</ele>
-		<time>2026-08-19T10:38:33Z</time>
-		<name><![CDATA[Grade 2]]></name>
-		<sat>32</sat>
-	</wpt>
-	<wpt lat="28.57917314" lon="77.2157634">
-		<ele>173.77911376953125</ele>
-		<time>2026-08-19T10:38:33Z</time>
-		<name><![CDATA[Grade 5]]></name>
-		<sat>32</sat>
-	</wpt>
 	<wpt lat="28.58037759" lon="77.23611608">
 		<ele>174.29583740234375</ele>
 		<time>2026-08-19T10:43:31Z</time>
@@ -121,33 +13,6 @@
 		</link>
 		<sat>20</sat>
 	</wpt>
-	<wpt lat="28.58157494" lon="77.23696052">
-		<ele>175.58770751953125</ele>
-		<time>2026-08-19T10:43:46Z</time>
-		<name><![CDATA[Voice recording]]></name>
-		<link href="2026-08-19_16-13-46.3gpp">
-			<text>2026-08-19_16-13-46.3gpp</text>
-		</link>
-		<sat>28</sat>
-	</wpt>
-	<wpt lat="28.5824929" lon="77.23744075">
-		<ele>175.13214111328125</ele>
-		<time>2026-08-19T10:43:56Z</time>
-		<name><![CDATA[Voice recording]]></name>
-		<link href="2026-08-19_16-13-56.3gpp">
-			<text>2026-08-19_16-13-56.3gpp</text>
-		</link>
-		<sat>27</sat>
-	</wpt>
-	<wpt lat="28.58640789" lon="77.24195249">
-		<ele>176.908935546875</ele>
-		<time>2026-08-19T10:44:46Z</time>
-		<name><![CDATA[Voice recording]]></name>
-		<link href="2026-08-19_16-14-46.3gpp">
-			<text>2026-08-19_16-14-46.3gpp</text>
-		</link>
-		<sat>40</sat>
-	</wpt>
 	<wpt lat="28.58695706" lon="77.24817374">
 		<ele>177.7843017578125</ele>
 		<time>2026-08-19T10:45:45Z</time>
@@ -156,15 +21,6 @@
 			<text>2026-08-19_16-15-45.jpg</text>
 		</link>
 		<sat>29</sat>
-	</wpt>
-	<wpt lat="28.57649403" lon="77.28623306">
-		<ele>165.7244873046875</ele>
-		<time>2026-08-19T10:56:38Z</time>
-		<name><![CDATA[Voice recording]]></name>
-		<link href="2026-08-19_16-26-38.3gpp">
-			<text>2026-08-19_16-26-38.3gpp</text>
-		</link>
-		<sat>37</sat>
 	</wpt>
 	<wpt lat="28.52073779" lon="77.4671326">
 		<ele>150.414306640625</ele>
