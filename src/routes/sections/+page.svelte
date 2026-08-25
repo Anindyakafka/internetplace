@@ -39,6 +39,7 @@
 
 	<div class="sections-grid">
 		<article class="section-card">
+			<img class="card-image" src="/images/sections/data-methods.jpg" alt="Survey sheets, hand-drawn charts, maps, and punched data cards arranged on a research table" loading="lazy" />
 			<h2>Data & Methods</h2>
 			<p>
 				Pipelines, reproducibility notes, maps, and empirical tools. This area will expand with
@@ -48,6 +49,7 @@
 		</article>
 
 		<article class="section-card">
+			<img class="card-image" src="/images/sections/writing-essays.jpg" alt="An annotated manuscript, typewriter, maps, and printed fragments" loading="lazy" />
 			<h2>Writing & Essays</h2>
 			<p>
 				Published essays, methodology notes, and experiments in long-form argument.
@@ -56,6 +58,7 @@
 		</article>
 
 		<article class="section-card">
+			<img class="card-image" src="/images/sections/professional-work.jpg" alt="Research plans, field equipment, diagrams, and analytical charts on a working desk" loading="lazy" />
 			<h2>Professional Work</h2>
 			<p>
 				Project implementations, collaborations, and production-grade research tooling.
@@ -64,6 +67,7 @@
 		</article>
 
 		<article class="section-card">
+			<img class="card-image" src="/images/sections/tracks-loiterings.jpg" alt="Worn walking shoes, a stitched route map, and three small photographs" loading="lazy" />
 			<h2>Tracks & Loiterings</h2>
 			<p>
 				Walks, journeys, GPS traces, photographs, and small observations recorded along the way.
@@ -72,6 +76,7 @@
 		</article>
 
 		<article class="section-card">
+			<img class="card-image" src="/images/sections/local-lines.jpg" alt="A branching railway network drawn over an archival map of Bengal" loading="lazy" />
 			<h2>Local Lines</h2>
 			<p>
 				A calculated live portrait of suburban trains moving across a historical map of Bengal.
@@ -80,6 +85,7 @@
 		</article>
 
 		<article class="section-card">
+			<img class="card-image" src="/images/sections/delhi-vehicles.jpg" alt="Small buses moving along routes on a faded historical map of Delhi" loading="lazy" />
 			<h2>Delhi Vehicles</h2>
 			<p>
 				A subtle, live view of Delhi transit movement over a historical map.
@@ -89,6 +95,7 @@
 		</article>
 
 		<article class="section-card">
+			<img class="card-image" src="/images/sections/legal-explorer.jpg" alt="Parliamentary papers connected by red threads and archival diagrams" loading="lazy" />
 			<h2>Legal Explorer</h2>
 			<p>
 				Search parliamentary bills from 1952 onward and trace their passage, assent,
@@ -98,6 +105,7 @@
 		</article>
 
 		<article class="section-card">
+			<img class="card-image" src="/images/sections/about-coordinates.jpg" alt="A researcher's hands among notebooks, maps, a camera, and a compass" loading="lazy" />
 			<h2>About & Coordinates</h2>
 			<p>
 				Bio, background, and research orientation. Useful if you are landing here for the first
@@ -107,6 +115,7 @@
 		</article>
 
 		<article class="section-card">
+			<img class="card-image" src="/images/sections/colophon.jpg" alt="Letterpress blocks, paper grids, printing rollers, and registration marks" loading="lazy" />
 			<h2>How This Site Is Built</h2>
 			<p>
 				Stack choices, typography, and design logic. The technical and editorial backbone.
@@ -255,17 +264,48 @@
 	}
 
 	.section-card {
+		position: relative;
 		min-width: 0;
 		display: grid;
 		align-content: start;
 		gap: var(--space-s);
-		padding: var(--space-l);
+		padding: 0 0 var(--space-l);
 		border: 1px solid var(--color-border);
 		border-radius: var(--radius-lg);
 		background: color-mix(in srgb, var(--color-surface) 86%, transparent);
+		overflow: hidden;
+		transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+	}
+
+	.section-card:has(.section-link):hover {
+		transform: translateY(-3px);
+		border-color: color-mix(in srgb, var(--color-accent) 48%, var(--color-border));
+		box-shadow: 0 12px 28px color-mix(in srgb, var(--color-text) 9%, transparent);
+	}
+
+	.card-image {
+		display: block;
+		width: 100%;
+		aspect-ratio: 4 / 3;
+		object-fit: cover;
+		border-bottom: 1px solid var(--color-border);
+		filter: saturate(0.86) contrast(1.02);
+		transition: filter var(--transition), transform 500ms ease;
+	}
+
+	.section-card:has(.section-link):hover .card-image {
+		filter: saturate(1) contrast(1.04);
+		transform: scale(1.012);
+	}
+
+	.section-card h2,
+	.section-card p,
+	.section-card .section-link {
+		margin-inline: var(--space-l);
 	}
 
 	.section-card h2 {
+		margin-top: var(--space-xs);
 		font-family: var(--font-serif);
 		font-size: var(--step-2);
 		line-height: 1.2;
@@ -288,6 +328,17 @@
 		letter-spacing: 0.04em;
 		text-decoration: none;
 		color: var(--color-accent);
+	}
+
+	.section-link::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+	}
+
+	.section-link:focus-visible::after {
+		outline: 2px solid var(--color-accent);
+		outline-offset: -3px;
 	}
 
 	.section-link:hover {
