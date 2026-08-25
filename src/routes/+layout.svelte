@@ -120,7 +120,10 @@
 	.site {
 		display: flex;
 		flex-direction: column;
+		width: 100%;
+		min-width: 0;
 		min-height: 100vh;
+		overflow-x: clip;
 	}
 
 	/* ── Header ── */
@@ -205,6 +208,8 @@
 		flex: 1;
 		position: relative;
 		isolation: isolate;
+		width: 100%;
+		min-width: 0;
 	}
 
 	/* Each section is framed as a different working object. */
@@ -235,8 +240,9 @@
 	.site-main:global(.identity-tracks) :global(.method-note) { border-style: dashed; transform: rotate(-.35deg); }
 	.site-main:global(.identity-tracks) :global(.tracks-feed > :nth-child(even)) { margin-left: clamp(0rem, 7vw, 7rem); }
 
-	.site-main:global(.identity-trains) { background: linear-gradient(180deg, color-mix(in srgb, #152018 8%, var(--color-bg)), var(--color-bg) 38rem); }
-	.site-main:global(.identity-trains) :global(.page-intro) { border: 1px solid var(--color-border-strong); border-radius: 999px 999px 0 0; padding: clamp(1.2rem, 4vw, 3rem); background: var(--color-surface); }
+	.site-main:global(.identity-trains) { overflow-x: clip; background: linear-gradient(180deg, color-mix(in srgb, #152018 8%, var(--color-bg)), var(--color-bg) 38rem); }
+	.site-main:global(.identity-trains) :global(.train-page) { min-width: 0; overflow: hidden; }
+	.site-main:global(.identity-trains) :global(.page-intro) { min-width: 0; width: 100%; max-width: 100%; box-sizing: border-box; border: 1px solid var(--color-border-strong); border-radius: 999px 999px 0 0; padding: clamp(1.2rem, 4vw, 3rem); background: var(--color-surface); }
 	.site-main:global(.identity-trains) :global(.totals) { border-top: 2px solid var(--color-text); border-bottom: 2px solid var(--color-text); }
 	.site-main:global(.identity-trains) :global(.network-layout) { box-shadow: 0 1.2rem 0 color-mix(in srgb, var(--color-text) 12%, transparent); }
 
@@ -293,6 +299,11 @@
 		.site-main:global(.identity-colophon) :global(.tech-card) { transform: none; margin-left: 0; }
 		.site-main:global(.identity-vehicles) :global(.vehicle-page > header) { grid-template-columns: 1fr; }
 		.site-main:global(.identity-vehicles) :global(.vehicle-page > header h1) { grid-row: auto; font-size: clamp(3rem, 18vw, 6rem); }
+		.site-main:global(.identity-trains) :global(.page-intro) { width: calc(100vw - 3rem); max-width: calc(100vw - 3rem); border-radius: 8rem 8rem 0 0; padding: 7rem 1.25rem 1.25rem; }
+		.site-main:global(.identity-trains) :global(.train-page) { width: 100vw; max-width: 100vw; box-sizing: border-box; }
+		.site-main:global(.identity-trains) :global(.page-intro h1) { max-width: 100%; font-size: clamp(2.7rem, 13vw, 4rem); overflow-wrap: anywhere; }
+		.site-main:global(.identity-trains) :global(.page-intro .eyebrow),
+		.site-main:global(.identity-trains) :global(.page-intro .lede) { width: 100%; max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
 	}
 
 	/* ── Responsive ── */
