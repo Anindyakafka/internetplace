@@ -3,9 +3,19 @@
 	import TrainNetworkMap from '$lib/components/TrainNetworkMap.svelte';
 	import type { SealdahDirection, SealdahNetwork } from '$lib/trains/sealdah-network';
 
+	type HubCode = 'SDAH' | 'HWH' | 'MJT' | 'KOAA' | 'SHM';
+	const hubNames: Record<HubCode, string> = {
+		SDAH: 'Sealdah',
+		HWH: 'Howrah',
+		MJT: 'Majerhat',
+		KOAA: 'Kolkata',
+		SHM: 'Shalimar'
+	};
+	const hubCodes = Object.keys(hubNames) as HubCode[];
+
 	let network = $state<SealdahNetwork | null>(null);
 	let networks = $state<Record<string, SealdahNetwork>>({});
-	let activeHub = $state<'SDAH' | 'HWH'>('SDAH');
+	let activeHub = $state<HubCode>('SDAH');
 	let loadError = $state(false);
 	let query = $state('');
 	let direction = $state<'all' | SealdahDirection>('all');
@@ -36,7 +46,7 @@
 		return Math.round(total * 10) / 10;
 	}
 
-	function networkForHub(data: any, code: 'SDAH' | 'HWH', name: string): SealdahNetwork {
+	function networkForHub(data: any, code: HubCode, name: string): SealdahNetwork {
 		const routes = (data.routes ?? []).filter((route: any) => route.source?.code === code || route.destination?.code === code);
 		const corridorMap = new Map<string, any>();
 		for (const route of routes) {
@@ -58,7 +68,7 @@
 		return { generatedAt: data.generatedAt, station: { code, name }, counts: { services: services.length, fromSealdah: services.filter((service: any) => service.direction === 'from-sealdah').length, toSealdah: services.filter((service: any) => service.direction === 'to-sealdah').length, corridors: corridors.length }, services, corridors } as SealdahNetwork;
 	}
 
-	function selectHub(code: 'SDAH' | 'HWH') {
+	function selectHub(code: HubCode) {
 		activeHub = code; network = networks[code]; selectedId = network?.services[0]?.id ?? null; terminal = 'all'; direction = 'all'; query = '';
 	}
 
@@ -67,7 +77,7 @@
 			const response = await fetch('/data/west-bengal-trains.json');
 			if (!response.ok) throw new Error();
 			const data = await response.json();
-			networks = { SDAH: networkForHub(data, 'SDAH', 'Sealdah'), HWH: networkForHub(data, 'HWH', 'Howrah') };
+			networks = Object.fromEntries(hubCodes.map((code) => [code, networkForHub(data, code, hubNames[code])]));
 			network = networks.SDAH;
 			selectedId = network?.services[0]?.id ?? null;
 		} catch { loadError = true; }
@@ -99,7 +109,13 @@
 		<p class="eyebrow">Local lines · Kolkata suburban network</p>
 		<h1>{hubName}, in motion.</h1>
 		<p class="lede">Suburban services beginning or ending at {hubName}, traced across the currently verified terminal corridors on a historical map. Positions are calculated from timetable times and route distance, with reported data checked for the selected train.</p>
-		<div class="hub-switch" aria-label="Railway hub"><button class:active={activeHub === 'SDAH'} onclick={() => selectHub('SDAH')}>Sealdah <small>{networks.SDAH?.counts.services ?? 0}</small></button><button class:active={activeHub === 'HWH'} onclick={() => selectHub('HWH')}>Howrah <small>{networks.HWH?.counts.services ?? 0}</small></button></div>
+		<div class="hub-switch" aria-label="Railway hub">
+			{#each hubCodes as code}
+				<button class:active={activeHub === code} onclick={() => selectHub(code)}>
+					{hubNames[code]} <small>{networks[code]?.counts.services ?? 0}</small>
+				</button>
+			{/each}
+		</div>
 		{#if network}<div class="totals"><span><strong>{network.counts.services}</strong> services</span><span><strong>{network.counts.corridors}</strong> corridors</span><span><strong>{network.counts.fromSealdah}</strong> departing</span><span><strong>{network.counts.toSealdah}</strong> arriving</span></div>{/if}
 	</header>
 
@@ -138,6 +154,6 @@
 </main>
 
 <style>
-	.hub-switch{display:flex;gap:.45rem;margin-top:var(--space-l)}.hub-switch button{padding:.55rem .8rem;border:1px solid var(--color-border);border-radius:999px;background:transparent;color:var(--color-text-muted);font:600 var(--step--1)/1 var(--font-sans);cursor:pointer}.hub-switch button.active{border-color:var(--color-accent);background:var(--color-accent);color:#fff}.hub-switch small{margin-left:.35rem;opacity:.72}
+	.hub-switch{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:var(--space-l)}.hub-switch button{padding:.55rem .8rem;border:1px solid var(--color-border);border-radius:999px;background:transparent;color:var(--color-text-muted);font:600 var(--step--1)/1 var(--font-sans);cursor:pointer}.hub-switch button.active{border-color:var(--color-accent);background:var(--color-accent);color:#fff}.hub-switch small{margin-left:.35rem;opacity:.72}
 	.train-page{width:min(100%,94rem);margin-inline:auto;padding:var(--space-3xl) clamp(var(--space-m),3vw,var(--space-2xl)) var(--space-4xl);box-sizing:border-box}.page-intro{max-width:62rem;margin-bottom:var(--space-2xl)}.eyebrow,.panel-label{margin:0 0 var(--space-s);font:600 var(--step--1)/1.2 var(--font-mono);text-transform:uppercase;letter-spacing:.1em;color:var(--color-accent)}h1{margin:0;font:500 clamp(3rem,7vw,6.5rem)/.92 var(--font-serif);letter-spacing:-.045em}.lede{max-width:70ch;margin:var(--space-l) 0 0;color:var(--color-text-muted);font-size:var(--step-1);line-height:1.6}.totals{display:flex;flex-wrap:wrap;gap:.6rem 1.5rem;margin-top:var(--space-l);color:var(--color-text-muted);font-size:var(--step--1)}.totals strong{color:var(--color-text);font-size:var(--step-1)}.network-layout{display:grid;grid-template-columns:minmax(18rem,23rem) minmax(0,1fr);gap:var(--space-l)}.train-sidebar{min-width:0;display:flex;flex-direction:column;padding:var(--space-l);border:1px solid var(--color-border);border-radius:var(--radius);background:var(--color-surface)}.search-block{display:grid;gap:var(--space-2xs)}.search-block label{font:600 var(--step--1)/1.2 var(--font-sans)}input,select{width:100%;box-sizing:border-box;padding:.72rem;color:var(--color-text);background:var(--color-bg);border:1px solid var(--color-border);border-radius:var(--radius);font:inherit}.filters{margin:var(--space-m) 0 var(--space-s)}.direction-filter{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.55rem}.direction-filter button{padding:.42rem .62rem;border:1px solid var(--color-border);border-radius:999px;color:var(--color-text-muted);background:transparent;font:500 .72rem/1 var(--font-sans);cursor:pointer}.direction-filter button.active{color:#fff;border-color:var(--color-accent);background:var(--color-accent)}.result-count{margin:.3rem 0;color:var(--color-text-muted);font-size:.72rem}.service-list{display:grid;gap:.25rem;max-height:22rem;overflow:auto}.service-card{width:100%;display:grid;grid-template-columns:auto minmax(0,1fr);gap:.6rem;align-items:center;padding:.6rem;text-align:left;color:var(--color-text);background:transparent;border:1px solid transparent;border-radius:var(--radius);cursor:pointer}.service-card:hover,.service-card.selected{background:var(--color-bg);border-color:var(--color-border)}.service-card strong,.service-card small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.service-card strong{font-size:var(--step--1)}.service-card small{margin-top:.18rem;color:var(--color-text-muted);font-size:.68rem}.service-dot,.legend-token{width:.65rem;height:.65rem;border:1.5px solid #292722;border-radius:4px;background:#f2c84b}.service-dot--to-sealdah,.legend-token--toward{background:#66c7c1}.selected-panel{margin-top:var(--space-l);padding-top:var(--space-l);border-top:1px solid var(--color-border)}.selected-panel h2{margin:0;font:500 var(--step-2)/1 var(--font-serif)}.train-name{margin:.35rem 0 var(--space-m);color:var(--color-text-muted);font-size:.75rem}.selected-panel dl{margin:0;display:grid;gap:.45rem}.selected-panel dl div{display:flex;justify-content:space-between;gap:1rem;font-size:.75rem}.selected-panel dt{color:var(--color-text-muted)}.selected-panel dd{margin:0;text-align:right}.map-notes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-l);margin-top:var(--space-l)}.map-notes>div{display:flex;gap:.7rem}.map-notes p{margin:0;color:var(--color-text-muted);font-size:var(--step--1);line-height:1.45}.map-notes strong{display:block;color:var(--color-text)}.direction-legend p span{display:flex;align-items:center;gap:.45rem;margin-top:.3rem}.direction-legend i{display:inline-block}.legend-token,.legend-line,.legend-station{flex:0 0 auto;margin-top:.2rem}.legend-line{width:1.3rem;height:3px;margin-top:.5rem;background:#c94b3a}.legend-station{width:.7rem;height:.7rem;border:2px solid var(--color-text);border-radius:50%;background:var(--color-bg)}.disclaimer{grid-column:1/-1;max-width:95ch;padding-top:var(--space-m);border-top:1px solid var(--color-border)}.list-note,.empty,.loading,.load-error{color:var(--color-text-muted);font-size:var(--step--1)}@media(max-width:900px){.network-layout{grid-template-columns:1fr}.train-sidebar{order:2}}@media(max-width:640px){.train-page{padding-inline:var(--space-m)}.map-notes{grid-template-columns:1fr}}
 </style>
