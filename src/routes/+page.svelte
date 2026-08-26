@@ -449,8 +449,8 @@
 				hour12: false
 			}).format(now);
 
-			// "Online" means the tab is visible and it's a plausible work window in IST.
-			operatorOnline = document.visibilityState === 'visible' && hour24 >= 9 && hour24 < 23;
+			// "Online" means the tab is visible and it's between 11:00 and 01:59 IST.
+			operatorOnline = document.visibilityState === 'visible' && (hour24 >= 11 || hour24 < 2);
 			istTimeLabel = `${timeText} IST`;
 		};
 

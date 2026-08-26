@@ -30,7 +30,7 @@
 			const now = new Date();
 			const hour = Number(new Intl.DateTimeFormat('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', hour12: false }).format(now));
 			istTimeLabel = `${new Intl.DateTimeFormat('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: false }).format(now)} IST`;
-			operatorOnline = document.visibilityState === 'visible' && hour >= 9 && hour < 23;
+			operatorOnline = document.visibilityState === 'visible' && (hour >= 11 || hour < 2);
 		};
 		const refreshWeather = async () => {
 			try {

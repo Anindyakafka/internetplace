@@ -284,13 +284,7 @@
 	.sections-grid {
 		min-width: 0;
 		display: grid;
-		grid-template-columns: repeat(12, minmax(0, 1fr));
-		grid-template-areas:
-			"write write write write write data data data data data data data"
-			"write write write write write work work work work work work work"
-			"track track track track track track train train train train train train"
-			"legal legal legal legal legal legal legal legal vehicle vehicle vehicle vehicle"
-			"about about about about colo colo colo colo colo colo colo colo";
+		grid-template-columns: repeat(3, minmax(0, 1fr));
 		gap: clamp(1rem, 2.2vw, 2rem);
 		align-items: stretch;
 	}
@@ -309,25 +303,16 @@
 		transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
 	}
 
-	.section-card--data { grid-area: data; border-radius: 0; transform: rotate(.35deg); }
-	.section-card--writing { grid-area: write; border-radius: .2rem 2.5rem .2rem .2rem; transform: rotate(-.45deg); }
-	.section-card--work { grid-area: work; border-radius: 0; border-left: .55rem solid var(--color-accent); }
-	.section-card--tracks { grid-area: track; border-radius: 2.8rem .2rem 2.8rem .2rem; transform: rotate(.25deg); }
-	.section-card--trains { grid-area: train; border-radius: 999px 999px 1rem 1rem; }
-	.section-card--vehicles { grid-area: vehicle; border-radius: .2rem; border-style: dashed; }
-	.section-card--legal { grid-area: legal; border-radius: 0; box-shadow: .7rem .7rem 0 color-mix(in srgb, var(--color-border) 60%, transparent); }
-	.section-card--about { grid-area: about; border-radius: 50% 50% 1rem 1rem / 2rem 2rem 1rem 1rem; }
-	.section-card--colophon { grid-area: colo; border-radius: 0; border-width: 2px; }
-
-	.section-card--writing .card-image { aspect-ratio: 3 / 4; }
-	.section-card--data .card-image { aspect-ratio: 16 / 7; }
-	.section-card--work .card-image { aspect-ratio: 16 / 6; }
-	.section-card--tracks .card-image { aspect-ratio: 16 / 8; }
-	.section-card--trains .card-image { aspect-ratio: 16 / 8; border-radius: 999px 999px 0 0; }
-	.section-card--legal .card-image { aspect-ratio: 16 / 7; }
-	.section-card--vehicles .card-image { aspect-ratio: 1 / 1; }
-	.section-card--about .card-image { aspect-ratio: 4 / 5; border-radius: 50% 50% 0 0 / 2rem 2rem 0 0; }
-	.section-card--colophon .card-image { aspect-ratio: 16 / 5; object-position: center 58%; }
+	.section-card--trains { order: 1; }
+	.section-card--data { order: 2; }
+	.section-card--vehicles { order: 3; }
+	.section-card--legal { order: 4; }
+	.section-card--writing { order: 5; }
+	.section-card--tracks { order: 6; }
+	.section-card--work { order: 7; }
+	.section-card--about { order: 8; }
+	.section-card--colophon { order: 9; }
+	.section-card--colophon .card-image { object-position: center 58%; }
 
 	.section-card:has(.section-link):hover {
 		transform: translateY(-3px);
@@ -423,12 +408,10 @@
 
 		.sections-grid {
 			grid-template-columns: 1fr;
-			grid-template-areas: "write" "data" "work" "track" "train" "vehicle" "legal" "about" "colo";
 		}
+	}
 
-		.section-card { transform: none; }
-		.section-card--writing .card-image,
-		.section-card--vehicles .card-image,
-		.section-card--about .card-image { aspect-ratio: 4 / 3; border-radius: 0; }
+	@media (min-width: 641px) and (max-width: 960px) {
+		.sections-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 	}
 </style>
