@@ -37,7 +37,13 @@ research/annihilation-atlas/working/
 
 # Local workspace artifacts
 file_list.txt
-temp_build_output.txt
+temp_build*.txt
+output_build*.txt
+build_output*.txt
+tmp-*.png
+tmp-*.jpg
+tmp-*.webp
+static/videos/intro.mp4
 
 
 # Local Netlify folder

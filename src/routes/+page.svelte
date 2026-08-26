@@ -21,7 +21,6 @@
 		subtitle: string;
 		location: string;
 		imageUrl: string;
-		fallbackImageUrl?: string;
 		bullets: string[];
 		repoUrl?: string;
 		repoLabel?: string;
@@ -283,9 +282,6 @@
 
 	let hoveredRegionId = $state<string | null>(null);
 	let selectedRegionId = $state<string | null>(null);
-	let storyLoadToken = 0;
-	let storyIsLoading = $state(false);
-	let selectedStoryImageUrl = $state<string | null>(null);
 	let storySceneVisible = $state(false);
 	let mapScale = $state(2.2);
 	let mapShiftX = $state(0);
@@ -520,14 +516,6 @@
 		};
 	});
 
-	// Preload all state story images on page mount so the first click feels instant.
-	$effect(() => {
-		if (!browser) return;
-		for (const id in stateStories) {
-			if (stateStories[id]) void preloadImage(stateStories[id].imageUrl);
-		}
-	});
-
 	$effect(() => {
 		const onScroll = () => {
 			const stageTop = mapStageEl?.offsetTop ?? 0;
@@ -608,7 +596,7 @@
 		noteDragY = 0;
 	}
 
-	async function handleRegionClick(regionId: string) {
+	function handleRegionClick(regionId: string) {
 		regionId = regionId === 'UA' ? 'UT' : regionId;
 		if (selectedRegionId === regionId) {
 			closeStory();
@@ -621,68 +609,18 @@
 			return;
 		}
 
-		const token = ++storyLoadToken;
-		storyIsLoading = true;
-
-		// WebP maps are ~1 MB — small enough to show directly.
-		selectedStoryImageUrl = story.imageUrl;
-		storySceneVisible = false;
 		selectedRegionId = regionId;
-		await nextFrame();
-		if (token !== storyLoadToken) return;
 		storySceneVisible = true;
-		storyIsLoading = false;
 	}
 
 	function handleRegionHover(regionId: string | null) {
 		regionId = regionId === 'UA' ? 'UT' : regionId;
 		hoveredRegionId = regionId;
-		const story = regionId ? stateStories[regionId] : undefined;
-		if (story?.imageUrl) void preloadImage(story.imageUrl);
 	}
 
 	function closeStory() {
-		storyLoadToken += 1;
-		storyIsLoading = false;
 		storySceneVisible = false;
-		selectedStoryImageUrl = null;
 		selectedRegionId = null;
-	}
-
-	function nextFrame() {
-		return new Promise<void>((resolve) => {
-			requestAnimationFrame(() => resolve());
-		});
-	}
-
-	function preloadImage(src: string, timeoutMs = 7000) {
-		return new Promise<boolean>((resolve) => {
-			let done = false;
-			const finish = (ok: boolean) => {
-				if (done) return;
-				done = true;
-				resolve(ok);
-			};
-
-			const timeoutId = setTimeout(() => finish(false), timeoutMs);
-
-			const img = new Image();
-			img.onload = () => {
-				clearTimeout(timeoutId);
-				finish(true);
-			};
-			img.onerror = () => {
-				clearTimeout(timeoutId);
-				finish(false);
-			};
-			img.src = src;
-
-			if (img.decode) {
-				img.decode().then(() => finish(true)).catch(() => {
-					// Keep waiting for onload/onerror when decode is unsupported for this asset.
-				});
-			}
-		});
 	}
 
 	function appendTerminalLines(lines: string[]) {
@@ -957,7 +895,6 @@
 
 		<div
 			class="map-zoom-shell"
-			class:loading-story={storyIsLoading}
 			style={`--map-scale: ${mapScale}; --map-shift-x: ${mapShiftX}%; --map-shift-y: ${mapShiftY}%;`}
 		>
 			<div
@@ -1020,7 +957,7 @@
 			<div class="state-story-scene" class:revealed={storySceneVisible}>
 				<img
 					class="state-story-image"
-					src={selectedStoryImageUrl ?? selectedStory.imageUrl}
+					src={selectedStory.imageUrl}
 					alt=""
 					aria-hidden="true"
 					decoding="async"
@@ -1051,11 +988,7 @@
 			</div>
 		{/if}
 
-		{#if storyIsLoading}
-			<div class="story-loading" aria-live="polite">Loading field view…</div>
-		{/if}
-
-		{#if !selectedStory && !storyIsLoading}
+		{#if !selectedStory}
 			<p class="map-instruction">Click a state and wait a moment for its story to load.</p>
 		{/if}
 	</div>
@@ -1195,10 +1128,6 @@
 		height: min(96vh, 58rem);
 		display: grid;
 		place-items: center;
-	}
-
-	.map-zoom-shell.loading-story {
-		cursor: progress;
 	}
 
 	.india-map {
@@ -1502,24 +1431,6 @@
 	.state-story-content li {
 		font-size: var(--step--1);
 		line-height: 1.45;
-	}
-
-	.story-loading {
-		position: absolute;
-		bottom: 1.1rem;
-		left: 50%;
-		transform: translateX(-50%);
-		padding: 0.5rem 0.8rem;
-		border-radius: 999px;
-		font-family: var(--font-mono);
-		font-size: var(--step--2);
-		letter-spacing: 0.04em;
-		text-transform: uppercase;
-		background: color-mix(in srgb, var(--color-surface) 82%, transparent);
-		border: 1px solid color-mix(in srgb, var(--color-border) 64%, transparent);
-		color: var(--color-text-muted);
-		backdrop-filter: blur(5px);
-		z-index: 20;
 	}
 
 	.map-instruction {

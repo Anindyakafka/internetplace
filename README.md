@@ -153,8 +153,6 @@ Below is a practical, developer-focused structure map (not every generated file 
 		│  └─ favicon.svg
 		├─ netlify.toml
 		├─ package.json
-		├─ PLAN.md
-		├─ PROJECT_LOG.md
 		├─ svelte.config.js
 		├─ tsconfig.json
 		└─ vite.config.ts
@@ -168,7 +166,6 @@ Below is a practical, developer-focused structure map (not every generated file 
 
 ## Conventions
 
-- PROJECT_LOG.md is maintained chronologically (oldest to newest) and updated each working session.
 - Avoid exposing personal contact details in plaintext; CV is stored as a PDF in repo root.
 
 ## External Project Links
