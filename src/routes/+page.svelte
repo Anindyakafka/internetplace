@@ -80,7 +80,6 @@
 		TG: 'Telangana',
 		TN: 'Tamil Nadu',
 		TR: 'Tripura',
-		UA: 'Uttarakhand',
 		UT: 'Uttarakhand',
 		UP: 'Uttar Pradesh',
 		WB: 'West Bengal'
@@ -349,7 +348,8 @@
 
 	let regionMetrics = $derived.by<Record<string, RegionMetric>>(() => {
 		const activeRegionIds = regions.map((region) => region.id);
-		if (!seccCombined) {
+		const combined = seccCombined;
+		if (!combined) {
 			return activeRegionIds.reduce<Record<string, RegionMetric>>((acc, regionId) => {
 				acc[regionId] = fallbackMetrics[regionId] ?? {
 					adivasiShare: 0,
@@ -366,7 +366,7 @@
 		const stateRows = activeRegionIds
 			.map((regionId) => {
 				const seccCode = seccStateCodeByIso[regionId];
-				return seccCode ? seccCombined[seccCode] : null;
+				return seccCode ? combined[seccCode] : null;
 			})
 			.filter((row): row is SeccStateMetric => Boolean(row));
 
@@ -374,7 +374,7 @@
 
 		return activeRegionIds.reduce<Record<string, RegionMetric>>((acc, regionId) => {
 			const seccCode = seccStateCodeByIso[regionId];
-			const row = seccCode ? seccCombined[seccCode] : undefined;
+			const row = seccCode ? combined[seccCode] : undefined;
 			if (!row) {
 				acc[regionId] = fallbackMetrics[regionId] ?? {
 					adivasiShare: 0,
@@ -609,6 +609,7 @@
 	}
 
 	async function handleRegionClick(regionId: string) {
+		regionId = regionId === 'UA' ? 'UT' : regionId;
 		if (selectedRegionId === regionId) {
 			closeStory();
 			return;
@@ -634,10 +635,10 @@
 	}
 
 	function handleRegionHover(regionId: string | null) {
+		regionId = regionId === 'UA' ? 'UT' : regionId;
 		hoveredRegionId = regionId;
-		if (regionId && stateStories[regionId]?.imageUrl) {
-			void preloadImage(stateStories[regionId].imageUrl);
-		}
+		const story = regionId ? stateStories[regionId] : undefined;
+		if (story?.imageUrl) void preloadImage(story.imageUrl);
 	}
 
 	function closeStory() {
@@ -953,7 +954,6 @@
 				Click here to explore the site sections →
 			</a>
 		</aside>
-		<p class="portrait-only-notice" role="status">Rotate to portrait mode to explore stories.</p>
 
 		<div
 			class="map-zoom-shell"
@@ -1075,11 +1075,11 @@
 		</section>
 
 		<section class="footer-link-block" aria-labelledby="misc-heading">
-			<h2 id="misc-heading">Miscellaneous</h2>
+			<h2 id="misc-heading">Explore</h2>
 			<ul>
 				<li><a href="/colophon">Colophon</a></li>
-				<li><a href="/writing">Notes</a></li>
-				<li><a href="/work">Blog Roll</a></li>
+				<li><a href="/writing">Writing</a></li>
+				<li><a href="/work">Work</a></li>
 				<li><a href="https://github.com/Anindyakafka/internetplace" target="_blank" rel="noreferrer noopener">Source code</a></li>
 			</ul>
 		</section>
@@ -1334,10 +1334,6 @@
 
 	.landing-note-link:hover {
 		border-color: rgba(27, 40, 89, 0.85);
-	}
-
-	.portrait-only-notice {
-		display: none;
 	}
 
 	.hover-hud {
@@ -2001,32 +1997,11 @@
 			place-items: center;
 		}
 
-		.portrait-only-notice {
-			display: block;
-			position: absolute;
-			left: 50%;
-			top: 50%;
-			transform: translate(-50%, -50%);
-			width: min(88vw, 28rem);
-			padding: 0.9rem 1rem;
-			border-radius: 0.85rem;
-			text-align: center;
-			font-family: var(--font-mono);
-			font-size: 0.74rem;
-			letter-spacing: 0.06em;
-			text-transform: uppercase;
-			color: var(--color-text-muted);
-			background: color-mix(in srgb, var(--color-surface) 92%, transparent);
-			border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
-			z-index: 30;
-		}
+		.map-zoom-shell { display: block; width: min(63vw, 36rem); }
+		.mobile-region-picker { display: grid; left: auto; right: 1rem; top: 3.8rem; bottom: auto; transform: none; width: min(31vw, 18rem); }
 
-		.map-zoom-shell,
-		.mobile-region-picker,
 		.mobile-hud,
 		.landing-note,
-		.state-story-scene,
-		.story-loading,
 		.map-instruction,
 		.hover-hud {
 			display: none;

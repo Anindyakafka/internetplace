@@ -10,6 +10,28 @@
 	let scrolled = $state(false);
 	let theme = $state<'light' | 'dark'>('light');
 
+	const socialMetaByPath: Record<string, { title: string; description: string }> = {
+		'/': { title: 'Anindya Singh — research, maps, and public data', description: 'An interactive archive of research, writing, maps, public data, and field records.' },
+		'/sections': { title: 'Explore the archive — Anindya Singh', description: 'Live data maps, research projects, writing, methods, field tracks, and Annihilation Atlas.' },
+		'/about': { title: 'About — Anindya Singh', description: 'Research background, biography, working principles, and ways to get in touch.' },
+		'/writing': { title: 'Writing — Anindya Singh', description: 'Essays, methodology notes, and experiments in long-form argument.' },
+		'/work': { title: 'Work — Anindya Singh', description: 'Research projects, collaborations, data tools, and public-interest investigations.' },
+		'/tracks': { title: 'Tracks & Loiterings — Anindya Singh', description: 'GPS traces, photographs, journeys, and observations recorded along the way.' },
+		'/trains': { title: 'West Bengal Local Lines — Anindya Singh', description: 'West Bengal railway tracks, stations, and calculated local-train positions on a historical map.' },
+		'/vehicles': { title: 'Delhi Vehicles — Anindya Singh', description: 'Live Delhi public-transport vehicle positions visualised over a historical map.' },
+		'/legal-explorer': { title: 'Indian Parliamentary Bills Explorer — Anindya Singh', description: 'Search and connect parliamentary bills and official documents from 1952 onward.' },
+		'/map': { title: 'Data Atlas — Anindya Singh', description: 'An interactive state-by-state view of public data, research records, and field stories.' },
+		'/annihilation-atlas': { title: 'Annihilation Atlas — Anindya Singh', description: 'An anti-caste observatory of land, labour, classification, segregation, resistance, and memory.' },
+		'/colophon': { title: 'Colophon — Anindya Singh', description: 'Technical and design notes for anindyasingh.netlify.app.' }
+	};
+	function socialMeta(pathname: string) {
+		const path = pathname.length > 1 ? pathname.replace(/\/$/, '') : pathname;
+		if (socialMetaByPath[path]) return socialMetaByPath[path];
+		if (path.startsWith('/writing/')) return { title: 'Writing — Anindya Singh', description: 'An essay from Anindya Singh’s writing archive.' };
+		if (path.startsWith('/work/')) return { title: 'Project — Anindya Singh', description: 'A project from Anindya Singh’s research and data archive.' };
+		return socialMetaByPath['/'];
+	}
+
 	$effect(() => {
 		if (!browser) return;
 		const stored = localStorage.getItem('theme') as 'light' | 'dark' | null;
@@ -40,6 +62,18 @@
 </script>
 
 <svelte:head>
+	<meta property="og:site_name" content="Anindya Singh" />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content={socialMeta($page.url.pathname).title} />
+	<meta property="og:description" content={socialMeta($page.url.pathname).description} />
+	<meta property="og:url" content={`https://anindyasingh.netlify.app${$page.url.pathname}`} />
+	<link rel="canonical" href={`https://anindyasingh.netlify.app${$page.url.pathname}`} />
+	<meta property="og:image" content="https://anindyasingh.netlify.app/images/sections/local-lines.jpg" />
+	<meta property="og:image:alt" content="An archival map of Bengal overlaid with a branching railway network" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content={socialMeta($page.url.pathname).title} />
+	<meta name="twitter:description" content={socialMeta($page.url.pathname).description} />
+	<meta name="twitter:image" content="https://anindyasingh.netlify.app/images/sections/local-lines.jpg" />
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
 	<link
@@ -54,6 +88,7 @@
 			<button
 				class="theme-toggle home-theme-toggle"
 				aria-label="Toggle dark mode"
+				aria-pressed={theme === 'dark'}
 				onclick={toggleTheme}
 			>
 				{#if theme === 'light'}
@@ -83,6 +118,7 @@
 				<button
 					class="theme-toggle"
 					aria-label="Toggle dark mode"
+					aria-pressed={theme === 'dark'}
 					onclick={toggleTheme}
 				>
 					{#if theme === 'light'}

@@ -92,9 +92,9 @@
 			</ul>
 		</section>
 		<section class="footer-link-block" aria-labelledby="global-misc-heading">
-			<h2 id="global-misc-heading">Miscellaneous</h2>
+			<h2 id="global-misc-heading">Explore</h2>
 			<ul>
-				<li><a href="/colophon">Colophon</a></li><li><a href="/writing">Notes</a></li><li><a href="/work">Blog Roll</a></li>
+				<li><a href="/colophon">Colophon</a></li><li><a href="/writing">Writing</a></li><li><a href="/work">Work</a></li>
 				<li><a href="https://github.com/Anindyakafka/internetplace" target="_blank" rel="noreferrer noopener">Source code</a></li>
 			</ul>
 		</section>

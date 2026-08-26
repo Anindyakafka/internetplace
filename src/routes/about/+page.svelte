@@ -5,9 +5,6 @@
 <svelte:head>
 	<title>About — Anindya Singh</title>
 	<meta name="description" content="About Anindya Singh — researcher, data scientist, and writer working at the intersection of economics, data, and social impact." />
-	<meta property="og:title" content="About — Anindya Singh" />
-	<meta property="og:description" content="Researcher, data scientist, and writer working at the intersection of economics, data, and social impact." />
-	<meta property="og:type" content="profile" />
 	<meta name="author" content="Anindya Singh" />
 </svelte:head>
 
@@ -225,9 +222,7 @@
 
 		<form class="contact-form" name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
 			<input type="hidden" name="form-name" value="contact" />
-			<p class="form-trap" aria-hidden="true">
-				<label>Leave this field empty <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
-			</p>
+			<input class="form-trap" name="bot-field" tabindex="-1" autocomplete="off" aria-hidden="true" />
 			<div class="form-row">
 				<label>
 					<span>Name</span>
@@ -634,8 +629,7 @@
 	}
 
 	.form-trap {
-		position: absolute;
-		left: -10000px;
+		display: none !important;
 	}
 
 	/* ───────── Buttons ───────── */

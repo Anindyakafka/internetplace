@@ -35,9 +35,6 @@
 <svelte:head>
 	<title>Work — Anindya Singh</title>
 	<meta name="description" content="Data projects, research, and professional work by Anindya Singh — CBFC Watch, MGNREGA pipelines, name classifiers, and more." />
-	<meta property="og:title" content="Work — Anindya Singh" />
-	<meta property="og:description" content="Data projects, research, and professional work by Anindya Singh." />
-	<meta property="og:type" content="website" />
 </svelte:head>
 
 <section class="page-content">

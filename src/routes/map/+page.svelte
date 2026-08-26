@@ -89,15 +89,16 @@
 	});
 
 	let regionMetrics = $derived.by<Record<string, RegionMetric>>(() => {
-		if (!seccCombined) return {};
+		const combined = seccCombined;
+		if (!combined) return {};
 
 		const rows = regions
-			.map((region) => seccCombined[seccStateCodeByIso[region.id]])
+			.map((region) => combined[seccStateCodeByIso[region.id]])
 			.filter((row): row is SeccStateMetric => Boolean(row));
 		const maxPopulation = Math.max(1, ...rows.map((row) => row.population));
 
 		return regions.reduce<Record<string, RegionMetric>>((acc, region) => {
-			const row = seccCombined[seccStateCodeByIso[region.id]];
+			const row = combined[seccStateCodeByIso[region.id]];
 			if (!row) return acc;
 
 			acc[region.id] = {
@@ -823,21 +824,6 @@
 		background: var(--color-accent-soft);
 		padding: 0.2em 0.5em;
 		border-radius: var(--radius-lg);
-	}
-
-	/* ═══ REGION GRID SECTION ═══ */
-	.region-grid-section {
-		padding: var(--space-xl) 0;
-		border-top: 1px solid var(--color-border);
-	}
-
-	.section-title {
-		font-family: var(--font-serif);
-		font-size: var(--step-3);
-		font-weight: 400;
-		color: var(--color-text);
-		margin-bottom: var(--space-l);
-		line-height: 1.2;
 	}
 
 	.region-grid {

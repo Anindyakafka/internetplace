@@ -1,9 +1,6 @@
 <svelte:head>
 	<title>Colophon — Anindya Singh</title>
-	<meta name="description" content="Technical and design notes for anindya.dev — built with SvelteKit and Pretext, set in Inter, Newsreader, and JetBrains Mono." />
-	<meta property="og:title" content="Colophon — Anindya Singh" />
-	<meta property="og:description" content="Technical and design notes for anindya.dev." />
-	<meta property="og:type" content="website" />
+	<meta name="description" content="Technical and design notes for anindyasingh.netlify.app — built with SvelteKit and Pretext, set in Inter, Newsreader, and JetBrains Mono." />
 	<meta name="author" content="Anindya Singh" />
 </svelte:head>
 
