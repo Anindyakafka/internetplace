@@ -3,15 +3,15 @@
 </script>
 
 <svelte:head>
-	<title>EmuOS — Anindya Singh</title>
+	<title>Anindya Singh — Windows 98</title>
 	<meta name="description" content="A Windows 98 desktop for browser games and nostalgic applications." />
 </svelte:head>
 
 <main class="emuos-room">
-	{#if !loaded}<div class="loading" aria-live="polite">Loading EmuOS…</div>{/if}
+	{#if !loaded}<div class="loading" aria-live="polite">Starting Windows 98…</div>{/if}
 	<a class="back-to-site" href="/">Back to website</a>
 	<iframe
-		title="EmuOS Windows 98 desktop"
+		title="Anindya's Windows 98 desktop"
 		src="/emuos/index.html"
 		allow="autoplay; fullscreen; clipboard-read; clipboard-write"
 		onload={() => loaded = true}
