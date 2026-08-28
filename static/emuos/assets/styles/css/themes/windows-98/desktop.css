@@ -1,6 +1,10 @@
 .theme-windows-98 .emuos-desktop {
+	position: absolute;
+	inset: 0 0 28px;
+	width: auto;
+	height: auto !important;
 	background-color: #76abd5;
-	background-image: url(../../../../images/themes/wallpapers/windows-98/windows-98-remastered-1920x1080.png);
+	background-image: url(../../../../images/themes/boot/windows-98/background.png);
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: cover;
