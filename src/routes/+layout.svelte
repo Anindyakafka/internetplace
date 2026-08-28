@@ -24,6 +24,8 @@
 		'/annihilation-atlas': { title: 'Annihilation Atlas — Anindya Singh', description: 'An anti-caste observatory of land, labour, classification, segregation, resistance, and memory.' },
 		'/colophon': { title: 'Colophon — Anindya Singh', description: 'Technical and design notes for anindyasingh.netlify.app.' }
 	};
+	socialMetaByPath['/game'] = { title: 'Wondows 98 — Anindya Singh', description: 'A small retro desktop and future home for browser games.' };
+
 	function socialMeta(pathname: string) {
 		const path = pathname.length > 1 ? pathname.replace(/\/$/, '') : pathname;
 		if (socialMetaByPath[path]) return socialMetaByPath[path];
@@ -85,6 +87,10 @@
 <div class="site">
 	{#if $page.url.pathname === '/'}
 		<header class="home-header">
+			<a class="game-launcher" href="/game" aria-label="Open Wondows 98">
+				<span class="retro-flag" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+				<strong>Wondows 98</strong>
+			</a>
 			<button
 				class="theme-toggle home-theme-toggle"
 				aria-label="Toggle dark mode"
@@ -110,7 +116,7 @@
 				{/if}
 			</button>
 		</header>
-	{:else}
+	{:else if !$page.url.pathname.startsWith('/game')}
 		<header class="site-header" class:scrolled>
 			<div class="header-inner">
 				<a class="site-mark" href="/" aria-label="Home"></a>
@@ -147,7 +153,7 @@
 		{@render children()}
 	</main>
 
-	{#if $page.url.pathname !== '/'}
+	{#if $page.url.pathname !== '/' && !$page.url.pathname.startsWith('/game')}
 		<SiteFooter />
 	{/if}
 </div>
@@ -179,6 +185,30 @@
 		right: var(--space-l);
 		pointer-events: auto;
 	}
+
+	.game-launcher {
+		position: absolute;
+		top: 11px;
+		left: var(--space-l);
+		display: flex;
+		align-items: center;
+		gap: .5rem;
+		padding: .35rem .55rem;
+		border: 2px outset #fff;
+		background: #c0c0c0;
+		color: #111;
+		font: 700 11px/1 Tahoma, sans-serif;
+		text-decoration: none;
+		pointer-events: auto;
+		box-shadow: 1px 1px #111;
+	}
+
+	.game-launcher:active { border-style: inset; }
+	.retro-flag { width: 20px; height: 17px; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; transform: skewY(-7deg); }
+	.retro-flag i:nth-child(1) { background: #ef493d; }
+	.retro-flag i:nth-child(2) { background: #59a84d; }
+	.retro-flag i:nth-child(3) { background: #347dcc; }
+	.retro-flag i:nth-child(4) { background: #f0c443; }
 
 	.site-header {
 		position: sticky;
