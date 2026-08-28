@@ -24,7 +24,7 @@
 		'/annihilation-atlas': { title: 'Annihilation Atlas — Anindya Singh', description: 'An anti-caste observatory of land, labour, classification, segregation, resistance, and memory.' },
 		'/colophon': { title: 'Colophon — Anindya Singh', description: 'Technical and design notes for anindyasingh.netlify.app.' }
 	};
-	socialMetaByPath['/game'] = { title: 'Wondows 98 — Anindya Singh', description: 'A small retro desktop and future home for browser games.' };
+	socialMetaByPath['/game'] = { title: 'Windows 98 game room — Anindya Singh', description: 'An EmuOS desktop for browser games and nostalgic applications.' };
 
 	function socialMeta(pathname: string) {
 		const path = pathname.length > 1 ? pathname.replace(/\/$/, '') : pathname;
@@ -87,9 +87,9 @@
 <div class="site">
 	{#if $page.url.pathname === '/'}
 		<header class="home-header">
-			<a class="game-launcher" href="/game" aria-label="Open Wondows 98">
-				<span class="retro-flag" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-				<strong>Wondows 98</strong>
+			<a class="game-launcher" href="/game" aria-label="Open Windows 98 game room">
+				<img src="/emuos/assets/images/themes/boot/windows-98/windows-98.gif" alt="" />
+				<strong>Windows 98</strong>
 			</a>
 			<button
 				class="theme-toggle home-theme-toggle"
@@ -204,11 +204,7 @@
 	}
 
 	.game-launcher:active { border-style: inset; }
-	.retro-flag { width: 20px; height: 17px; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; transform: skewY(-7deg); }
-	.retro-flag i:nth-child(1) { background: #ef493d; }
-	.retro-flag i:nth-child(2) { background: #59a84d; }
-	.retro-flag i:nth-child(3) { background: #347dcc; }
-	.retro-flag i:nth-child(4) { background: #f0c443; }
+	.game-launcher img { width: 25px; height: 20px; object-fit: cover; object-position: left center; image-rendering: auto; }
 
 	.site-header {
 		position: sticky;
