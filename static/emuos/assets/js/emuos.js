@@ -23,7 +23,8 @@
 		}
 	}
 } (function ($, Router, toastr, simplestorage, moment, Octokat, eSheep, clippy, Fireworks) {
-	var root = location.hostname === 'localhost' ? 'https://emupedia.net' : '';
+	// Keep relative shortcuts on Anindya's own site, including localhost.
+	var root = '';
 	var hash = location.hash.toString();
 	var resizeTimeout = null;
 	var versionCheckInterval = null;
@@ -63,38 +64,6 @@
 	toastr.options.timeOut = 0;
 	toastr.options.extendedTimeOut = 0;
 	toastr.options.showMethod = 'slideDown';
-
-	// noinspection JSUnusedAssignment
-	clearInterval(versionCheckInterval);
-	// noinspection JSUnusedAssignment
-	versionCheckInterval = setInterval(function() {
-		$sys.api.fetch('https://api.github.com/repos/Emupedia/emupedia.github.io/commits/master', function(data) {
-			try {
-				// noinspection JSUnresolvedVariable
-				data = JSON.parse(data.target.response);
-			} catch(error) {
-				console.log(error)
-			}
-
-			// noinspection JSUnresolvedVariable
-			if (typeof data.sha !== 'undefined' && typeof $sys.version !== 'undefined') {
-				// noinspection JSUnresolvedVariable
-				if (data.sha !== null && $sys.version !== null) {
-					// noinspection JSUnresolvedVariable
-					if (data.sha !== '' && $sys.version !== '' && $sys.version !== '{{ site.github.build_revision }}') {
-						// noinspection JSUnresolvedVariable
-						if (data.sha !== $sys.version) {
-							toastr.options.onclick = function() {
-								location.reload();
-							};
-							toastr.info('New update available, click here to reload');
-							toastr.options.onclick = function() {};
-						}
-					}
-				}
-			}
-		});
-	}, 5 * 60 * 1000);
 
 	function copyToClipboard(text, el) {
 		if ('clipboard' in navigator) {
