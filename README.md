@@ -51,7 +51,7 @@ Run type and Svelte checks:
 
 		npm run check
 
-## Available Scripts
+## Available Scripts.
 
 - npm run dev: start local dev server
 - npm run dev:netlify: start the site with the local Netlify Functions runtime
