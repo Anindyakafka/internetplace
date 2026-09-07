@@ -1,5 +1,31 @@
 <script lang="ts">
 	// About page — expanded with full CV content
+	let formState = $state<'idle' | 'submitting' | 'error'>('idle');
+	let formError = $state('');
+
+	async function submitContact(event: SubmitEvent) {
+		const form = event.currentTarget as HTMLFormElement;
+		if (!form.reportValidity()) return;
+		event.preventDefault();
+		formState = 'submitting';
+		formError = '';
+
+		const body = new URLSearchParams();
+		for (const [key, value] of new FormData(form)) body.append(key, String(value));
+
+		try {
+			const response = await fetch('/', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				body: body.toString()
+			});
+			if (!response.ok) throw new Error(`Submission failed (${response.status})`);
+			window.location.assign('/thank-you');
+		} catch {
+			formState = 'error';
+			formError = 'The form could not send your message. Please try again, or use the email link above.';
+		}
+	}
 </script>
 
 <svelte:head>
@@ -220,7 +246,7 @@
 			</a>
 		</div>
 
-		<form class="contact-form" name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
+		<form class="contact-form" name="contact" method="POST" action="/thank-you" data-netlify="true" data-netlify-honeypot="bot-field" onsubmit={submitContact} aria-busy={formState === 'submitting'}>
 			<input type="hidden" name="form-name" value="contact" />
 			<input class="form-trap" name="bot-field" tabindex="-1" autocomplete="off" aria-hidden="true" />
 			<div class="form-row">
@@ -237,7 +263,12 @@
 				<span>What would you like to talk about?</span>
 				<textarea name="message" rows="6" required></textarea>
 			</label>
-			<button class="btn btn--primary" type="submit">Send message</button>
+			<button class="btn btn--primary" type="submit" disabled={formState === 'submitting'}>
+				{formState === 'submitting' ? 'Sending…' : 'Send message'}
+			</button>
+			{#if formState === 'error'}
+				<p class="form-error" role="alert">{formError}</p>
+			{/if}
 		</form>
 	</div>
 </section>
@@ -631,6 +662,9 @@
 	.form-trap {
 		display: none !important;
 	}
+
+	.contact-form .btn:disabled { cursor:wait; opacity:.62; }
+	.form-error { margin:0; color:#a33; font-size:var(--step--1); line-height:1.5; }
 
 	/* ───────── Buttons ───────── */
 	.btn {

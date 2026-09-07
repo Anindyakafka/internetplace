@@ -1,0 +1,29 @@
+{
+	"name": "Anindya Singh — Research, Maps, and Public Data",
+	"short_name": "Anindya Singh",
+	"description": "An interactive archive of research, writing, maps, public data, and field records.",
+	"start_url": "/",
+	"display": "browser",
+	"background_color": "#f5f1e8",
+	"theme_color": "#1a1a2e",
+	"icons": [
+		{
+			"src": "/favicon.svg",
+			"sizes": "any",
+			"type": "image/svg+xml",
+			"purpose": "any"
+		},
+		{
+			"src": "/favicon-32x32.png",
+			"sizes": "32x32",
+			"type": "image/png",
+			"purpose": "any"
+		},
+		{
+			"src": "/apple-touch-icon.png",
+			"sizes": "180x180",
+			"type": "image/png",
+			"purpose": "any"
+		}
+	]
+}

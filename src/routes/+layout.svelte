@@ -10,27 +10,31 @@
 	let scrolled = $state(false);
 	let theme = $state<'light' | 'dark'>('light');
 
-	const socialMetaByPath: Record<string, { title: string; description: string }> = {
-		'/': { title: 'Anindya Singh — research, maps, and public data', description: 'An interactive archive of research, writing, maps, public data, and field records.' },
-		'/sections': { title: 'Explore the archive — Anindya Singh', description: 'Live data maps, research projects, writing, methods, field tracks, and Annihilation Atlas.' },
-		'/about': { title: 'About — Anindya Singh', description: 'Research background, biography, working principles, and ways to get in touch.' },
-		'/writing': { title: 'Writing — Anindya Singh', description: 'Essays, methodology notes, and experiments in long-form argument.' },
-		'/work': { title: 'Work — Anindya Singh', description: 'Research projects, collaborations, data tools, and public-interest investigations.' },
-		'/tracks': { title: 'Tracks & Loiterings — Anindya Singh', description: 'GPS traces, photographs, journeys, and observations recorded along the way.' },
-		'/trains': { title: 'West Bengal Local Lines — Anindya Singh', description: 'West Bengal railway tracks, stations, and calculated local-train positions on a historical map.' },
-		'/vehicles': { title: 'Delhi Vehicles — Anindya Singh', description: 'Live Delhi public-transport vehicle positions visualised over a historical map.' },
-		'/legal-explorer': { title: 'Indian Parliamentary Bills Explorer — Anindya Singh', description: 'Search and connect parliamentary bills and official documents from 1952 onward.' },
-		'/map': { title: 'Data Atlas — Anindya Singh', description: 'An interactive state-by-state view of public data, research records, and field stories.' },
-		'/annihilation-atlas': { title: 'Annihilation Atlas — Anindya Singh', description: 'An anti-caste observatory of land, labour, classification, segregation, resistance, and memory.' },
-		'/colophon': { title: 'Colophon — Anindya Singh', description: 'Technical and design notes for anindyasingh.netlify.app.' }
+	type SocialMeta = { title: string; description: string; image: string; imageAlt: string };
+	const archiveImage = '/images/sections/data-methods.jpg';
+	const socialMetaByPath: Record<string, SocialMeta> = {
+		'/': { title: 'Anindya Singh — research, maps, and public data', description: 'An interactive archive of research, writing, maps, public data, and field records.', image: archiveImage, imageAlt: 'A layered archival composition representing maps, data, and field research' },
+		'/sections': { title: 'Explore the archive — Anindya Singh', description: 'Live data maps, research projects, writing, methods, field tracks, and Annihilation Atlas.', image: archiveImage, imageAlt: 'A layered archival composition representing the sections of Anindya Singh’s archive' },
+		'/about': { title: 'About — Anindya Singh', description: 'Research background, biography, working principles, and ways to get in touch.', image: '/images/sections/about-coordinates.jpg', imageAlt: 'A portrait-oriented archival composition representing Anindya Singh’s biography and location' },
+		'/writing': { title: 'Writing — Anindya Singh', description: 'Essays, methodology notes, and experiments in long-form argument.', image: '/images/sections/writing-essays.jpg', imageAlt: 'A restrained composition of paper and writing materials' },
+		'/work': { title: 'Work — Anindya Singh', description: 'Research projects, collaborations, data tools, and public-interest investigations.', image: '/images/sections/professional-work.jpg', imageAlt: 'An archival work surface representing research projects and collaborations' },
+		'/tracks': { title: 'Tracks & Loiterings — Anindya Singh', description: 'GPS traces, photographs, journeys, and observations recorded along the way.', image: '/images/sections/tracks-loiterings.jpg', imageAlt: 'A mapped walking trace and field observations' },
+		'/trains': { title: 'West Bengal Local Lines — Anindya Singh', description: 'West Bengal railway tracks, stations, and calculated local-train positions on a historical map.', image: '/images/sections/local-lines.jpg', imageAlt: 'An archival map of Bengal overlaid with a branching railway network' },
+		'/vehicles': { title: 'Delhi Vehicles — Anindya Singh', description: 'Live Delhi public-transport vehicle positions visualised over a historical map.', image: '/images/sections/delhi-vehicles.jpg', imageAlt: 'A historical map of Delhi with public-transport movement marks' },
+		'/legal-explorer': { title: 'Indian Parliamentary Bills Explorer — Anindya Singh', description: 'Search and connect parliamentary bills and official documents from 1952 onward.', image: '/images/sections/legal-explorer.jpg', imageAlt: 'Parliamentary papers connected as a legal research network' },
+		'/map': { title: 'Data Atlas — Anindya Singh', description: 'An interactive state-by-state view of public data, research records, and field stories.', image: archiveImage, imageAlt: 'An archival composition representing maps and public data' },
+		'/annihilation-atlas': { title: 'Annihilation Atlas — Anindya Singh', description: 'An anti-caste observatory of land, labour, classification, segregation, resistance, and memory.', image: archiveImage, imageAlt: 'A layered research archive of maps, records, and annotations' },
+		'/colophon': { title: 'Colophon — Anindya Singh', description: 'Technical and design notes for anindyasingh.com.', image: '/images/sections/colophon.jpg', imageAlt: 'A typographic and technical composition representing the site colophon' },
+		'/privacy': { title: 'Privacy — Anindya Singh', description: 'How this website handles contact messages, local preferences, and third-party content.', image: archiveImage, imageAlt: 'A layered archival composition representing the website and its records' },
+		'/thank-you': { title: 'Message received — Anindya Singh', description: 'Confirmation that a message was sent to Anindya Singh.', image: '/images/sections/about-coordinates.jpg', imageAlt: 'An archival composition representing correspondence' }
 	};
-	socialMetaByPath['/game'] = { title: 'Windows 98 game room — Anindya Singh', description: 'An EmuOS desktop for browser games and nostalgic applications.' };
+	socialMetaByPath['/game'] = { title: 'Windows 98 game room — Anindya Singh', description: 'Anindya’s personal Windows 98 room for browser games and nostalgic applications.', image: '/images/sections/colophon.jpg', imageAlt: 'A digital composition representing Anindya’s Windows 98 room' };
 
 	function socialMeta(pathname: string) {
 		const path = pathname.length > 1 ? pathname.replace(/\/$/, '') : pathname;
 		if (socialMetaByPath[path]) return socialMetaByPath[path];
-		if (path.startsWith('/writing/')) return { title: 'Writing — Anindya Singh', description: 'An essay from Anindya Singh’s writing archive.' };
-		if (path.startsWith('/work/')) return { title: 'Project — Anindya Singh', description: 'A project from Anindya Singh’s research and data archive.' };
+		if (path.startsWith('/writing/')) return { title: 'Writing — Anindya Singh', description: 'An essay from Anindya Singh’s writing archive.', image: '/images/sections/writing-essays.jpg', imageAlt: 'A restrained composition of paper and writing materials' };
+		if (path.startsWith('/work/')) return { title: 'Project — Anindya Singh', description: 'A project from Anindya Singh’s research and data archive.', image: '/images/sections/professional-work.jpg', imageAlt: 'An archival work surface representing research and public-interest data projects' };
 		return socialMetaByPath['/'];
 	}
 
@@ -68,14 +72,15 @@
 	<meta property="og:type" content="website" />
 	<meta property="og:title" content={socialMeta($page.url.pathname).title} />
 	<meta property="og:description" content={socialMeta($page.url.pathname).description} />
-	<meta property="og:url" content={`https://anindyasingh.netlify.app${$page.url.pathname}`} />
-	<link rel="canonical" href={`https://anindyasingh.netlify.app${$page.url.pathname}`} />
-	<meta property="og:image" content="https://anindyasingh.netlify.app/images/sections/local-lines.jpg" />
-	<meta property="og:image:alt" content="An archival map of Bengal overlaid with a branching railway network" />
+	<meta property="og:url" content={`https://anindyasingh.com${$page.url.pathname}`} />
+	<link rel="canonical" href={`https://anindyasingh.com${$page.url.pathname}`} />
+	<meta property="og:image" content={`https://anindyasingh.com${socialMeta($page.url.pathname).image}`} />
+	<meta property="og:image:alt" content={socialMeta($page.url.pathname).imageAlt} />
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content={socialMeta($page.url.pathname).title} />
 	<meta name="twitter:description" content={socialMeta($page.url.pathname).description} />
-	<meta name="twitter:image" content="https://anindyasingh.netlify.app/images/sections/local-lines.jpg" />
+	<meta name="twitter:image" content={`https://anindyasingh.com${socialMeta($page.url.pathname).image}`} />
+	<meta name="twitter:image:alt" content={socialMeta($page.url.pathname).imageAlt} />
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
 	<link

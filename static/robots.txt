@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://anindyasingh.com/sitemap.xml
