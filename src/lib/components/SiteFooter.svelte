@@ -20,7 +20,7 @@
 	const terminalPrompt = 'heart-of-gold@chhipi:~ %';
 	const routes: Record<string, string> = {
 		home: '/', about: '/about', work: '/work', writing: '/writing', colophon: '/colophon',
-		sections: '/sections', map: '/map', tracks: '/tracks', trains: '/trains', vehicles: '/vehicles',
+		sections: '/sections', map: '/map', tracks: '/tracks', trains: '/trains', vehicles: '/vehicles', flights: '/flights',
 		notes: '/writing', 'blog-roll': '/work', blog: '/writing', contact: '/about#contact', '/': '/'
 	};
 
@@ -64,7 +64,7 @@
 		const [base, ...rest] = command.toLowerCase().split(/\s+/);
 		const argument = rest.join(' ');
 		if (base === 'help') add('Available commands for the computational proletariat:', '- help · ls · cd <route> · status · socials · weather · about · ping · clear');
-		else if (base === 'ls') add('about work writing colophon sections map tracks trains vehicles contact');
+		else if (base === 'ls') add('about work writing colophon sections map tracks trains vehicles flights contact');
 		else if (base === 'cd') {
 			const target = routes[argument] ?? routes[argument.replace(/^\//, '')];
 			if (target && browser) window.location.href = target;

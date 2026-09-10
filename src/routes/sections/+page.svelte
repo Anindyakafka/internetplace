@@ -42,6 +42,7 @@
 		<div><span>Live instruments</span><h2 id="live-projects-title">Start with the maps that are moving.</h2></div>
 		<a href="/trains"><strong>Local Lines</strong><span>West Bengal tracks, stations, and calculated trains →</span></a>
 		<a href="/vehicles"><strong>Delhi Vehicles</strong><span>Live public-transport positions on a historical map →</span></a>
+		<a href="/flights"><strong>Flights over India</strong><span>OpenSky aircraft positions across the India map →</span></a>
 		<a href="/legal-explorer"><strong>Legal Explorer</strong><span>Search and connect parliamentary bills since 1952 →</span></a>
 	</nav>
 	<p class="archive-note"><strong>An archive under construction.</strong> The live instruments are usable now; essays, methods, and the Annihilation Atlas grow as work is documented and verified. Planned rooms are labelled instead of being presented as finished collections.</p>
@@ -102,6 +103,15 @@
 				Station and official line geometry will follow from the static GTFS archive.
 			</p>
 			<a href="/vehicles" class="section-link">Open the vehicle map →</a>
+		</article>
+
+		<article class="section-card section-card--flights">
+			<img class="card-image" src="/images/sections/delhi-vehicles.jpg" alt="OpenSky aircraft points moving over an India historical map" loading="lazy" />
+			<h2>Flights over India</h2>
+			<p>
+				A live OpenSky sketch of aircraft movement over a historical India map, keyed to the same visual archive as other transit instruments.
+			</p>
+			<a href="/flights" class="section-link">Open the flight map →</a>
 		</article>
 
 		<article class="section-card section-card--legal">
