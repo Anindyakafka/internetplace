@@ -33,13 +33,16 @@
 	let fetchedAt = $state<string | null>(null);
 	let feedState = $state<'loading' | 'live' | 'error'>('loading');
 	let error = $state('');
-	let modernOnly = $state(false);
+	let modernOnly = $state(true);
 	let flightCount = $state(0);
 
 	function setMapStyle() {
 		if (!map || !historicalLayer) return;
-		if (modernOnly) historicalLayer.remove();
-		else historicalLayer.addTo(map);
+		if (modernOnly) {
+			historicalLayer.remove();
+			return;
+		}
+		historicalLayer.addTo(map);
 	}
 
 	function drawFlights() {
@@ -72,7 +75,15 @@
 			map = L.map(mapElement, { zoomControl: false, preferCanvas: true, scrollWheelZoom: true }).setView([23.0, 80.0], 4);
 			L.control.zoom({ position: 'bottomright' }).addTo(map);
 			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap contributors' }).addTo(map);
-			historicalLayer = L.tileLayer('https://geo.nls.uk/mapdata3/india-combined/{z}/{x}/{y}.png', { maxZoom: 15, opacity: 0.88, attribution: 'Historical map tiles © National Library of Scotland' }).addTo(map);
+			historicalLayer = L.tileLayer('https://geo.nls.uk/mapdata3/india-combined/{z}/{x}/{y}.png', { maxZoom: 15, opacity: 0.88, attribution: 'Historical map tiles © National Library of Scotland' });
+			historicalLayer.on('tileerror', () => {
+				if (!modernOnly) {
+					modernOnly = true;
+					error = 'Historical map layer failed in this browser; showing the OpenStreetMap fallback.';
+					setMapStyle();
+				}
+			});
+			if (!modernOnly) historicalLayer.addTo(map);
 			flightRenderer = L.canvas({ padding: 0.36, tolerance: 8 });
 			flightLayer = L.layerGroup().addTo(map);
 			map.on('zoomend', drawFlights);
