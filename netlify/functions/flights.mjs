@@ -1,4 +1,10 @@
 export default async () => {
+	const username = process.env.OPENSKY_USERNAME;
+	const password = process.env.OPENSKY_PASSWORD;
+	if (!username || !password) {
+		return Response.json({ error: 'OpenSky credentials are not configured.' }, { status: 503 });
+	}
+
 	try {
 		const bbox = new URLSearchParams({
 			lamin: '6.0',
@@ -8,7 +14,10 @@ export default async () => {
 		});
 
 		const upstream = await fetch(`https://opensky-network.org/api/states/all?${bbox.toString()}`, {
-			headers: { Accept: 'application/json' }
+			headers: {
+				Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`,
+				Accept: 'application/json'
+			}
 		});
 
 		if (!upstream.ok) {
