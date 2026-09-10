@@ -28,7 +28,7 @@
 
 	<section>
 		<h2>Analytics and cookies</h2>
-		<p>No first-party analytics or advertising trackers are installed. This site does not currently set a tracking cookie, which is why it does not display a cookie-consent banner. If that changes, this notice and the consent approach will be reviewed first.</p>
+		<p>This site now uses the Umami analytics script in the page shell to understand aggregate traffic patterns and page activity. No advertising tracker or behavioural profile is sold or shared. The route for the private dashboard at <a href="/analytics">/analytics</a> is intentionally not listed in the main site navigation and is marked noindex/no-follow for privacy.</p>
 	</section>
 
 	<section>
