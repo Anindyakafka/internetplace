@@ -44,7 +44,18 @@ export default async () => {
 			lamax: String(BBOX.maxLat), lomax: String(BBOX.maxLon)
 		});
 		const headers = { Accept: 'application/json' };
-		if (hasCredentials) headers.Authorization = `Bearer ${await getAccessToken(clientId, clientSecret)}`;
+		let authenticated = false;
+		let authenticationWarning = null;
+		if (hasCredentials) {
+			try {
+				headers.Authorization = `Bearer ${await getAccessToken(clientId, clientSecret)}`;
+				authenticated = true;
+			} catch (cause) {
+				// OpenSky's OAuth host can occasionally be unreachable from a serverless
+				// region. The public states endpoint is still useful, so degrade gracefully.
+				authenticationWarning = cause instanceof Error ? cause.message : 'OpenSky authentication failed.';
+			}
+		}
 		const upstream = await fetch(`${STATES_URL}?${bbox.toString()}`, { headers });
 		if (!upstream.ok) {
 			const retryAfter = upstream.headers.get('x-rate-limit-retry-after-seconds');
@@ -84,13 +95,20 @@ export default async () => {
 			count: flights.length,
 			fetchedAt: new Date().toISOString(),
 			sourceTime: payload.time ? new Date(payload.time * 1000).toISOString() : null,
-			authenticated: hasCredentials,
+			authenticated,
+			authenticationWarning,
 			bbox: BBOX
 		};
-		responseCache = { payload: result, expiresAt: Date.now() + (hasCredentials ? 90_000 : 10 * 60_000) };
-		return Response.json(result, { headers: cacheHeaders(hasCredentials) });
+		responseCache = { payload: result, expiresAt: Date.now() + (authenticated ? 90_000 : 10 * 60_000) };
+		return Response.json(result, { headers: cacheHeaders(authenticated) });
 	} catch (cause) {
-		return Response.json({ error: cause instanceof Error ? cause.message : 'OpenSky flight feed failed.' }, { status: 502 });
+		return Response.json(
+			{
+				error: cause instanceof Error ? cause.message : 'OpenSky flight feed failed.',
+				stage: 'states-feed'
+			},
+			{ status: 502, headers: { 'Cache-Control': 'no-store' } }
+		);
 	}
 };
 
