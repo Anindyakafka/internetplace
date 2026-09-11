@@ -26,16 +26,19 @@ async function getAccessToken(clientId, clientSecret) {
 export default async () => {
 	const clientId = process.env.OPENSKY_CLIENT_ID;
 	const clientSecret = process.env.OPENSKY_CLIENT_SECRET;
+	const proxyUrl = process.env.OPENSKY_PROXY_URL;
+	const proxyToken = process.env.FLIGHT_PROXY_TOKEN;
 	const hasCredentials = Boolean(clientId && clientSecret);
+	const hasProxy = Boolean(proxyUrl && proxyToken);
 
-	if (Boolean(clientId) !== Boolean(clientSecret)) {
+	if (!hasProxy && Boolean(clientId) !== Boolean(clientSecret)) {
 		return Response.json(
 			{ error: 'OpenSky OAuth credentials are incomplete. Set both OPENSKY_CLIENT_ID and OPENSKY_CLIENT_SECRET.' },
 			{ status: 503 }
 		);
 	}
 	if (responseCache.payload && Date.now() < responseCache.expiresAt) {
-		return Response.json(responseCache.payload, { headers: cacheHeaders(hasCredentials) });
+		return Response.json(responseCache.payload, { headers: cacheHeaders(Boolean(responseCache.payload.authenticated)) });
 	}
 
 	try {
@@ -46,7 +49,12 @@ export default async () => {
 		const headers = { Accept: 'application/json' };
 		let authenticated = false;
 		let authenticationWarning = null;
-		if (hasCredentials) {
+		let statesUrl = `${STATES_URL}?${bbox.toString()}`;
+		if (hasProxy) {
+			statesUrl = proxyUrl;
+			headers['X-Relay-Token'] = proxyToken;
+			authenticated = true;
+		} else if (hasCredentials) {
 			try {
 				headers.Authorization = `Bearer ${await getAccessToken(clientId, clientSecret)}`;
 				authenticated = true;
@@ -56,7 +64,7 @@ export default async () => {
 				authenticationWarning = cause instanceof Error ? cause.message : 'OpenSky authentication failed.';
 			}
 		}
-		const upstream = await fetch(`${STATES_URL}?${bbox.toString()}`, { headers });
+		const upstream = await fetch(statesUrl, { headers });
 		if (!upstream.ok) {
 			const retryAfter = upstream.headers.get('x-rate-limit-retry-after-seconds');
 			const detail = upstream.status === 429
