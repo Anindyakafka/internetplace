@@ -19,7 +19,9 @@
 		squawk: string | null;
 		spi: boolean;
 		positionSource: number | null;
+		category: number | null;
 	};
+	type TrailPoint = [number, number];
 
 	type Leaflet = typeof import('leaflet');
 
@@ -33,8 +35,11 @@
 	let fetchedAt = $state<string | null>(null);
 	let feedState = $state<'loading' | 'live' | 'error'>('loading');
 	let error = $state('');
-	let modernOnly = $state(true);
+	let modernOnly = $state(false);
 	let flightCount = $state(0);
+	let authenticated = $state(false);
+	const trails = new Map<string, TrailPoint[]>();
+	const lastSeen = new Map<string, number>();
 
 	function setMapStyle() {
 		if (!map || !historicalLayer) return;
@@ -51,23 +56,57 @@
 		const L = leaflet;
 		const zoom = map.getZoom();
 		for (const f of flights) {
-			const marker = L.circleMarker([f.latitude, f.longitude], {
-				color: '#f9f3df',
-				fillColor: '#b75843',
-				fillOpacity: 0.85,
-				weight: zoom >= 4 ? 1.0 : 0.5,
-				radius: zoom >= 4 ? 4 : 3,
-				opacity: 0.78,
-				pane: 'markerPane'
+			const key = f.icao24 ?? `${f.latitude}:${f.longitude}`;
+			const trail = trails.get(key) ?? [];
+			if (trail.length > 1) {
+				L.polyline(trail, {
+					color: '#9a4b3b', weight: zoom >= 5 ? 1.35 : .85,
+					opacity: .48, interactive: false, renderer: flightRenderer ?? undefined
+				}).addTo(flightLayer);
+			}
+			const heading = Number.isFinite(f.heading) ? f.heading : 0;
+			const marker = L.marker([f.latitude, f.longitude], {
+				icon: L.divIcon({
+					className: 'flight-icon-shell',
+					html: `<span class="aircraft${f.onGround ? ' is-grounded' : ''}" style="--heading:${heading}deg"><svg viewBox="0 0 14 16" aria-hidden="true"><path d="M7 0.8 8.7 6l4.6 2v1.7L8.6 9l-.7 5.3 1.8 1v.7L7 15.5 4.3 16v-.7l1.8-1L5.4 9l-4.7.7V8l4.6-2L7 .8Z"/></svg></span>`,
+					iconSize: [14, 16], iconAnchor: [7, 8]
+				}),
+				keyboard: true,
+				riseOnHover: true
 			}).addTo(flightLayer);
-			const label = `${f.callsign ?? f.icao24 ?? 'Flight'}${f.originCountry ? ` · ${f.originCountry}` : ''}`;
+			const speed = f.velocity === null ? '' : ` · ${Math.round(f.velocity * 3.6)} km/h`;
+			const altitude = f.geoAltitude === null ? '' : ` · ${Math.round(f.geoAltitude).toLocaleString('en-IN')} m`;
+			const direction = f.heading === null ? '' : ` · ${Math.round(f.heading)}°`;
+			const label = `${f.callsign ?? f.icao24 ?? 'Flight'}${f.originCountry ? ` · ${f.originCountry}` : ''}${speed}${altitude}${direction}`;
 			marker.bindTooltip(label, { direction: 'top', opacity: 0.92 });
+		}
+	}
+
+	function updateTrails(nextFlights: Flight[]) {
+		const now = Date.now();
+		for (const flight of nextFlights) {
+			if (!flight.icao24) continue;
+			const point: TrailPoint = [flight.latitude, flight.longitude];
+			const trail = trails.get(flight.icao24) ?? [];
+			const previous = trail.at(-1);
+			if (!previous || Math.abs(previous[0] - point[0]) + Math.abs(previous[1] - point[1]) > .001) {
+				trail.push(point);
+				if (trail.length > 12) trail.shift();
+				trails.set(flight.icao24, trail);
+			}
+			lastSeen.set(flight.icao24, now);
+		}
+		for (const [key, seen] of lastSeen) {
+			if (now - seen > 30 * 60_000) {
+				lastSeen.delete(key);
+				trails.delete(key);
+			}
 		}
 	}
 
 	onMount(() => {
 		let disposed = false;
-		let timer: ReturnType<typeof setInterval>;
+		let timer: ReturnType<typeof setInterval> | undefined;
 		void import('leaflet').then((module) => {
 			if (disposed) return;
 			leaflet = module.default;
@@ -76,13 +115,6 @@
 			L.control.zoom({ position: 'bottomright' }).addTo(map);
 			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap contributors' }).addTo(map);
 			historicalLayer = L.tileLayer('https://geo.nls.uk/mapdata3/india-combined/{z}/{x}/{y}.png', { maxZoom: 15, opacity: 0.88, attribution: 'Historical map tiles © National Library of Scotland' });
-			historicalLayer.on('tileerror', () => {
-				if (!modernOnly) {
-					modernOnly = true;
-					error = 'Historical map layer failed in this browser; showing the OpenStreetMap fallback.';
-					setMapStyle();
-				}
-			});
 			if (!modernOnly) historicalLayer.addTo(map);
 			flightRenderer = L.canvas({ padding: 0.36, tolerance: 8 });
 			flightLayer = L.layerGroup().addTo(map);
@@ -91,11 +123,14 @@
 			const refresh = async () => {
 				try {
 					const response = await fetch('/.netlify/functions/flights');
-					if (!response.ok) throw new Error(`Flight feed returned ${response.status}`);
-					const payload = await response.json();
-					flights = ((payload.flights ?? []) as Flight[]).filter((f) => Number.isFinite(f.latitude) && Number.isFinite(f.longitude));
+					const payload = await response.json().catch(() => ({}));
+					if (!response.ok) throw new Error(payload.error ?? `Flight feed returned ${response.status}`);
+					const nextFlights = ((payload.flights ?? []) as Flight[]).filter((f) => Number.isFinite(f.latitude) && Number.isFinite(f.longitude));
+					updateTrails(nextFlights);
+					flights = nextFlights;
 					flightCount = flights.length;
 					fetchedAt = payload.fetchedAt ?? null;
+					authenticated = Boolean(payload.authenticated);
 					feedState = 'live';
 					error = '';
 					drawFlights();
@@ -106,9 +141,9 @@
 				}
 			};
 			void refresh();
-			timer = setInterval(refresh, 60_000);
+			timer = setInterval(refresh, 120_000);
 		});
-		return () => { disposed = true; clearInterval(timer); map?.remove(); map = null; flightRenderer = null; };
+		return () => { disposed = true; if (timer) clearInterval(timer); map?.remove(); map = null; flightRenderer = null; };
 	});
 </script>
 
@@ -125,7 +160,7 @@
 		<div class="status">
 			<i class:online={feedState === 'live'}></i>
 			{#if feedState === 'loading'}Connecting to OpenSky…{:else if feedState === 'live'}{flightCount.toLocaleString('en-IN')} aircraft in the latest bin{:else}{error}{/if}
-			{#if fetchedAt}<small>Updated {new Date(fetchedAt).toLocaleTimeString('en-IN')}</small>{/if}
+			{#if fetchedAt}<small>Updated {new Date(fetchedAt).toLocaleTimeString('en-IN')} · {authenticated ? 'authenticated feed' : 'anonymous feed'}</small>{/if}
 		</div>
 	</header>
 
@@ -143,8 +178,8 @@
 		</div>
 		<div class="flight-map"><div bind:this={mapElement}></div></div>
 		<div class="legend">
-			<span><i class="flight-marker"></i>Visible aircraft</span>
-			<p>Source: OpenSky Network state vectors for the India footprint. Coordinates are shown as received; aircraft positions and callsigns may be sparse or delayed.</p>
+			<span><i class="flight-marker">✈</i>Heading and recent path</span>
+			<p>Source: OpenSky Network state vectors for the India footprint. Aircraft point in their reported direction; trails accumulate from observations received while this page remains open.</p>
 		</div>
 	</section>
 </main>
@@ -175,7 +210,12 @@
 	.legend { display: flex; align-items: center; gap: .8rem; padding: .8rem var(--space-l); border-top: 1px solid var(--color-border); color: var(--color-text-muted); font: 400 var(--step--1)/1.4 var(--font-ticketing); }
 	.legend span { display: flex; align-items: center; gap: .5rem; color: var(--color-text); }
 	.legend p { max-width: 62ch; margin: 0; line-height: 1.5; }
-	.legend .flight-marker { display: inline-block; width: .75rem; height: .75rem; border-radius: 50%; background: var(--color-accent); box-shadow: 0 0 0 1px var(--color-border); }
+	.legend .flight-marker { display:inline-grid; width:1rem; height:1rem; place-items:center; color:var(--color-accent); font:700 .8rem/1 sans-serif; transform:rotate(45deg); }
+	:global(.flight-icon-shell) { border:0 !important; background:transparent !important; }
+	:global(.aircraft) { --heading:0deg; display:block; width:14px; height:16px; color:#a94736; filter:drop-shadow(0 1px 1px rgba(255,255,255,.8)); transform:rotate(var(--heading)); transform-origin:50% 50%; transition:transform .35s linear; }
+	:global(.aircraft svg) { display:block; width:100%; height:100%; }
+	:global(.aircraft path) { fill:currentColor; stroke:#f7f0dc; stroke-width:.65; vector-effect:non-scaling-stroke; }
+	:global(.aircraft.is-grounded) { color:#756e5f; opacity:.68; }
 	:global(.leaflet-tooltip) { font-family: var(--font-mono); font-size: .72rem; background: var(--color-surface); color: var(--color-text); border: 1px solid var(--color-border); }
 	@media (max-width: 640px) { .map-toolbar, .legend { align-items: flex-start; flex-direction: column; } .flight-map { min-height: 36rem; } }
 </style>
