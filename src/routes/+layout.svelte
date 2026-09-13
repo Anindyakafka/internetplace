@@ -1,14 +1,17 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
 	import type { Snippet } from 'svelte';
 	import SiteFooter from '$lib/components/SiteFooter.svelte';
+	import { startTranslation, translateTree, type SiteLanguage } from '$lib/i18n/runtime';
 	import '../lib/styles/global.css';
 
 	let { children }: { children: Snippet } = $props();
 
 	let scrolled = $state(false);
 	let theme = $state<'light' | 'dark'>('light');
+	let language = $state<SiteLanguage>('en');
 
 	type SocialMeta = { title: string; description: string; image: string; imageAlt: string };
 	const archiveImage = '/images/sections/data-methods.jpg';
@@ -59,6 +62,25 @@
 		theme = theme === 'light' ? 'dark' : 'light';
 	}
 
+	function toggleLanguage() {
+		language = language === 'en' ? 'bn' : 'en';
+	}
+
+	onMount(() => {
+		const stored = localStorage.getItem('site-language');
+		if (stored === 'bn' || stored === 'en') language = stored;
+		const translator = startTranslation(() => language);
+		return translator.stop;
+	});
+
+	$effect(() => {
+		if (!browser) return;
+		document.documentElement.lang = language === 'bn' ? 'bn' : 'en';
+		document.documentElement.dataset.language = language;
+		localStorage.setItem('site-language', language);
+		if (document.documentElement) translateTree(document.documentElement, language);
+	});
+
 	$effect(() => {
 		const onScroll = () => {
 			scrolled = window.scrollY > 20;
@@ -85,7 +107,7 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
 	<link
-		href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap"
+		href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap"
 		rel="stylesheet"
 	/>
 </svelte:head>
@@ -97,6 +119,9 @@
 				<img src="/emuos/assets/images/themes/boot/windows-98/windows-98.gif" alt="" />
 				<strong>Windows 98</strong>
 			</a>
+			<button class="language-toggle home-language-toggle" aria-label="Change language" onclick={toggleLanguage}>
+				{language === 'en' ? 'বাংলা' : 'English'}
+			</button>
 			<button
 				class="theme-toggle home-theme-toggle"
 				aria-label="Toggle dark mode"
@@ -126,7 +151,10 @@
 		<header class="site-header" class:scrolled>
 			<div class="header-inner">
 				<a class="site-mark" href="/" aria-label="Home"></a>
-
+				<div class="header-actions">
+				<button class="language-toggle" aria-label="Change language" onclick={toggleLanguage}>
+					{language === 'en' ? 'বাংলা' : 'English'}
+				</button>
 				<button
 					class="theme-toggle"
 					aria-label="Toggle dark mode"
@@ -150,7 +178,7 @@
 							<line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
 						</svg>
 					{/if}
-				</button>
+				</button></div>
 			</div>
 		</header>
 	{/if}
@@ -191,6 +219,21 @@
 		right: var(--space-l);
 		pointer-events: auto;
 	}
+
+	.home-language-toggle { position:absolute; top:14px; right:calc(var(--space-l) + 2.8rem); pointer-events:auto; }
+	.header-actions { display:flex; align-items:center; gap:.25rem; }
+	.language-toggle { min-height:2rem; padding:.32rem .62rem; border:1px solid var(--color-border-strong); border-radius:999px; background:var(--color-surface); color:var(--color-text); font:600 .72rem/1 'Noto Sans Bengali',var(--font-sans); cursor:pointer; }
+	.language-toggle:hover { border-color:var(--color-accent); color:var(--color-accent); }
+	:global(html[data-language='bn']) .site { font-family:'Noto Sans Bengali',var(--font-sans); }
+	:global(html[data-language='bn']) :global(h1),
+	:global(html[data-language='bn']) :global(h2),
+	:global(html[data-language='bn']) :global(h3),
+	:global(html[data-language='bn']) :global(p),
+	:global(html[data-language='bn']) :global(a),
+	:global(html[data-language='bn']) :global(button),
+	:global(html[data-language='bn']) :global(label),
+	:global(html[data-language='bn']) :global(input),
+	:global(html[data-language='bn']) :global(select) { font-family:'Noto Sans Bengali',var(--font-sans); }
 
 	.game-launcher {
 		position: absolute;
