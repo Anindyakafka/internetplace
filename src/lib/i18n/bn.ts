@@ -1,5 +1,5 @@
 export const bn: Record<string, string> = {
-	'Anindya Singh': 'অনিন্দ্য সিংহ',
+	'Anindya Singh': 'অনিন্দ্য সিং',
 	'Home': 'শুরু',
 	'About': 'আমার কথা',
 	'Work': 'কাজ',
