@@ -3,7 +3,9 @@ import { resolve } from 'node:path';
 
 const root = resolve(import.meta.dirname, '..');
 const output = resolve(root, 'static/data/west-bengal-trains.json');
-const hubs = ['SDAH', 'HWH', 'MJT', 'KOAA', 'SHM'];
+// Major suburban terminals and interchange points across the Sealdah and
+// Howrah systems. Invalid/unsupported boards are skipped without erasing cache.
+const hubs = ['SDAH', 'HWH', 'MJT', 'KOAA', 'SHM', 'RHA', 'KNJ', 'NH', 'BT', 'BNJ', 'CG', 'DH', 'LKPR', 'NMKA', 'HNB', 'BWN', 'BDC', 'KGP', 'MCA', 'TAK', 'AMBG', 'GOGT', 'HLZ'];
 const delay = (ms) => new Promise((done) => setTimeout(done, ms));
 
 async function readKey() {
@@ -26,7 +28,7 @@ const previous = JSON.parse(await readFile(output, 'utf8').catch(() => '{"routes
 const geometryByPair = new Map((previous.routes ?? []).map((route) => [route.pair, route]));
 // Station boards can occasionally be partial. Begin with the durable cache and
 // let fresh records replace matching trains instead of erasing absent trains.
-const serviceById = new Map((previous.services ?? []).map((service) => [service.id, service]));
+const serviceById = new Map((previous.services ?? []).map((service) => [`${service.id}@${service.anchor}`, service]));
 
 const sealdah = JSON.parse(await readFile(resolve(root, 'static/data/sealdah-network.json'), 'utf8').catch(() => '{"corridors":[]}'));
 for (const corridor of sealdah.corridors ?? []) {
@@ -37,17 +39,19 @@ for (const corridor of sealdah.corridors ?? []) {
 	geometryByPair.set(`${corridor.code}→SDAH`, { pair: `${corridor.code}→SDAH`, source: terminal, destination: hub, representativeTrain: corridor.representativeTrain, coordinates: corridor.coordinates.toReversed() });
 }
 
-if (process.env.TRAIN_DATA_OFFLINE === '1') {
-	console.log(`Offline mode: retaining ${serviceById.size} cached services.`);
+if (process.env.TRAIN_DATA_OFFLINE === '1' || process.env.TRAIN_SKIP_BOARDS === '1') {
+	console.log(`Cache mode: retaining ${serviceById.size} cached services.`);
 } else {
 	for (const hub of hubs) {
 		console.log(`Fetching ${hub} station board…`);
-		const payload = await get(`/stations/${hub}/trains`);
+		let payload;
+		try { payload = await get(`/stations/${hub}/trains`); }
+		catch (error) { console.warn(`Skipping ${hub}: ${error.message}`); continue; }
 		for (const { train, stop } of payload?.data?.trains ?? []) {
 			if (!['Suburban', 'MEMU'].includes(train?.type)) continue;
 			if (train.source?.code !== hub && train.destination?.code !== hub) continue;
 			const outbound = train.source.code === hub;
-			serviceById.set(train.number, {
+			serviceById.set(`${train.number}@${hub}`, {
 				id: train.number, name: train.name, type: train.type, source: train.source, destination: train.destination,
 				anchor: hub, anchorTime: outbound ? stop.departure : stop.arrival,
 				distanceKm: Number(stop.distance) || 0, runDays: train.runDays ?? []

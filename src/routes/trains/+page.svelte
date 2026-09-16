@@ -3,13 +3,16 @@
 	import TrainNetworkMap from '$lib/components/TrainNetworkMap.svelte';
 	import type { SealdahDirection, SealdahNetwork, WestBengalRailways } from '$lib/trains/sealdah-network';
 
-	type HubCode = 'SDAH' | 'HWH' | 'MJT' | 'KOAA' | 'SHM';
+	type HubCode = 'SDAH' | 'HWH' | 'MJT' | 'KOAA' | 'SHM' | 'RHA' | 'KNJ' | 'NH' | 'BT' | 'BNJ' | 'CG' | 'DH' | 'LKPR' | 'NMKA' | 'HNB' | 'BWN' | 'BDC' | 'KGP' | 'MCA' | 'TAK' | 'AMBG' | 'GOGT' | 'HLZ';
 	const hubNames: Record<HubCode, string> = {
 		SDAH: 'Sealdah',
 		HWH: 'Howrah',
 		MJT: 'Majerhat',
 		KOAA: 'Kolkata',
-		SHM: 'Shalimar'
+		SHM: 'Shalimar', RHA: 'Ranaghat', KNJ: 'Krishnanagar City', NH: 'Naihati', BT: 'Barasat',
+		BNJ: 'Bangaon', CG: 'Canning', DH: 'Diamond Harbour', LKPR: 'Lakshmikantapur',
+		NMKA: 'Namkhana', HNB: 'Hasnabad', BWN: 'Barddhaman', BDC: 'Bandel', KGP: 'Kharagpur',
+		MCA: 'Mecheda', TAK: 'Tarakeswar', AMBG: 'Arambagh', GOGT: 'Goghat', HLZ: 'Haldia'
 	};
 	const hubCodes = Object.keys(hubNames) as HubCode[];
 
@@ -111,7 +114,7 @@
 		<p class="eyebrow">Local lines · West Bengal railway network</p>
 		<h1>{hubName}, in motion.</h1>
 		<p class="lede">The physical railway network of West Bengal, with local services beginning or ending at {hubName} moving across it. Positions are calculated from timetable times and route distance, with reported data checked for the selected train.</p>
-		{#if railways}<div class="statewide-totals"><span><strong>{railways.counts.stations}</strong> stations &amp; halts</span><span><strong>{railways.counts.trackSegments}</strong> physical segments</span><span><strong>{railways.counts.trackKm.toLocaleString('en-IN')}</strong> mapped km</span></div>{/if}
+		{#if railways}<div class="statewide-totals"><span><strong>{railways.counts.stations}</strong> verified station reference points</span><span><strong>{network?.counts.corridors ?? 0}</strong> API route geometries for this hub</span></div>{/if}
 		<div class="hub-switch" aria-label="Railway hub">
 			{#each hubCodes as code}
 				<button class:active={activeHub === code} onclick={() => selectHub(code)}>
@@ -153,7 +156,7 @@
 		</section>
 	{/if}
 
-	<section class="map-notes"><div class="direction-legend"><p><strong>Direction</strong><span><i class="legend-token legend-token--away"></i>Away from {hubName}</span><span><i class="legend-token legend-token--toward"></i>Towards {hubName}</span></p></div><div><span class="legend-line"></span><p><strong>Statewide railway</strong>{railways?.counts.trackSegments ?? 0} physical segments form the base network; coloured lines are {network?.counts.corridors ?? 0} animated service corridors.</p></div><div><span class="legend-station"></span><p><strong>{railways?.counts.stations ?? 0} stations and halts</strong>Zoom in and hover a station to see its name and code.</p></div><p class="disclaimer">Calculated positions are approximate and not suitable for boarding decisions. Historical tiles are provided by the National Library of Scotland. Physical infrastructure and stations come from the geo-referenced Indian Railways dataset curated by Sankalp Sharma; service routes were refreshed from RailRadar on {network ? new Date(network.generatedAt).toLocaleDateString('en-IN', { dateStyle: 'medium' }) : 'the latest data refresh'}.</p></section>
+	<section class="map-notes"><div class="direction-legend"><p><strong>Direction</strong><span><i class="legend-token legend-token--away"></i>Away from {hubName}</span><span><i class="legend-token legend-token--toward"></i>Towards {hubName}</span></p></div><div><span class="legend-line"></span><p><strong>API service routes</strong>The map shows only {network?.counts.corridors ?? 0} route geometries returned for trains serving {hubName}; no inferred or statewide base lines are drawn.</p></div><div><span class="legend-station"></span><p><strong>{railways?.counts.stations ?? 0} verified station reference points</strong>Zoom in and hover a station to see its name and code.</p></div><p class="disclaimer">Calculated positions are approximate and not suitable for boarding decisions. Historical tiles are provided by the National Library of Scotland. Station reference points come from the geo-referenced Indian Railways dataset curated by Sankalp Sharma; every coloured service route was returned by RailRadar and refreshed on {network ? new Date(network.generatedAt).toLocaleDateString('en-IN', { dateStyle: 'medium' }) : 'the latest data refresh'}.</p></section>
 </main>
 
 <style>

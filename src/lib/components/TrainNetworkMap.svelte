@@ -67,8 +67,9 @@
 		void import('leaflet').then((leaflet)=>{
 			if(disposed)return; const L=leaflet.default; void import('leaflet/dist/leaflet.css');
 			map=L.map(mapElement,{zoomControl:false,scrollWheelZoom:true,minZoom:6,maxZoom:16,preferCanvas:true}); L.control.zoom({position:'bottomright'}).addTo(map);
-			const statewidePoints=(railways?.tracks ?? []).flatMap((track)=>track.coordinates.map(([lng,lat])=>[lat,lng] as [number,number]));
-			const allPoints=statewidePoints.length ? statewidePoints : validCorridors.flatMap((corridor)=>corridor.coordinates.map(([lng,lat])=>[lat,lng] as [number,number]));
+			// Only draw and frame routes returned by RailRadar. The separate statewide
+			// linework dataset is retained solely for verified station reference points.
+			const allPoints=validCorridors.flatMap((corridor)=>corridor.coordinates.map(([lng,lat])=>[lat,lng] as [number,number]));
 			map.fitBounds(L.latLngBounds(allPoints),{padding:[24,24]});
 			modernLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,opacity:1,attribution:'© OpenStreetMap contributors'}).addTo(map);
 			historicalLayer=L.tileLayer('https://geo.nls.uk/mapdata3/india-combined/{z}/{x}/{y}.png',{maxZoom:16,opacity:showModern?0:.88,attribution:'Historical map tiles © National Library of Scotland'}).addTo(map);
@@ -78,11 +79,6 @@
 				if(!tile.dataset.fallback){tile.dataset.fallback='osm';tile.src=`https://a.tile.openstreetmap.org/${z}/${x}/${y}.png`;}
 			});
 			const railwayRenderer=L.canvas({padding:.35});
-			(railways?.tracks ?? []).forEach((track)=>{
-				const points=track.coordinates.map(([lng,lat])=>[lat,lng] as [number,number]);
-				L.polyline(points,{renderer:railwayRenderer,color:'#292722',weight:2.2,opacity:.68,interactive:false}).addTo(map!);
-				L.polyline(points,{renderer:railwayRenderer,color:'#f4edda',weight:.8,opacity:.9,interactive:false,dashArray:'3 3'}).addTo(map!);
-			});
 			const stationLayer=L.layerGroup().addTo(map!);
 			(railways?.stations ?? []).forEach((station)=>{
 				const [lng,lat]=station.coordinates;
