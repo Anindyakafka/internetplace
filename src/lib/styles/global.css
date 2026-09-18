@@ -44,7 +44,7 @@ html {
 	--font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 	--font-serif: 'Newsreader', Georgia, 'Times New Roman', serif;
 	--font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-	--font-bangla: 'Li Subha Letterpress', 'Noto Sans Bengali', sans-serif;
+	--font-bangla: 'Li Subha Letterpress';
 
 	/* Type Scale (modular, 1.250 — Major Third) */
 	--step--2: clamp(0.7rem, 0.67rem + 0.15vw, 0.78rem);

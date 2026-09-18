@@ -224,16 +224,8 @@
 	.header-actions { display:flex; align-items:center; gap:.25rem; }
 	.language-toggle { min-height:2rem; padding:.32rem .62rem; border:1px solid var(--color-border-strong); border-radius:999px; background:var(--color-surface); color:var(--color-text); font:600 .72rem/1 var(--font-bangla); cursor:pointer; }
 	.language-toggle:hover { border-color:var(--color-accent); color:var(--color-accent); }
-	:global(html[data-language='bn']) .site { font-family:var(--font-bangla); }
-	:global(html[data-language='bn']) :global(h1),
-	:global(html[data-language='bn']) :global(h2),
-	:global(html[data-language='bn']) :global(h3),
-	:global(html[data-language='bn']) :global(p),
-	:global(html[data-language='bn']) :global(a),
-	:global(html[data-language='bn']) :global(button),
-	:global(html[data-language='bn']) :global(label),
-	:global(html[data-language='bn']) :global(input),
-	:global(html[data-language='bn']) :global(select) { font-family:var(--font-bangla); }
+	:global(html[data-language='bn']) .site,
+	:global(html[data-language='bn']) .site :global(*) { font-family:var(--font-bangla) !important; }
 
 	.game-launcher {
 		position: absolute;
