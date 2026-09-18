@@ -4,6 +4,22 @@
    Inspired by kazukinoda.com — generous whitespace, restrained palette
    ======================================================================== */
 
+@font-face {
+	font-family: 'Li Subha Letterpress';
+	src: url('/fonts/bangla/li-subha-letterpress-regular.ttf') format('truetype');
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Li Subha Letterpress';
+	src: url('/fonts/bangla/li-subha-letterpress-italic.ttf') format('truetype');
+	font-style: italic;
+	font-weight: 400;
+	font-display: swap;
+}
+
 /* --- Reset --- */
 *,
 *::before,
@@ -28,6 +44,7 @@ html {
 	--font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 	--font-serif: 'Newsreader', Georgia, 'Times New Roman', serif;
 	--font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+	--font-bangla: 'Li Subha Letterpress', 'Noto Sans Bengali', sans-serif;
 
 	/* Type Scale (modular, 1.250 — Major Third) */
 	--step--2: clamp(0.7rem, 0.67rem + 0.15vw, 0.78rem);

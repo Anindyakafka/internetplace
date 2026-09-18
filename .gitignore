@@ -28,6 +28,9 @@ Thumbs.db
 # Local pretext demo artifacts
 /tmp/
 
+# Original paid-font download package (retain only approved web files)
+static/fonts/bengali/LiSubhaLetterpressUnicode/
+
 # Large local research datasets (kept off GitHub)
 src/data/shrug-secc-mord-rural-csv/
 src/data/shrug-secc-parsed-urban-csv/
@@ -43,6 +46,10 @@ build_output*.txt
 tmp-*.png
 tmp-*.jpg
 tmp-*.webp
+temp_*
+output_*
+tmp-*
+*.tmp
 static/videos/intro.mp4
 
 

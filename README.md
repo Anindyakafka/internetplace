@@ -140,9 +140,7 @@ Below is a practical, developer-focused structure map (not every generated file 
 		│        ├─ +page.svelte
 		│        ├─ dadri-methodology/
 		│        ├─ name-ethnicity-essay/
-		│        ├─ pretext-demo/
-		│        │  └─ +page.svelte
-		│        └─ qgis-workflow/
+		│        └─ scenery-as-weapon/
 		├─ static/
 		│  ├─ assets/
 		│  ├─ data/

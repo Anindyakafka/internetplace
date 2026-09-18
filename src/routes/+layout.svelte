@@ -24,7 +24,7 @@
 		'/tracks': { title: 'Tracks & Loiterings — Anindya Singh', description: 'GPS traces, photographs, journeys, and observations recorded along the way.', image: '/images/sections/tracks-loiterings.jpg', imageAlt: 'A mapped walking trace and field observations' },
 		'/trains': { title: 'West Bengal Local Lines — Anindya Singh', description: 'West Bengal railway tracks, stations, and calculated local-train positions on a historical map.', image: '/images/sections/local-lines.jpg', imageAlt: 'An archival map of Bengal overlaid with a branching railway network' },
 		'/vehicles': { title: 'Delhi Vehicles — Anindya Singh', description: 'Live Delhi public-transport vehicle positions visualised over a historical map.', image: '/images/sections/delhi-vehicles.jpg', imageAlt: 'A historical map of Delhi with public-transport movement marks' },
-		'/flights': { title: 'Flights over India — Anindya Singh', description: 'OpenSky aircraft positions over India visualised through a historical map.', image: '/images/sections/delhi-vehicles.jpg', imageAlt: 'A historical map of India with aviation positions overlaid' },
+		'/flights': { title: 'Flights over India — Anindya Singh', description: 'OpenSky aircraft positions over India visualised through a historical map.', image: '/images/sections/flights-over-india.jpg', imageAlt: 'An archival map of India crossed by two restrained aircraft paths' },
 		'/legal-explorer': { title: 'Indian Parliamentary Bills Explorer — Anindya Singh', description: 'Search and connect parliamentary bills and official documents from 1952 onward.', image: '/images/sections/legal-explorer.jpg', imageAlt: 'Parliamentary papers connected as a legal research network' },
 		'/map': { title: 'Data Atlas — Anindya Singh', description: 'An interactive state-by-state view of public data, research records, and field stories.', image: archiveImage, imageAlt: 'An archival composition representing maps and public data' },
 		'/annihilation-atlas': { title: 'Annihilation Atlas — Anindya Singh', description: 'An anti-caste observatory of land, labour, classification, segregation, resistance, and memory.', image: archiveImage, imageAlt: 'A layered research archive of maps, records, and annotations' },
@@ -222,9 +222,9 @@
 
 	.home-language-toggle { position:absolute; top:14px; right:calc(var(--space-l) + 2.8rem); pointer-events:auto; }
 	.header-actions { display:flex; align-items:center; gap:.25rem; }
-	.language-toggle { min-height:2rem; padding:.32rem .62rem; border:1px solid var(--color-border-strong); border-radius:999px; background:var(--color-surface); color:var(--color-text); font:600 .72rem/1 'Noto Sans Bengali',var(--font-sans); cursor:pointer; }
+	.language-toggle { min-height:2rem; padding:.32rem .62rem; border:1px solid var(--color-border-strong); border-radius:999px; background:var(--color-surface); color:var(--color-text); font:600 .72rem/1 var(--font-bangla); cursor:pointer; }
 	.language-toggle:hover { border-color:var(--color-accent); color:var(--color-accent); }
-	:global(html[data-language='bn']) .site { font-family:'Noto Sans Bengali',var(--font-sans); }
+	:global(html[data-language='bn']) .site { font-family:var(--font-bangla); }
 	:global(html[data-language='bn']) :global(h1),
 	:global(html[data-language='bn']) :global(h2),
 	:global(html[data-language='bn']) :global(h3),
@@ -233,7 +233,7 @@
 	:global(html[data-language='bn']) :global(button),
 	:global(html[data-language='bn']) :global(label),
 	:global(html[data-language='bn']) :global(input),
-	:global(html[data-language='bn']) :global(select) { font-family:'Noto Sans Bengali',var(--font-sans); }
+	:global(html[data-language='bn']) :global(select) { font-family:var(--font-bangla); }
 
 	.game-launcher {
 		position: absolute;

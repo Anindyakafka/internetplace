@@ -118,7 +118,7 @@
 		<div class="hub-switch" aria-label="Railway hub">
 			{#each hubCodes as code}
 				<button class:active={activeHub === code} onclick={() => selectHub(code)}>
-					{hubNames[code]} <small>{networks[code]?.counts.services ?? 0}</small>
+					{hubNames[code]} <small>{networks[code] ? networks[code].counts.services : '…'}</small>
 				</button>
 			{/each}
 		</div>
@@ -156,7 +156,9 @@
 		</section>
 	{/if}
 
-	<section class="map-notes"><div class="direction-legend"><p><strong>Direction</strong><span><i class="legend-token legend-token--away"></i>Away from {hubName}</span><span><i class="legend-token legend-token--toward"></i>Towards {hubName}</span></p></div><div><span class="legend-line"></span><p><strong>API service routes</strong>The map shows only {network?.counts.corridors ?? 0} route geometries returned for trains serving {hubName}; no inferred or statewide base lines are drawn.</p></div><div><span class="legend-station"></span><p><strong>{railways?.counts.stations ?? 0} verified station reference points</strong>Zoom in and hover a station to see its name and code.</p></div><p class="disclaimer">Calculated positions are approximate and not suitable for boarding decisions. Historical tiles are provided by the National Library of Scotland. Station reference points come from the geo-referenced Indian Railways dataset curated by Sankalp Sharma; every coloured service route was returned by RailRadar and refreshed on {network ? new Date(network.generatedAt).toLocaleDateString('en-IN', { dateStyle: 'medium' }) : 'the latest data refresh'}.</p></section>
+	{#if network && railways}
+		<section class="map-notes"><div class="direction-legend"><p><strong>Direction</strong><span><i class="legend-token legend-token--away"></i>Away from {hubName}</span><span><i class="legend-token legend-token--toward"></i>Towards {hubName}</span></p></div><div><span class="legend-line"></span><p><strong>API service routes</strong>The map shows only {network.counts.corridors} route geometries returned for trains serving {hubName}; no inferred or statewide base lines are drawn.</p></div><div><span class="legend-station"></span><p><strong>{railways.counts.stations} verified station reference points</strong>Zoom in and hover a station to see its name and code.</p></div><p class="disclaimer">Calculated positions are approximate and not suitable for boarding decisions. Historical tiles are provided by the National Library of Scotland. Station reference points come from the geo-referenced Indian Railways dataset curated by Sankalp Sharma; every coloured service route was returned by RailRadar and refreshed on {new Date(network.generatedAt).toLocaleDateString('en-IN', { dateStyle: 'medium' })}.</p></section>
+	{/if}
 </main>
 
 <style>

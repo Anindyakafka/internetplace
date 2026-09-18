@@ -106,7 +106,7 @@
 		</article>
 
 		<article class="section-card section-card--flights">
-			<img class="card-image" src="/images/sections/delhi-vehicles.jpg" alt="OpenSky aircraft points moving over an India historical map" loading="lazy" />
+			<img class="card-image" src="/images/sections/flights-over-india.jpg" alt="Two small aircraft paths crossing an archival map of India" loading="lazy" />
 			<h2>Flights over India</h2>
 			<p>
 				A live OpenSky sketch of aircraft movement over a historical India map, keyed to the same visual archive as other transit instruments.
