@@ -56,9 +56,12 @@ def classify(flow_path: Path, output_path: Path, image_path: Path, metadata_path
 
 		rgba = np.zeros((4, classes.shape[0], classes.shape[1]), dtype="uint8")
 		palette = {
-			1: (196, 205, 208, 55),
-			2: (171, 206, 208, 135),
-			3: (81, 158, 162, 215),
+			# Keep every classified channel legible over a detailed street map.
+			# The earlier alpha values made the most common class effectively
+			# disappear once composited by a WebGL raster layer.
+			1: (151, 194, 198, 150),
+			2: (93, 169, 175, 220),
+			3: (28, 119, 128, 255),
 		}
 		for value, color in palette.items():
 			mask = classes == value
