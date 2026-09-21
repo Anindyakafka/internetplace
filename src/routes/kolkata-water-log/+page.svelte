@@ -2,119 +2,115 @@
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import { waterLogReports, type WaterLogReport } from '$lib/data/kolkata-water-log';
-	import 'leaflet/dist/leaflet.css';
+	import 'maplibre-gl/dist/maplibre-gl.css';
 
-	let mapElement: HTMLDivElement;
-	let map: import('leaflet').Map | null = null;
-	let overlay: import('leaflet').ImageOverlay | null = null;
-	let opacity = $state(72);
+	let mapNode: HTMLDivElement;
+	let map: import('maplibre-gl').Map | null = null;
+	let markers: import('maplibre-gl').Marker[] = [];
+	let opacity = $state(80);
+	let open = $state(false);
+	let screen = $state<'index' | 'report' | 'method'>('index');
 	let selected = $state<WaterLogReport | null>(null);
-	let drawerOpen = $state(false);
+	let ready = $state(false);
 	let locating = $state(false);
-	let locateMessage = $state('');
+	let notice = $state('');
+	const bounds = { west: 88.18, south: 22.45, east: 88.58, north: 22.72 };
+	const reports = [...waterLogReports].sort((a, b) => a.name.localeCompare(b.name));
 
-	const bounds: [[number, number], [number, number]] = [[22.45, 88.18], [22.72, 88.58]];
-
-	function updateOpacity() {
-		overlay?.setOpacity(opacity / 100);
+	function choose(report: WaterLogReport) {
+		selected = report; screen = 'report'; open = true;
+		map?.flyTo({ center: report.coordinates, zoom: 14.4, pitch: 45, duration: 1600 });
 	}
-
+	function index() { selected = null; screen = 'index'; }
+	function updateOpacity() { if (map?.getLayer('water')) map.setPaintProperty('water', 'raster-opacity', opacity / 100); }
 	function locate() {
-		if (!map || !browser || locating) return;
+		if (!map || locating || !browser) return;
 		locating = true;
-		locateMessage = '';
-		map.locate({ setView: false, enableHighAccuracy: true, timeout: 8000 });
+		navigator.geolocation?.getCurrentPosition(({ coords }) => {
+			locating = false;
+			if (!map) return;
+			if (coords.longitude < bounds.west || coords.longitude > bounds.east || coords.latitude < bounds.south || coords.latitude > bounds.north) {
+				notice = 'You seem to be outside the Kolkata map. The rain may be kinder where you are.'; return;
+			}
+			map.flyTo({ center: [coords.longitude, coords.latitude], zoom: 15.2, pitch: 25, duration: 1800 });
+		}, () => { locating = false; notice = 'Location could not be read. Check browser permission and try again.'; }, { enableHighAccuracy: true, timeout: 8000 });
 	}
 
 	onMount(() => {
-		if (!browser) return;
 		let disposed = false;
-		void import('leaflet').then((module) => {
+		void import('maplibre-gl').then((ml) => {
 			if (disposed) return;
-			const L = module.default;
-			const hash = window.location.hash.slice(1).split('/').map(Number);
-			const initial = hash.length >= 3 && hash.every(Number.isFinite)
-				? { zoom: hash[0], lat: hash[1], lng: hash[2] }
-				: { zoom: 12, lat: 22.5726, lng: 88.3639 };
-			map = L.map(mapElement, { zoomControl: false, minZoom: 10, maxZoom: 18, scrollWheelZoom: true, preferCanvas: true }).setView([initial.lat, initial.lng], initial.zoom);
-			L.control.zoom({ position: 'bottomright' }).addTo(map);
-			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-				maxZoom: 19,
-				attribution: '© OpenStreetMap contributors'
-			}).addTo(map);
-			overlay = L.imageOverlay('/data/kolkata-water-log/accumulation.png', bounds, { opacity: opacity / 100, interactive: false }).addTo(map);
-
-			for (const report of waterLogReports) {
-				const icon = L.divIcon({ className: 'water-report-shell', html: `<button class="water-report-marker" aria-label="Open report for ${report.name}"><span></span>${report.name}</button>`, iconAnchor: [8, 8] });
-				L.marker([report.coordinates[1], report.coordinates[0]], { icon, title: report.name })
-					.on('click', () => { selected = report; drawerOpen = true; })
-					.addTo(map);
-			}
-
-			map.on('moveend', () => {
-				if (!map) return;
-				const centre = map.getCenter();
-				history.replaceState(null, '', `#${map.getZoom()}/${centre.lat.toFixed(5)}/${centre.lng.toFixed(5)}/0/0`);
+			const hash = location.hash.slice(1).split('/').map(Number);
+			const valid = hash.length >= 3 && hash.slice(0, 3).every(Number.isFinite);
+			map = new ml.Map({
+				container: mapNode, style: 'https://tiles.openfreemap.org/styles/liberty',
+				center: valid ? [hash[2], hash[1]] : [88.3639, 22.5726], zoom: valid ? hash[0] : 12.7,
+				bearing: valid ? hash[3] || 0 : 0, pitch: valid ? hash[4] || 45 : 45,
+				minZoom: 11, maxZoom: 18, maxBounds: [[87.98, 22.3], [88.75, 22.86]], attributionControl: false
 			});
-			map.on('locationfound', (event) => {
-				locating = false;
-				if (!map) return;
-				if (!L.latLngBounds(bounds).contains(event.latlng)) {
-					locateMessage = 'You appear to be outside the Kolkata map.';
-					return;
+			map.addControl(new ml.NavigationControl({ visualizePitch: true }), 'bottom-right');
+			map.addControl(new ml.AttributionControl({ compact: true }), 'bottom-right');
+			map.on('load', () => {
+				if (!map) return; ready = true;
+				const labels = map.getStyle().layers?.find((l) => l.type === 'symbol')?.id;
+				const vector = Object.keys(map.getStyle().sources).find((name) => map?.getSource(name)?.type === 'vector');
+				if (vector) try { map.addLayer({ id: 'buildings', type: 'fill-extrusion', source: vector, 'source-layer': 'building', minzoom: 14, paint: { 'fill-extrusion-color': '#d8d2c5', 'fill-extrusion-height': ['coalesce', ['get','render_height'], ['get','height'], 7], 'fill-extrusion-base': 0, 'fill-extrusion-opacity': .45 } }, labels); } catch { /* style schema varies */ }
+				map.addSource('water-model', { type: 'image', url: '/data/kolkata-water-log/accumulation.png', coordinates: [[bounds.west,bounds.north],[bounds.east,bounds.north],[bounds.east,bounds.south],[bounds.west,bounds.south]] });
+				map.addLayer({ id: 'water', type: 'raster', source: 'water-model', paint: { 'raster-opacity': opacity / 100, 'raster-resampling': 'linear', 'raster-fade-duration': 500 } }, labels);
+				for (const report of waterLogReports) {
+					const el = document.createElement('button'); el.className = 'water-marker'; el.innerHTML = `<span>${report.name}</span>`; el.ariaLabel = `Open reports for ${report.name}`;
+					el.onclick = (event) => { event.stopPropagation(); choose(report); };
+					markers.push(new ml.Marker({ element: el, anchor: 'left', offset: [0,-10], pitchAlignment: 'viewport' }).setLngLat(report.coordinates).addTo(map));
 				}
-				map.flyTo(event.latlng, 15, { duration: 1.5 });
-				L.circleMarker(event.latlng, { radius: 8, color: '#fff', weight: 2, fillColor: '#3c858b', fillOpacity: 1 }).addTo(map).bindTooltip('Your location').openTooltip();
 			});
-			map.on('locationerror', () => { locating = false; locateMessage = 'Location could not be read. Check browser permission.'; });
+			map.on('moveend', () => { if (!map) return; const c = map.getCenter(); history.replaceState(null, '', `#${map.getZoom().toFixed(2)}/${c.lat.toFixed(5)}/${c.lng.toFixed(5)}/${map.getBearing().toFixed(0)}/${map.getPitch().toFixed(0)}`); });
 		});
-		return () => { disposed = true; map?.remove(); map = null; };
+		return () => { disposed = true; markers.forEach((m) => m.remove()); map?.remove(); map = null; };
 	});
 </script>
 
-<svelte:head>
-	<title>Kolkata Water Log — Anindya Singh</title>
-	<meta name="description" content="Explore terrain-derived water-flow and accumulation patterns across Kolkata alongside documented waterlogging reports." />
-</svelte:head>
+<svelte:head><title>Kolkata Water Log — Anindya Singh</title><meta name="description" content="Explore terrain-derived water-flow and accumulation patterns across Kolkata alongside a living archive of reported waterlogging." /></svelte:head>
 
-<main class="water-log-page">
-	<div class="map" bind:this={mapElement} aria-label="Interactive map of terrain-derived water accumulation likelihood in Kolkata"></div>
-	<header class="title-card">
-		<p>Kolkata · terrain and drainage</p>
-		<h1>Kolkata<br />Water Log</h1>
-		<span>Where might water gather and flow?</span>
-	</header>
-	<button class="locate" onclick={locate} disabled={locating}>{locating ? 'Locating…' : 'Locate me'}</button>
+<main class="page">
+	<div class="map" bind:this={mapNode} aria-label="Interactive pitched map of water accumulation likelihood in Kolkata"></div><div class="shade"></div>
+	{#if !ready}<div class="loading"><i></i><span>Reading the terrain…</span></div>{/if}
+	<header class="title"><div><h1>Kolkata Water Log</h1><p>Mapping where water drains and gathers</p></div><span class="fill"><i></i><i></i><i></i><i></i></span></header>
+	<a class="mark" href="/sections"><b>জ</b><span><small>An internet place by</small><strong>Anindya Singh</strong></span></a>
+	<button class="locate" onclick={locate} disabled={locating}><b class:spin={locating}>⌖</b><span>{locating ? 'Locating' : 'Locate me'}</span></button>
 
-	<section class:open={drawerOpen} class="drawer" aria-label="Map information">
-		<button class="drawer-handle" aria-label={drawerOpen ? 'Close information drawer' : 'Open information drawer'} onclick={() => drawerOpen = !drawerOpen}><i></i></button>
-		{#if selected}
-			<div class="report-detail">
-				<p class="kicker">Documented waterlogging · {selected.date}</p>
-				<button class="close" onclick={() => { selected = null; drawerOpen = false; }} aria-label="Close report">×</button>
-				<h2>{selected.name}</h2>
-				<p>{selected.neighbourhood}. The marker is an approximate locality centre, not an inundation boundary.</p>
-				<a href={selected.url} target="_blank" rel="noreferrer">Read the report at {selected.source} ↗</a>
-			</div>
-		{:else}
-			<div class="drawer-grid">
-				<div>
-					<p class="kicker">Read the surface</p>
-					<h2>Water follows terrain—but the city changes its path.</h2>
-					<p>This layer models likely flow concentration from 30 m elevation data. Darker blue indicates stronger upstream accumulation. It does not forecast rainfall, drain capacity, tide locking, sewer failure, or street-level flood depth.</p>
+	<section class:open class="drawer">
+		<button class="trigger" onclick={() => open = !open} aria-expanded={open}>
+			<span class="legend"><i class="low"></i>Possible accumulation <i class="mid"></i>Higher <i class="high"></i>Highest</span><b></b>
+		</button>
+		<div class="body">
+			{#if screen === 'report' && selected}
+				<div class="screen"><header class="screen-head"><div><h2>{selected.name}</h2><p>{selected.neighbourhood}</p></div><button onclick={index}>← Back</button></header>
+					<div class="report"><h3>In the news</h3><article><time>{selected.date}</time><div><strong>{selected.source}</strong><p>A documented report of waterlogging around {selected.name}. The marker locates the neighbourhood, not the extent or depth of inundation.</p><a href={selected.url} target="_blank" rel="noreferrer">Read the original report ↗</a></div></article></div><footer class="empty"><b>≈</b><span>That is everything collected here—for now.</span></footer>
 				</div>
-				<div class="controls">
-					<label for="opacity"><span>Water layer</span><strong>{opacity}%</strong></label>
-					<input id="opacity" type="range" min="0" max="100" bind:value={opacity} oninput={updateOpacity} />
-					<div class="legend"><span><i class="low"></i>Possible concentration</span><span><i class="mid"></i>Higher</span><span><i class="high"></i>Highest</span></div>
-					<p class="source">Copernicus DEM GLO-30 · D8 flow accumulation · reported locations from linked journalism · method adapted with permission from <a href="https://github.com/diagram-chasing/blr-water-log" target="_blank" rel="noreferrer">Diagram Chasing’s BLR Water Log ↗</a>.</p>
+			{:else if screen === 'method'}
+				<div class="screen"><header class="screen-head"><div><h2>Methodology</h2><p>How this surface was made</p></div><button onclick={index}>Back →</button></header>
+					<div class="method"><p>A 30-metre Copernicus GLO-30 elevation model was clipped to metropolitan Kolkata. Depressions were filled, a D8 flow direction calculated, and upstream cells accumulated. The logarithm of accumulation was classified at the 78th, 90th and 97th percentiles.</p><p>This is a terrain reading—not a flood forecast. It cannot see rainfall intensity, drains, pumps, sewer failure, tide locking or street-level construction. News reports form a separate documentary layer.</p></div>
+					<p class="credit">Method adapted, with permission, from <a href="https://github.com/diagram-chasing/blr-water-log" target="_blank" rel="noreferrer">Diagram Chasing’s BLR Water Log ↗</a>. Map data © OpenStreetMap contributors.</p>
 				</div>
-			</div>
-		{/if}
-		{#if locateMessage}<p class="locate-message">{locateMessage}</p>{/if}
+			{:else}
+				<div class="screen"><div class="intro"><div><p class="eyebrow">The way of water</p><h2>The city interrupts a surface that still remembers how to drain.</h2><p>Blue traces show where terrain concentrates flow. Beside them sits a growing archive of places repeatedly named in reporting.</p></div><div class="diagram"><i></i><i></i><i></i><b></b><span></span></div></div>
+					<div class="browse"><div><p>Choose a locality to read its collected report.</p><button onclick={() => { screen = 'method'; }}>Methodology</button></div><nav>{#each reports as report}<button onclick={() => choose(report)}>{report.name}<b>→</b></button>{/each}</nav></div>
+					<div class="opacity"><label for="opacity"><span>Water-layer opacity</span><b>{opacity}%</b></label><input id="opacity" type="range" min="0" max="100" bind:value={opacity} oninput={updateOpacity} style={`--p:${opacity}%`} /></div>
+				</div>
+			{/if}
+		</div>
 	</section>
+	{#if notice}<div class="veil"><button class="dismiss" aria-label="Close location notice" onclick={() => notice = ''}></button><div class="alert" role="alertdialog" tabindex="-1"><h2>Oops!</h2><p>{notice}</p><button onclick={() => notice = ''}>Close</button></div></div>{/if}
 </main>
 
 <style>
-	:global(body:has(.water-log-page)){overflow:hidden}.water-log-page{position:relative;height:calc(100dvh - 4rem);min-height:38rem;background:#d9e2df}.map{position:absolute;inset:0}.title-card{position:absolute;z-index:600;top:clamp(1rem,3vw,2rem);left:clamp(1rem,3vw,2rem);padding:1rem 1.15rem;background:rgba(250,247,237,.9);border:1px solid rgba(42,62,61,.25);box-shadow:0 8px 30px rgba(24,41,40,.12);backdrop-filter:blur(10px)}.title-card p,.kicker{margin:0;color:#397b80;font:600 .68rem/1.2 var(--font-mono);letter-spacing:.09em;text-transform:uppercase}.title-card h1{margin:.3rem 0;font:500 clamp(2.4rem,6vw,5rem)/.78 var(--font-serif);letter-spacing:-.055em;color:#263938}.title-card span{font-size:.72rem;color:#536563}.locate{position:absolute;z-index:600;right:1rem;top:1rem;padding:.65rem .9rem;border:1px solid #315f62;border-radius:999px;background:rgba(250,247,237,.92);color:#315f62;font:600 .7rem var(--font-mono);cursor:pointer}.drawer{position:absolute;z-index:650;left:50%;bottom:0;width:min(56rem,calc(100% - 2rem));min-height:4.1rem;padding:0 1.25rem 1.25rem;box-sizing:border-box;transform:translate(-50%,calc(100% - 4.1rem));transition:transform .35s cubic-bezier(.2,.8,.2,1);background:rgba(250,247,237,.96);border:1px solid rgba(42,62,61,.24);border-bottom:0;border-radius:1rem 1rem 0 0;box-shadow:0 -10px 35px rgba(24,41,40,.14);backdrop-filter:blur(12px)}.drawer.open{transform:translate(-50%,0)}.drawer-handle{width:100%;height:4rem;border:0;background:transparent;cursor:pointer}.drawer-handle i{display:block;width:3rem;height:4px;margin:auto;border-radius:9px;background:#6b7d7b}.drawer-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:2rem}.drawer h2{max-width:22ch;margin:.35rem 0 .7rem;font:500 clamp(1.5rem,3vw,2.5rem)/1.05 var(--font-serif)}.drawer p{color:#536563;line-height:1.5}.controls label{display:flex;justify-content:space-between;color:#263938;font:.72rem var(--font-mono)}.controls input{width:100%;accent-color:#519ea2}.legend{display:flex;flex-wrap:wrap;gap:.55rem 1rem;margin:1rem 0;color:#536563;font:.68rem var(--font-mono)}.legend span{display:flex;align-items:center;gap:.35rem}.legend i{width:.85rem;height:.85rem;display:inline-block}.low{background:rgba(196,205,208,.7)}.mid{background:#abced0}.high{background:#519ea2}.source{font-size:.68rem}.source a,.report-detail a{color:#397b80;font-weight:600}.report-detail{position:relative;max-width:42rem}.report-detail a{font:.74rem var(--font-mono)}.close{position:absolute;right:0;top:-.5rem;border:0;background:transparent;color:#263938;font-size:2rem;cursor:pointer}.locate-message{margin:.75rem 0 0;font-size:.72rem}:global(.water-report-shell){width:auto!important;height:auto!important;background:transparent!important;border:0!important}:global(.water-report-marker){display:flex;align-items:center;gap:.35rem;width:max-content;padding:.25rem .45rem .25rem .25rem;border:1px solid rgba(38,57,56,.35);border-radius:999px;background:rgba(250,247,237,.9);color:#263938;font:600 10px/1 var(--font-sans);box-shadow:0 2px 8px rgba(24,41,40,.12);cursor:pointer}:global(.water-report-marker span){width:.52rem;height:.52rem;border-radius:50%;background:#397b80;box-shadow:0 0 0 3px rgba(81,158,162,.2)}:global(.leaflet-control-attribution){font-size:9px}@media(max-width:700px){.water-log-page{height:calc(100dvh - 3.5rem)}.title-card h1{font-size:2.7rem}.drawer{width:calc(100% - 1rem)}.drawer-grid{grid-template-columns:1fr;gap:1rem}.title-card span{display:none}:global(.water-report-marker){font-size:0;padding:.3rem}:global(.water-report-marker span){width:.62rem;height:.62rem}}
+	:global(body:has(.page)){overflow:hidden}.page{position:relative;height:calc(100dvh - 4rem);min-height:38rem;background:#d7dfdc;color:#293130}.map{position:absolute;inset:0}.shade{position:absolute;z-index:2;inset:0 0 auto;height:18%;pointer-events:none;background:linear-gradient(#17201fa8,transparent)}.loading{position:absolute;z-index:5;inset:0;display:grid;place-content:center;justify-items:center;gap:.8rem;background:#dce5e1;color:#356f73;font:600 .7rem var(--font-mono);text-transform:uppercase}.loading i{width:2.6rem;height:2.6rem;border:3px solid #519ea233;border-top-color:#519ea2;border-radius:50%;animation:spin 1s linear infinite}
+	.title{position:absolute;z-index:10;top:1rem;left:50%;width:min(20rem,calc(100% - 10rem));min-height:5.6rem;transform:translateX(-50%);overflow:hidden;border:1px solid #ddd;border-radius:.65rem;background:white;box-shadow:0 8px 25px #0004}.title>div{position:relative;z-index:2;padding:.7rem;text-align:center}.title h1{margin:0;font:700 clamp(1.7rem,3vw,2.5rem)/1 var(--font-sans);text-transform:uppercase}.title p{margin:.3rem 0;font:600 .7rem var(--font-sans)}.fill{position:absolute;inset:auto 0 0;height:46%;background:#74b1b5b5;animation:tide 30s ease-in-out infinite}.fill:before{content:'';position:absolute;left:-10%;top:-8px;width:120%;height:16px;background:radial-gradient(ellipse,#74b1b5 48%,transparent 51%) 0 0/28px 15px;animation:wave 5s linear infinite}.fill i{position:absolute;bottom:-5px;width:5px;height:5px;border-radius:50%;background:#fff9;animation:bubble 4s infinite}.fill i:nth-child(1){left:15%}.fill i:nth-child(2){left:40%;animation-delay:1s}.fill i:nth-child(3){left:65%;animation-delay:2s}.fill i:nth-child(4){left:85%;animation-delay:3s}
+	.mark,.locate{position:absolute;z-index:10;border:1px solid #d3d3d0;border-radius:.45rem;background:#fff;box-shadow:0 6px 20px #0004}.mark{left:1rem;bottom:1rem;display:flex;align-items:center;gap:.5rem;padding:.35rem .55rem;color:inherit;text-decoration:none}.mark>b{display:grid;place-items:center;width:2.2rem;height:2.2rem;border-radius:.25rem;background:#74b1b5;color:white;font-size:1.35rem}.mark small,.mark strong{display:block}.mark small{font-size:.58rem}.mark strong{font:.7rem var(--font-mono);text-transform:uppercase}.locate{right:1rem;top:1rem;display:flex;align-items:center;gap:.4rem;padding:.5rem .7rem;color:#356f73;cursor:pointer}.locate b{font-size:1.3rem}.locate span{font-weight:700}
+	.drawer{position:absolute;z-index:20;left:50%;bottom:0;width:min(44rem,calc(100% - 1.5rem));height:min(35rem,72dvh);transform:translate(-50%,calc(100% - 5.5rem));transition:transform .4s cubic-bezier(.22,.8,.22,1);border-radius:1.2rem 1.2rem 0 0;background:white;box-shadow:0 -10px 35px #0003}.drawer.open{transform:translate(-50%,0)}.trigger{width:100%;height:5.5rem;border:0;border-radius:inherit;background:white;cursor:pointer}.trigger>b{display:block;width:3rem;height:.35rem;margin:.9rem auto 0;border-radius:1rem;background:#d4d4d4}.legend{display:flex;justify-content:center;align-items:center;gap:.4rem;color:#56605f;font:600 .68rem var(--font-sans)}.legend i{width:1.1rem;height:1.1rem;border-radius:.15rem}.low{background:#c4cdd0}.mid{background:#abced0}.high{background:#519ea2}.body{height:calc(100% - 5.5rem);overflow:hidden;border-top:1px solid #eee}.screen{height:100%;overflow:auto;animation:appear .3s}.screen-head{display:flex;justify-content:space-between;align-items:center;margin:0 1rem;padding:1rem 0;border-bottom:1px solid #e6e6e3}.screen-head h2{margin:0;font-size:1.7rem}.screen-head p{margin:.2rem 0;color:#767d7c}.screen-head button,.browse button{padding:.6rem .9rem;border:1px solid #ddd;border-radius:.45rem;background:#f5f5f3;font-weight:700;cursor:pointer}
+	.intro{display:grid;grid-template-columns:1.1fr .9fr;gap:1rem;padding:1rem}.eyebrow{margin:0;color:#397b80;font:700 .7rem var(--font-mono);text-transform:uppercase}.intro h2{margin:.25rem 0 .5rem;font-size:1.7rem;line-height:1.05}.intro p{color:#646c6b}.diagram{position:relative;overflow:hidden;min-height:9rem;border-radius:.5rem;background:linear-gradient(#dce8e6,#f7f5e7)}.diagram span{position:absolute;left:-10%;right:-10%;bottom:-4rem;height:9rem;border-radius:50%;background:#88aa94}.diagram b{position:absolute;z-index:2;left:43%;bottom:0;width:16%;height:55%;clip-path:polygon(35% 0,65% 0,100% 100%,0 100%);background:#5d9da8}.diagram i{position:absolute;z-index:3;top:-2rem;width:2px;height:1.5rem;background:#519ea2;animation:rain 1.5s infinite}.diagram i:nth-child(1){left:25%}.diagram i:nth-child(2){left:55%;animation-delay:.5s}.diagram i:nth-child(3){left:80%;animation-delay:1s}.browse{display:grid;grid-template-columns:.4fr .6fr;gap:1rem;padding:0 1rem 1rem}.browse>div{display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;color:#737b7a}.browse>div p{margin:0}.browse>div button{padding:.5rem 0;border:0;background:none;text-decoration:underline;text-underline-offset:5px}.browse nav{max-height:9rem;overflow:auto;border-block:1px solid #eee}.browse nav button{display:flex;justify-content:space-between;width:100%;padding:.55rem .8rem;border:0;border-bottom:1px solid #eee;border-radius:0;background:white;text-align:left}.browse nav button:hover{background:#eef3f1}.opacity{padding:.8rem 1rem;border-top:1px solid #eee}.opacity label{display:flex;justify-content:space-between;font:600 .7rem var(--font-mono)}.opacity input{width:100%;height:.45rem;appearance:none;border-radius:1rem;background:linear-gradient(to right,#74b1b5 var(--p),#e4e4e1 var(--p));accent-color:#74b1b5}.report{padding:1rem}.report h3{border-bottom:1px solid #eee;padding-bottom:.5rem}.report article{display:grid;grid-template-columns:6rem 1fr;gap:1rem;padding:.9rem;border:1px solid #ddd;border-radius:.5rem;background:#fafaf8}.report time{font:700 .75rem var(--font-mono)}.report p{color:#66706e}.report a,.credit a{color:#397b80;font-weight:700}.empty{display:grid;place-items:center;color:#8a9492}.empty b{font-size:3rem;color:#74b1b5}.method{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;padding:1.2rem;color:#596260;line-height:1.55}.credit{margin:0 1rem;padding-top:1rem;border-top:1px solid #eee;color:#747d7b;font-size:.7rem}.veil{position:fixed;z-index:1000;inset:0;display:grid;place-items:center;background:#0007}.dismiss{position:absolute;inset:0;width:100%;height:100%;border:0;background:transparent}.alert{position:relative;width:min(24rem,calc(100% - 2rem));padding:1.4rem;text-align:center;border-radius:.7rem;background:#fffffff2}.alert h2{font-size:2.5rem;margin:0}.alert button{padding:.5rem 1rem;border:1px solid #397b80;border-radius:.4rem;background:white;color:#397b80;font-weight:700}
+	:global(.water-marker){position:relative;padding:0 0 0 .65rem;border:0;background:none;cursor:pointer}:global(.water-marker:before){content:'';position:absolute;left:0;top:50%;width:.7rem;height:.7rem;transform:translateY(-50%);border:2px solid white;border-radius:50%;background:#417d77}:global(.water-marker span){display:block;padding:.28rem .62rem;border:1px solid #313e40;border-radius:999px;background:#417d77;color:white;box-shadow:0 3px 9px #0005;font:700 11px var(--font-sans);white-space:nowrap}:global(.maplibregl-ctrl-bottom-right){bottom:5.7rem}:global(.maplibregl-ctrl-attrib){font-size:9px}.spin{animation:spin .8s linear infinite}
+	@keyframes spin{to{transform:rotate(360deg)}}@keyframes tide{0%,100%{height:25%}50%{height:58%}}@keyframes wave{to{transform:translateX(28px)}}@keyframes bubble{0%{opacity:0;transform:translateY(0)}20%{opacity:1}100%{opacity:0;transform:translateY(-5rem)}}@keyframes rain{to{transform:translate(-1rem,11rem)}}@keyframes appear{from{opacity:0;transform:translateX(10px)}}
+	@media(max-width:700px){.page{height:calc(100dvh - 3.5rem)}.title{top:.65rem;width:calc(100% - 6.5rem);min-height:4.7rem}.title h1{font-size:1.5rem}.mark{left:.65rem;bottom:.65rem}.mark span{display:none}.locate{right:.65rem;top:.65rem}.locate span{display:none}.drawer{width:calc(100% - .75rem);height:76dvh;transform:translate(-50%,calc(100% - 5.1rem))}.trigger{height:5.1rem}.body{height:calc(100% - 5.1rem)}.legend{font-size:.58rem}.legend i{width:.9rem;height:.9rem}.intro,.method{grid-template-columns:1fr}.diagram{min-height:5rem}.browse{grid-template-columns:.38fr .62fr}.report article{grid-template-columns:1fr}:global(.maplibregl-ctrl-bottom-right){bottom:5.2rem}:global(.maplibregl-ctrl-attrib){display:none}:global(.water-marker span){font-size:0;width:.65rem;height:.65rem;padding:.3rem}}
+	@media(prefers-reduced-motion:reduce){.fill,.fill:before,.fill i,.diagram i,.loading i{animation:none}.drawer{transition:none}}
 </style>
