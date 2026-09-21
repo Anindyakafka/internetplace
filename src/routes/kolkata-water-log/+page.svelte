@@ -21,7 +21,7 @@
 	}
 	function index() { selected = null; screen = 'index'; }
 	function closeDrawer() { open = false; }
-	function updateOpacity() { if (map?.getLayer('water')) map.setPaintProperty('water', 'raster-opacity', opacity / 100); }
+	function updateOpacity() { if (map?.getLayer('water')) map.setPaintProperty('water', 'fill-opacity', opacity / 100); }
 	function locate() {
 		if (!map || locating || !browser) return;
 		locating = true;
@@ -62,10 +62,14 @@
 				}
 				const vector = Object.keys(map.getStyle().sources).find((name) => map?.getSource(name)?.type === 'vector');
 				if (vector) try { map.addLayer({ id: 'buildings', type: 'fill-extrusion', source: vector, 'source-layer': 'building', minzoom: 14, paint: { 'fill-extrusion-color': '#d8d2c5', 'fill-extrusion-height': ['coalesce', ['get','render_height'], ['get','height'], 7], 'fill-extrusion-base': 0, 'fill-extrusion-opacity': .45 } }, labels); } catch { /* style schema varies */ }
-				map.addSource('water-model', { type: 'image', url: '/data/kolkata-water-log/accumulation.png?v=4', coordinates: [[bounds.west,bounds.north],[bounds.east,bounds.north],[bounds.east,bounds.south],[bounds.west,bounds.south]] });
-				// Keep the accumulation surface above every provider-owned basemap layer.
-				// Report dots and labels are added afterwards, so they remain on top.
-				map.addLayer({ id: 'water', type: 'raster', source: 'water-model', paint: { 'raster-opacity': opacity / 100, 'raster-resampling': 'nearest', 'raster-fade-duration': 0 } });
+				map.addSource('water-model', { type: 'geojson', data: '/data/kolkata-water-log/accumulation.geojson' });
+				// This deliberately mirrors BLR Water Log's classified vector fill. The
+				// report dots and labels are added afterwards and remain above it.
+				map.addLayer({ id: 'water', type: 'fill', source: 'water-model', paint: {
+					'fill-color': ['match', ['get','VALUE'], 1, '#97c2c6', 2, '#5da9af', 3, '#1c7780', '#97c2c6'],
+					'fill-opacity': opacity / 100,
+					'fill-outline-color': ['match', ['get','VALUE'], 1, '#8ab8bc', 2, '#438f96', 3, '#155f66', '#8ab8bc']
+				} });
 				// Map-native features stay locked to geographic coordinates. DOM markers
 				// visibly drift when a pitched WebGL map is panned or zoomed.
 				map.addSource('water-reports', {
