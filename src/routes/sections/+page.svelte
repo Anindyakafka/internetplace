@@ -42,7 +42,7 @@
 		<div><span>Live instruments</span><h2 id="live-projects-title">Start with the maps that are moving.</h2></div>
 		<a href="/trains"><strong>Local Lines</strong><span>West Bengal tracks, stations, and calculated trains →</span></a>
 		<a href="/vehicles"><strong>Delhi Vehicles</strong><span>Live public-transport positions on a historical map →</span></a>
-		<a href="/flights"><strong>Flights over India</strong><span>OpenSky aircraft positions across the India map →</span></a>
+		<a href="/kolkata-water-log"><strong>Kolkata Water Log</strong><span>Terrain-derived paths of water flow and accumulation →</span></a>
 		<a href="/legal-explorer"><strong>Legal Explorer</strong><span>Search and connect parliamentary bills since 1952 →</span></a>
 	</nav>
 	<p class="archive-note"><strong>An archive under construction.</strong> The live instruments are usable now; essays, methods, and the Annihilation Atlas grow as work is documented and verified. Planned rooms are labelled instead of being presented as finished collections.</p>
@@ -105,13 +105,13 @@
 			<a href="/vehicles" class="section-link">Open the vehicle map →</a>
 		</article>
 
-		<article class="section-card section-card--flights">
-			<img class="card-image" src="/images/sections/flights-over-india.jpg" alt="Two small aircraft paths crossing an archival map of India" loading="lazy" />
-			<h2>Flights over India</h2>
+		<article class="section-card section-card--water">
+			<img class="card-image water-card-image" src="/images/sections/kolkata-water-log.jpg" alt="Kolkata map with terrain-derived water accumulation paths and documented reports" loading="lazy" />
+			<h2>Kolkata Water Log</h2>
 			<p>
-				A live OpenSky sketch of aircraft movement over a historical India map, keyed to the same visual archive as other transit instruments.
+				Trace where water may gather and flow across Kolkata, then compare the terrain model with documented waterlogging reports.
 			</p>
-			<a href="/flights" class="section-link">Open the flight map →</a>
+			<a href="/kolkata-water-log" class="section-link">Open the water log →</a>
 		</article>
 
 		<article class="section-card section-card--legal">
@@ -271,7 +271,7 @@
 
 	.atlas-status { font-family: var(--font-mono); color: var(--color-accent); text-transform: uppercase; letter-spacing: .04em; }
 
-	.live-projects { display:grid; grid-template-columns:minmax(14rem,1.1fr) repeat(3,minmax(10rem,1fr)); border:1px solid var(--color-border-strong); background:var(--color-surface); }
+	.live-projects { display:grid; grid-template-columns:minmax(14rem,1.1fr) repeat(4,minmax(9rem,1fr)); border:1px solid var(--color-border-strong); background:var(--color-surface); }
 	.live-projects > * { min-width:0; padding:var(--space-m); border-right:1px solid var(--color-border); }
 	.live-projects > *:last-child { border-right:0; }
 	.live-projects div > span { font:600 var(--step--2)/1.2 var(--font-mono); color:var(--color-accent); letter-spacing:.08em; text-transform:uppercase; }
@@ -282,6 +282,7 @@
 	.live-projects a span { color:var(--color-text-muted); font-size:var(--step--1); line-height:1.4; }
 	.archive-note { max-width:78ch; margin:calc(var(--space-l) * -1) 0 0; padding-left:var(--space-m); border-left:3px solid var(--color-accent); color:var(--color-text-muted); line-height:1.6; }
 	.archive-note strong { color:var(--color-text); }
+	.water-card-image { background:#dfe6e2; object-fit:cover; }
 	@media(max-width:850px){.live-projects{grid-template-columns:1fr}.live-projects>*{border-right:0;border-bottom:1px solid var(--color-border)}.live-projects>*:last-child{border-bottom:0}}
 
 	.hero-note {

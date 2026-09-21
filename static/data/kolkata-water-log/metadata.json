@@ -1,0 +1,16 @@
+{
+  "bounds": {
+    "west": 88.18,
+    "south": 22.45,
+    "east": 88.58,
+    "north": 22.72
+  },
+  "classes": 3,
+  "quantiles": [
+    0.78,
+    0.9,
+    0.97
+  ],
+  "source": "Copernicus DEM GLO-30",
+  "method": "Filled-depression D8 flow accumulation, log transformed and quantile classified"
+}
