@@ -21,7 +21,7 @@
 	}
 	function index() { selected = null; screen = 'index'; }
 	function closeDrawer() { open = false; }
-	function updateOpacity() { if (map?.getLayer('water')) map.setPaintProperty('water', 'fill-opacity', opacity / 100); }
+	function updateOpacity() { if (map?.getLayer('water-accumulation')) map.setPaintProperty('water-accumulation', 'fill-opacity', opacity / 100); }
 	function locate() {
 		if (!map || locating || !browser) return;
 		locating = true;
@@ -65,7 +65,7 @@
 				map.addSource('water-model', { type: 'geojson', data: '/data/kolkata-water-log/accumulation.geojson' });
 				// This deliberately mirrors BLR Water Log's classified vector fill. The
 				// report dots and labels are added afterwards and remain above it.
-				map.addLayer({ id: 'water', type: 'fill', source: 'water-model', paint: {
+				map.addLayer({ id: 'water-accumulation', type: 'fill', source: 'water-model', paint: {
 					'fill-color': ['match', ['get','VALUE'], 1, '#97c2c6', 2, '#5da9af', 3, '#1c7780', '#97c2c6'],
 					'fill-opacity': opacity / 100,
 					'fill-outline-color': ['match', ['get','VALUE'], 1, '#8ab8bc', 2, '#438f96', 3, '#155f66', '#8ab8bc']
