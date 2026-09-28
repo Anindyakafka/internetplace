@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
+	let { aboutRoute = false } = $props<{ aboutRoute?: boolean }>();
 
 	let terminalInput = $state('');
 	let terminalLogEl: HTMLDivElement | null = $state(null);
@@ -108,12 +109,16 @@
 				<div class="terminal-input-row"><span>{terminalPrompt}</span><input type="text" placeholder="Enter command" bind:value={terminalInput} onkeydown={(event) => { if (event.key === 'Enter') submit(); }} /></div>
 			</div>
 		</section>
-	</div>
-	<section class="footer-video-reel" aria-label="Footer reel">
-		<video class="footer-video" autoplay muted loop playsinline preload="auto" onended={(event) => { const video = event.currentTarget; video.currentTime = 0; void video.play(); }}>
-			<source src="/videos/intro.web.mp4" media="(min-width: 1200px)" type="video/mp4" /><source src="/videos/intro.web.720.mp4" type="video/mp4" />
-		</video>
-	</section>
+		</div>
+		<section class="footer-video-reel" aria-label="Footer reel">
+			{#if aboutRoute}
+				<img class="footer-video" src="/images/footer-reel-poster.webp" alt="" aria-hidden="true" width="1280" height="720" loading="lazy" decoding="async" />
+			{:else}
+				<video class="footer-video" autoplay muted loop playsinline preload="auto" onended={(event) => { const video = event.currentTarget; video.currentTime = 0; void video.play(); }}>
+					<source src="/videos/intro.web.mp4" media="(min-width: 1200px)" type="video/mp4" /><source src="/videos/intro.web.720.mp4" type="video/mp4" />
+				</video>
+			{/if}
+		</section>
 </footer>
 
 <style>

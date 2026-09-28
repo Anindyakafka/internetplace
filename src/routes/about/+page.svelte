@@ -1,7 +1,285 @@
 <script lang="ts">
-	// About page — expanded with full CV content
-	let formState = $state<'idle' | 'submitting' | 'error'>('idle');
+	import { onMount } from 'svelte';
+
+	type Language = 'en' | 'bn';
+	type FormState = 'idle' | 'submitting' | 'success' | 'error';
+
+	const copy = {
+		en: {
+			skip: 'Skip the file',
+			progress: 'File progress',
+			draft: 'Bengali draft · needs author review',
+			intake: 'FILE 00 / INTAKE',
+			formTitle: 'PERSONNEL RECORD',
+			formSubtitle: 'A partial account, filed under “still becoming.”',
+			subject: 'SUBJECT',
+			occupation: 'OCCUPATION',
+			location: 'LOCATION',
+			status: 'STATUS',
+			name: 'Anindya Singh',
+			nameFirst: 'Anindya',
+			nameLast: 'Singh',
+			occupationValue: 'Researcher · data scientist · writer',
+			locationValue: 'West Bengal, India',
+			statusValue: 'In the field / in the margins',
+			subjectFiled: 'SUBJECT / NAME AS FILED',
+			recordOpen: 'RECORD STATUS: OPEN',
+			evidenceKeep: 'KEEP WITH THE EVIDENCE',
+			portraitFigure: 'FIG. 01',
+			portraitCaption: 'SUBJECT, OUTSIDE THE ARCHIVE',
+			department: 'DEPARTMENT OF INCOMPLETE KNOWLEDGE',
+			scrollContinue: 'SCROLL TO CONTINUE ↓',
+			stamp: 'OPEN FILE',
+			stamp2: 'CLASSIFICATION DISPUTED',
+			portraitAlt: 'Anindya Singh wearing a colourful ceremonial hat outdoors',
+			personal: 'I keep asking public data to explain itself; it usually requests an extension.',
+			classification: 'FILE 01 / CLASSIFICATION',
+			classificationTitle: 'The record has opinions.',
+			classificationIntro: 'A small machine is very sure of itself. The person it describes is less impressed.',
+			classifierLabel: 'MODEL OUTPUT · NOT A BIOGRAPHY',
+			modelSerial: 'MODEL 04',
+			classifierDisclaimer: 'INFERENCE ENGINE / CONFIDENCE NOT GUARANTEED',
+			classifierFrames: [
+				{ label: 'OCCUPATION', value: 'economist?', score: '91.4%' },
+				{ label: 'REGION', value: 'somewhere, probably', score: '68.2%' },
+				{ label: 'COMMUNITY', value: 'please do not infer', score: '99.9%' },
+				{ label: 'CONFIDENCE', value: 'confidently uncertain', score: '104.0%' }
+			],
+			selfLabel: 'SUBJECT STATEMENT',
+			selfDescription: 'I bring empirical methods into conversation with labour, identity, information, and the everyday consequences of policy.',
+			classificationAside: 'Classification is a method. It is not the same thing as knowing someone.',
+			classificationNote: '“Name Ethnicity Detector”: a classifier, a research project, and an essay about what such a machine cannot settle.',
+			route: 'FILE 02 / THE ROUTE',
+			routeTitle: 'A route, not a straight line.',
+			routeIntro: 'A few places and institutions that appear in the record. No claim that a map can explain the journey.',
+			routeAlt: 'A drawn route connecting Kolkata, Shiv Nadar and Dadri, and research work.',
+			routeProgress: 'Route progress',
+			routeNotesLabel: 'Route field notes',
+			routeMapLabel: 'ROUTE / 03 ENTRIES',
+			notToScale: 'NOT TO SCALE',
+			mapLabels: ['KOLKATA', 'SHIV NADAR / DADRI', 'RESEARCH WORK'],
+			mapFoot: 'DOCUMENTED MOVEMENT / THREE STOPS',
+			mapQualifier: '— NOT A COMPLETE HISTORY —',
+			waypoints: [
+				{ place: 'Kolkata', date: '2020 — 2023', title: 'B.Sc. Economics', text: 'Bidhannagar Government College. The first set of questions; none of the last ones.' },
+				{ place: 'Shiv Nadar / Dadri', date: '2023 — 2025', title: 'M.Sc. Economics + fieldwork', text: '214 household surveys across seven villages in Dadri, alongside satellite imagery, oral histories, and land-record politics.' },
+				{ place: 'Research work', date: 'ONGOING', title: 'Data, policy, and the human scale', text: 'Research tools and public datasets, read alongside the lives and labour that administrative categories can flatten.' }
+			],
+			lenses: 'FILE 03 / THREE LENSES',
+			lensesTitle: 'The questions travel together.',
+			lensesIntro: 'Not separate boxes so much as three ways of noticing what the record includes, and what it leaves out.',
+			lensItems: [
+				{ number: '01', title: 'Labour', mark: 'WORK / VALUE / TIME', text: 'I look at work as lived time and bargaining power, not only as a row in a labour-force table.', visual: 'Dots enter the ledger. The missing hours do not.' },
+				{ number: '02', title: 'Identity', mark: 'NAMES / BORDERS / BELONGING', text: 'Categories travel through institutions. I study what they make legible, and the people they misread.', visual: 'The groups sort themselves. Then decline to stay sorted.' },
+				{ number: '03', title: 'Information', mark: 'RECORD / ABSENCE / EVIDENCE', text: 'Data is made, inherited, and sometimes withheld. Its gaps are part of the evidence, not a footnote.', visual: 'A table, several redactions, an uncooperative margin.' }
+			],
+			atlasTitle: 'A longer file: Annihilation Atlas',
+			atlasText: 'An anti-caste observatory of land, labour, classification, segregation, resistance, and memory.',
+			projectStatus: 'LONG-RUNNING PROJECT / IN PROGRESS',
+			atlasLink: 'Visit the project',
+			relatedLabel: 'SUBFILES / SELECTED WORK',
+			relatedText: 'Field research, public records, and small instruments for reading what the official ledger leaves unresolved.',
+			relatedFiles: ['Dadri Forecast', 'CBFC Watch', 'MGNREGA asset pipelines', 'West Bengal 2002 electoral rolls', 'Local Lines', 'Delhi Vehicles', 'Flights over India', 'Legal Explorer'],
+			relatedLink: 'Browse the work index',
+			instruments: 'FILE 04 / INSTRUMENT PANEL',
+			instrumentsTitle: 'Tools are not neutral. Still useful.',
+			instrumentsIntro: 'A working toolkit for asking, checking, mapping, and occasionally arguing with the data.',
+			toolGroups: [
+				{ label: 'ANALYSIS', tools: ['Python', 'R', 'Stata', 'SQL'] },
+				{ label: 'SPATIAL', tools: ['QGIS'] },
+				{ label: 'BUILD', tools: ['JavaScript', 'C++', 'Git'] },
+				{ label: 'PUBLISH', tools: ['LaTeX'] }
+			],
+			experienceTitle: 'Experience & education',
+			experienceHint: 'Open an index card for the field note.',
+			experienceIndex: 'INDEX / EXPERIENCE',
+			filed: 'FILED',
+			experiences: [
+				{ date: 'START DATE TO CONFIRM', title: 'Research Consultant', org: 'Inclusion Economics India Centre · Yale Research Initiative', detail: 'Research and data work at the intersection of economics and inclusion. The start date is deliberately left open rather than guessed.' },
+				{ date: 'EARLIER', title: 'Research Assistant', org: 'Centre for Sustainable Employment · Azim Premji University', detail: 'Work on employment and livelihoods, with data cleaning, spatial analysis, and the careful business of making evidence usable.' },
+				{ date: '2023 — 2025', title: 'M.Sc. Economics', org: 'Shiv Nadar Institution of Eminence', detail: 'Graduate training in economics, methods, and the empirical questions that become harder—not easier—when people enter the dataset.' },
+				{ date: '2020 — 2023', title: 'B.Sc. Economics (Hons)', org: 'Bidhannagar Government College, Kolkata', detail: 'Undergraduate study in economics, statistics, and the habit of checking what a clean table has left outside its frame.' }
+			],
+			reply: 'FILE 05 / REPLY SLIP',
+			replyForm: 'REPLY / FORM 05-B',
+			keepCopy: 'KEEP THIS COPY',
+			replyFooter: 'THANK YOU FOR WRITING',
+			receivingDesk: 'CHHIPI/42 · RECEIVING DESK',
+			replyTitle: 'A note back would be welcome.',
+			replyText: 'Write about a question, a shared interest, or something you think deserves a closer look. This is not a commercial services page; please write because the idea matters.',
+			email: 'Email',
+			linkedin: 'LinkedIn',
+			github: 'GitHub',
+			contactForm: 'Contact form',
+			fieldName: 'Name',
+			fieldEmail: 'Email address',
+			fieldMessage: 'What would you like to talk about?',
+			fieldMessageHint: 'No sensitive personal information, please.',
+			botField: 'Leave this field empty',
+			send: 'Send the reply slip',
+			sending: 'Sending…',
+			formError: 'The slip did not reach the desk. Please try again, or use the email link above.',
+			formSuccess: 'Slip filed. Thank you — redirecting to the receipt…',
+			pageEnd: 'END OF CURRENT FILE · MORE EVIDENCE MAY ARRIVE',
+			helpHint: 'There is a small bureaucratic help desk hidden in this file.',
+			dialogTitle: 'CHHIPI/42 · help desk',
+			close: 'Close help desk',
+			easterLines: ['REQUEST RECEIVED. THE FORM WAS ALREADY A FORM.', 'CLASSIFICATION: CURIOUS, WITH EVIDENCE.', 'PLEASE TAKE A NUMBER. THE NUMBER IS ALSO UNDER REVIEW.'],
+			thank: 'Continue browsing'
+		},
+		bn: {
+			skip: 'নথি এড়িয়ে মূল অংশে যান',
+			progress: 'নথির অগ্রগতি',
+			draft: 'বাংলা খসড়া · লেখকের পর্যালোচনা প্রয়োজন',
+			intake: 'নথি ০০ / গ্রহণ',
+			formTitle: 'ব্যক্তিগত নথি',
+			formSubtitle: 'একটি অসম্পূর্ণ বিবরণ, “এখনও হয়ে উঠছি” ফোল্ডারে রাখা।',
+			subject: 'বিষয়',
+			occupation: 'পেশা',
+			location: 'অবস্থান',
+			status: 'অবস্থা',
+			name: 'অনিন্দ্য সিং',
+			nameFirst: 'অনিন্দ্য',
+			nameLast: 'সিং',
+			occupationValue: 'গবেষক · ডেটা সায়েন্টিস্ট · লেখক',
+			locationValue: 'পশ্চিমবঙ্গ, ভারত',
+			statusValue: 'মাঠে / প্রান্তিক টীকায়',
+			subjectFiled: 'বিষয় / নথিতে লেখা নাম',
+			recordOpen: 'নথির অবস্থা: খোলা',
+			evidenceKeep: 'প্রমাণের সঙ্গে রাখুন',
+			portraitFigure: 'চিত্র ০১',
+			portraitCaption: 'সংগ্রহশালার বাইরে বিষয়',
+			department: 'অসম্পূর্ণ জ্ঞানের বিভাগ',
+			scrollContinue: 'চালিয়ে যেতে স্ক্রল করুন ↓',
+			stamp: 'নথি খুলুন',
+			stamp2: 'শ্রেণিবিভাগ নিয়ে আপত্তি আছে',
+			portraitAlt: 'বাইরে রঙিন আনুষ্ঠানিক টুপি পরে অনিন্দ্য সিং',
+			personal: 'সরকারি তথ্যকে নিজের কথা বুঝিয়ে বলতে বলি; সাধারণত সে সময় বাড়ানোর আবেদন করে।',
+			classification: 'নথি ০১ / শ্রেণিবিভাগ',
+			classificationTitle: 'নথিটির নিজস্ব মতামত আছে।',
+			classificationIntro: 'একটি ছোট যন্ত্র নিজের বিষয়ে খুব নিশ্চিত। যাকে সে বর্ণনা করছে, তিনি ততটা মুগ্ধ নন।',
+			classifierLabel: 'মডেলের ফল · জীবনপরিচয় নয়',
+			modelSerial: 'মডেল ০৪',
+			classifierDisclaimer: 'অনুমান-যন্ত্র / নিশ্চয়তা নিশ্চিত নয়',
+			classifierFrames: [
+				{ label: 'পেশা', value: 'অর্থনীতিবিদ?', score: '৯১.৪%' },
+				{ label: 'অঞ্চল', value: 'কোথাও, সম্ভবত', score: '৬৮.২%' },
+				{ label: 'সম্প্রদায়', value: 'অনুমান করবেন না', score: '৯৯.৯%' },
+				{ label: 'নিশ্চয়তা', value: 'নিশ্চিতভাবেই অনিশ্চিত', score: '১০৪.০%' }
+			],
+			selfLabel: 'বিষয়ের বক্তব্য',
+			selfDescription: 'শ্রম, পরিচয়, তথ্য এবং নীতির দৈনন্দিন ফলাফলের সঙ্গে তথ্যভিত্তিক পদ্ধতির সংলাপ ঘটাই।',
+			classificationAside: 'শ্রেণিবিভাগ একটি পদ্ধতি। কাউকে জানার সঙ্গে তার এক জিনিস নয়।',
+			classificationNote: '“Name Ethnicity Detector”: একটি শ্রেণিবিভাগকারী, একটি গবেষণা প্রকল্প, এবং এমন একটি রচনা—যে যন্ত্রটি কী মীমাংসা করতে পারে না তা নিয়ে।',
+			route: 'নথি ০২ / পথরেখা',
+			routeTitle: 'একটি পথ, সরলরেখা নয়।',
+			routeIntro: 'নথিতে দেখা যায় এমন কয়েকটি স্থান ও প্রতিষ্ঠান। কোনও মানচিত্রই পুরো যাত্রার ব্যাখ্যা দিতে পারে না।',
+			routeAlt: 'কলকাতা, শিব নাদার ও দাদরি, এবং গবেষণার কাজকে যুক্ত করা একটি আঁকা পথ।',
+			routeProgress: 'পথের অগ্রগতি',
+			routeNotesLabel: 'পথের মাঠ-নোট',
+			routeMapLabel: 'পথ / ০৩টি নথি',
+			notToScale: 'মাপ অনুযায়ী নয়',
+			mapLabels: ['কলকাতা', 'শিব নাদার / দাদরি', 'গবেষণার কাজ'],
+			mapFoot: 'নথিভুক্ত চলাচল / তিনটি থামা',
+			mapQualifier: '— সম্পূর্ণ ইতিহাস নয় —',
+			waypoints: [
+				{ place: 'কলকাতা', date: '২০২০ — ২০২৩', title: 'অর্থনীতিতে স্নাতক', text: 'বিধাননগর সরকারি কলেজ। প্রশ্নের প্রথম দফা; শেষ দফা নয়।' },
+				{ place: 'শিব নাদার / দাদরি', date: '২০২৩ — ২০২৫', title: 'স্নাতকোত্তর + মাঠকাজ', text: 'দাদরির সাতটি গ্রামে ২১৪টি পরিবারের সমীক্ষা; সঙ্গে উপগ্রহ-চিত্র, মৌখিক ইতিহাস এবং জমির নথির রাজনীতি।' },
+				{ place: 'গবেষণার কাজ', date: 'চলমান', title: 'তথ্য, নীতি, মানুষের মাপ', text: 'গবেষণার সরঞ্জাম ও সরকারি তথ্যভাণ্ডার—সেই মানুষ ও শ্রমের পাশে পড়া, যাদের প্রশাসনিক শ্রেণি ছোট করে দেয়।' }
+			],
+			lenses: 'নথি ০৩ / তিনটি দৃষ্টিকোণ',
+			lensesTitle: 'প্রশ্নগুলি একসঙ্গেই চলে।',
+			lensesIntro: 'আলাদা ঘর নয়; নথি কী রাখে, আর কী বাদ দেয় তা দেখার তিনটি উপায়।',
+			lensItems: [
+				{ number: '০১', title: 'শ্রম', mark: 'কাজ / মূল্য / সময়', text: 'কাজকে শুধু শ্রমশক্তি-সমীক্ষার সারি হিসেবে নয়, বেঁচে থাকা সময় ও দর-কষাকষির ক্ষমতা হিসেবে দেখি।', visual: 'বিন্দুগুলি খাতায় ঢোকে। বাদ পড়া সময় ঢোকে না।' },
+				{ number: '০২', title: 'পরিচয়', mark: 'নাম / সীমানা / অন্তর্ভুক্তি', text: 'প্রতিষ্ঠানের ভিতর দিয়ে পরিচয়ের শ্রেণিগুলি চলাচল করে। তারা কাকে দৃশ্যমান করে, আর কাকে ভুল পড়ে—তা দেখি।', visual: 'গোষ্ঠীগুলি সাজে। তারপর সাজানো থাকতে রাজি হয় না।' },
+				{ number: '০৩', title: 'তথ্য', mark: 'নথি / অনুপস্থিতি / প্রমাণ', text: 'তথ্য তৈরি হয়, উত্তরাধিকারেও আসে, কখনও আটকে রাখা হয়। তার ফাঁকও প্রমাণের অংশ, পাদটীকা নয়।', visual: 'একটি সারণি, কয়েকটি কালিমা, আর একগুঁয়ে প্রান্তটীকা।' }
+			],
+			atlasTitle: 'দীর্ঘতর নথি: Annihilation Atlas',
+			atlasText: 'জমি, শ্রম, শ্রেণিবিভাগ, বিচ্ছিন্নতা, প্রতিরোধ ও স্মৃতি নিয়ে একটি জাতপাত-বিরোধী পর্যবেক্ষণশালা।',
+			projectStatus: 'দীর্ঘমেয়াদি প্রকল্প / কাজ চলছে',
+			atlasLink: 'প্রকল্পটি দেখুন',
+			relatedLabel: 'উপ-নথি / নির্বাচিত কাজ',
+			relatedText: 'মাঠগবেষণা, সরকারি নথি, এবং সরকারি খাতায় অমীমাংসিত থেকে যাওয়া বিষয় পড়ার ছোট যন্ত্র।',
+			relatedFiles: ['Dadri Forecast', 'CBFC Watch', 'MGNREGA asset pipelines', 'West Bengal 2002 electoral rolls', 'Local Lines', 'Delhi Vehicles', 'Flights over India', 'Legal Explorer'],
+			relatedLink: 'কাজের সূচি দেখুন',
+			instruments: 'নথি ০৪ / যন্ত্রপাতির প্যানেল',
+			instrumentsTitle: 'সরঞ্জাম নিরপেক্ষ নয়। তবু কাজে লাগে।',
+			instrumentsIntro: 'প্রশ্ন করা, যাচাই, মানচিত্র আঁকা এবং কখনও তথ্যের সঙ্গে তর্ক করার কাজের সরঞ্জাম।',
+			toolGroups: [
+				{ label: 'বিশ্লেষণ', tools: ['Python', 'R', 'Stata', 'SQL'] },
+				{ label: 'স্থানিক', tools: ['QGIS'] },
+				{ label: 'নির্মাণ', tools: ['JavaScript', 'C++', 'Git'] },
+				{ label: 'প্রকাশনা', tools: ['LaTeX'] }
+			],
+			experienceTitle: 'অভিজ্ঞতা ও শিক্ষা',
+			experienceHint: 'মাঠের নোট দেখতে একটি কার্ড খুলুন।',
+			experienceIndex: 'সূচি / অভিজ্ঞতা',
+			filed: 'নথিভুক্ত',
+			experiences: [
+				{ date: 'শুরুর তারিখ নিশ্চিত করতে হবে', title: 'গবেষণা পরামর্শক', org: 'Inclusion Economics India Centre · Yale Research Initiative', detail: 'অর্থনীতি ও অন্তর্ভুক্তির সংযোগস্থলে গবেষণা ও তথ্যের কাজ। অনুমান না করে শুরুর তারিখটি খোলা রাখা হয়েছে।' },
+				{ date: 'পূর্বে', title: 'গবেষণা সহকারী', org: 'Centre for Sustainable Employment · Azim Premji University', detail: 'কর্মসংস্থান ও জীবিকা নিয়ে কাজ; তথ্য পরিষ্কার করা, স্থানিক বিশ্লেষণ, এবং প্রমাণকে ব্যবহারযোগ্য করার যত্নশীল কাজ।' },
+				{ date: '২০২৩ — ২০২৫', title: 'অর্থনীতিতে স্নাতকোত্তর', org: 'Shiv Nadar Institution of Eminence', detail: 'অর্থনীতি, পদ্ধতি এবং মানুষেরা তথ্যভাণ্ডারে এলে যে অভিজ্ঞতাভিত্তিক প্রশ্নগুলি আরও কঠিন হয়—সেগুলি নিয়ে পড়াশোনা।' },
+				{ date: '২০২০ — ২০২৩', title: 'অর্থনীতিতে স্নাতক (সম্মান)', org: 'Bidhannagar Government College, Kolkata', detail: 'অর্থনীতি, পরিসংখ্যান, এবং একটি পরিষ্কার সারণি ফ্রেমের বাইরে কী রেখেছে তা যাচাই করার অভ্যাস।' }
+			],
+			reply: 'নথি ০৫ / উত্তরপত্র',
+			replyForm: 'উত্তর / ফর্ম ০৫-বি',
+			keepCopy: 'এই কপিটি রাখুন',
+			replyFooter: 'লেখার জন্য ধন্যবাদ',
+			receivingDesk: 'CHHIPI/42 · গ্রহণকক্ষ',
+			replyTitle: 'উত্তরে একটি চিঠি পেলে ভালো লাগবে।',
+			replyText: 'কোনও প্রশ্ন, মিলের আগ্রহ, বা আরও খুঁটিয়ে দেখার মতো বিষয় নিয়ে লিখুন। এটি বাণিজ্যিক পরিষেবার পাতা নয়—ভাবনাটি জরুরি বলেই লিখুন।',
+			email: 'ইমেল',
+			linkedin: 'LinkedIn',
+			github: 'GitHub',
+			contactForm: 'যোগাযোগের ফর্ম',
+			fieldName: 'নাম',
+			fieldEmail: 'ইমেল ঠিকানা',
+			fieldMessage: 'কী বিষয়ে কথা বলতে চান?',
+			fieldMessageHint: 'অনুগ্রহ করে সংবেদনশীল ব্যক্তিগত তথ্য পাঠাবেন না।',
+			botField: 'এই ঘরটি খালি রাখুন',
+			send: 'উত্তরপত্র পাঠান',
+			sending: 'পাঠানো হচ্ছে…',
+			formError: 'চিঠিটি ডেস্কে পৌঁছায়নি। আবার চেষ্টা করুন, অথবা উপরের ইমেল লিঙ্কটি ব্যবহার করুন।',
+			formSuccess: 'চিঠিটি নথিভুক্ত হয়েছে। ধন্যবাদ — প্রাপ্তির পাতায় যাচ্ছি…',
+			pageEnd: 'বর্তমান নথির শেষ · আরও প্রমাণ আসতে পারে',
+			helpHint: 'এই নথিতে ছোট্ট একটি আমলাতান্ত্রিক সাহায্যকেন্দ্র লুকিয়ে আছে।',
+			dialogTitle: 'CHHIPI/42 · সাহায্যকেন্দ্র',
+			close: 'সাহায্যকেন্দ্র বন্ধ করুন',
+			easterLines: ['অনুরোধ পেয়েছি। ফর্মটি আগে থেকেই একটি ফর্ম ছিল।', 'শ্রেণিবিভাগ: কৌতূহলী, প্রমাণসহ।', 'অনুগ্রহ করে নম্বর নিন। নম্বরটিও পর্যালোচনাধীন।'],
+			thank: 'আরও ঘুরে দেখুন'
+		}
+	} as const;
+
+	let language = $state<Language>('en');
+	const t = $derived(copy[language]);
+	let scrollProgress = $state(0);
+	let routeProgress = $state(1);
+	let activeScene = $state(0);
+	let classifierIndex = $state(0);
+	let classifierDone = $state(false);
+	let motionEnabled = $state(false);
+	let cursorEnabled = $state(false);
+	let helpOpen = $state(false);
+	let formState = $state<FormState>('idle');
 	let formError = $state('');
+	let routeSection: HTMLElement | null = $state(null);
+	let cursorEl: HTMLDivElement | null = $state(null);
+
+	const personSchema = {
+		'@context': 'https://schema.org',
+		'@type': 'Person',
+		'name': 'Anindya Singh',
+		'url': 'https://anindyasingh.com/about',
+		'image': 'https://anindyasingh.com/images/anindya2.png',
+		'description': 'Researcher, data scientist, and writer working at the intersection of economics, data, labour, identity, information, and social impact.',
+		'jobTitle': 'Research Consultant, Data Scientist, and Writer',
+		'alumniOf': [
+			{ '@type': 'CollegeOrUniversity', 'name': 'Shiv Nadar Institution of Eminence' },
+			{ '@type': 'CollegeOrUniversity', 'name': 'Bidhannagar Government College' }
+		],
+		'sameAs': ['https://linkedin.com/in/anindyakafka', 'https://github.com/anindyakafka']
+	};
 
 	async function submitContact(event: SubmitEvent) {
 		const form = event.currentTarget as HTMLFormElement;
@@ -20,759 +298,685 @@
 				body: body.toString()
 			});
 			if (!response.ok) throw new Error(`Submission failed (${response.status})`);
-			window.location.assign('/thank-you');
+			formState = 'success';
+			form.classList.add('slip-filed');
+			window.setTimeout(() => window.location.assign('/thank-you'), 900);
 		} catch {
 			formState = 'error';
-			formError = 'The form could not send your message. Please try again, or use the email link above.';
+			formError = t.formError;
 		}
 	}
+
+	onMount(() => {
+		const syncLanguage = () => {
+			language = document.documentElement.dataset.language === 'bn' ? 'bn' : 'en';
+		};
+		syncLanguage();
+		const languageObserver = new MutationObserver(syncLanguage);
+		languageObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-language'] });
+
+		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+		motionEnabled = !reducedMotion.matches;
+		cursorEnabled = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+		const onMotionChange = (event: MediaQueryListEvent) => {
+			motionEnabled = !event.matches;
+			if (event.matches) {
+				classifierDone = true;
+				routeProgress = 1;
+			} else {
+				updateScroll();
+			}
+		};
+		reducedMotion.addEventListener('change', onMotionChange);
+
+		let classifierSteps = 0;
+		let classifierTimer: number | undefined;
+		if (motionEnabled) {
+			classifierTimer = window.setInterval(() => {
+				classifierIndex = (classifierIndex + 1) % t.classifierFrames.length;
+				classifierSteps += 1;
+				if (classifierSteps >= 8) {
+					if (classifierTimer) window.clearInterval(classifierTimer);
+					classifierDone = true;
+				}
+			}, 430);
+		} else {
+			classifierDone = true;
+		}
+
+		const scenes = Array.from(document.querySelectorAll<HTMLElement>('[data-file-scene]'));
+		const sceneObserver = new IntersectionObserver(
+			(entries) => {
+				const visible = entries
+					.filter((entry) => entry.isIntersecting)
+					.sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+				if (visible) activeScene = scenes.indexOf(visible.target as HTMLElement);
+			},
+			{ rootMargin: '-15% 0px -55% 0px', threshold: [0, 0.15, 0.4, 0.7] }
+		);
+		scenes.forEach((scene) => sceneObserver.observe(scene));
+
+		let raf = 0;
+		const updateScroll = () => {
+			if (raf) return;
+			raf = window.requestAnimationFrame(() => {
+				raf = 0;
+				const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+				scrollProgress = maxScroll > 0 ? Math.min(1, Math.max(0, window.scrollY / maxScroll)) : 0;
+				if (routeSection) {
+					const start = routeSection.getBoundingClientRect().top + window.scrollY;
+					const distance = Math.max(1, routeSection.offsetHeight - window.innerHeight);
+					routeProgress = motionEnabled ? Math.min(1, Math.max(0, (window.scrollY - start) / distance)) : 1;
+				}
+			});
+		};
+		window.addEventListener('scroll', updateScroll, { passive: true });
+		window.addEventListener('resize', updateScroll, { passive: true });
+		updateScroll();
+
+		let cursorFrame = 0;
+		const moveCursor = (event: PointerEvent) => {
+			if (!cursorEl || event.pointerType === 'touch') return;
+			cursorEl.classList.toggle('cursor-over-text', Boolean((event.target as Element | null)?.closest('h1,h2,h3,p,a,button,label,summary')));
+			if (cursorFrame) return;
+			const x = event.clientX;
+			const y = event.clientY;
+			cursorFrame = window.requestAnimationFrame(() => {
+				cursorFrame = 0;
+				cursorEl?.style.setProperty('--cursor-transform', `translate3d(${x}px, ${y}px, 0)`);
+			});
+		};
+		window.addEventListener('pointermove', moveCursor, { passive: true });
+
+		let keyBuffer = '';
+		let lastKeyTime = 0;
+		const onKeyDown = (event: KeyboardEvent) => {
+			if (event.key === 'Escape') helpOpen = false;
+			if (event.key.length !== 1 || event.metaKey || event.ctrlKey || event.altKey) return;
+			const target = event.target as HTMLElement | null;
+			if (target?.matches('input, textarea, select, [contenteditable="true"]')) return;
+			const now = Date.now();
+			keyBuffer = now - lastKeyTime > 1500 ? event.key.toLowerCase() : `${keyBuffer}${event.key.toLowerCase()}`.slice(-4);
+			lastKeyTime = now;
+			if (keyBuffer.endsWith('help')) {
+				helpOpen = true;
+				keyBuffer = '';
+			}
+		};
+		window.addEventListener('keydown', onKeyDown);
+
+		return () => {
+			languageObserver.disconnect();
+			sceneObserver.disconnect();
+			reducedMotion.removeEventListener('change', onMotionChange);
+			if (classifierTimer) window.clearInterval(classifierTimer);
+			if (raf) window.cancelAnimationFrame(raf);
+			if (cursorFrame) window.cancelAnimationFrame(cursorFrame);
+			window.removeEventListener('scroll', updateScroll);
+			window.removeEventListener('resize', updateScroll);
+			window.removeEventListener('pointermove', moveCursor);
+			window.removeEventListener('keydown', onKeyDown);
+		};
+	});
 </script>
 
 <svelte:head>
 	<title>About — Anindya Singh</title>
-	<meta name="description" content="About Anindya Singh — researcher, data scientist, and writer working at the intersection of economics, data, and social impact." />
+	<meta name="description" content="A case file on Anindya Singh: researcher, data scientist, and writer working with economics, labour, identity, information, and public data." />
 	<meta name="author" content="Anindya Singh" />
+	<script type="application/ld+json">{JSON.stringify(personSchema)}</script>
 </svelte:head>
 
-<!-- ───────────── Hero / Bio ───────────── -->
-<section class="page-content bio-section">
-	<div class="bio-grid">
-		<div class="bio-text">
-			<span class="section-index">00 — About</span>
-			<h1 class="bio-title">
-				Anindya<br />Singh
-			</h1>
-			<p class="bio-lede">
-				Researcher, data scientist, and writer working at the intersection of
-				economics, data, and social impact. Based in West Bengal, India.
-			</p>
-			<p class="bio-paragraph">
-				My work sits where rigorous empirical methods meet real-world questions about
-				labour, identity, and information. I build tools that make data more
-				accessible, write essays that connect technical ideas to human experience,
-				and conduct research that asks how policy shapes lives.
-			</p>
-			<div class="bio-meta">
-				<div class="bio-meta-item">
-					<span class="bio-meta-label">Based in</span>
-					<span class="bio-meta-value">West Bengal, India</span>
-				</div>
-				<div class="bio-meta-item">
-					<span class="bio-meta-label">Focus</span>
-					<span class="bio-meta-value">Economics · Data · Writing</span>
-				</div>
-			</div>
-		</div>
-		<div class="bio-card">
-			<div class="bio-card-header">
-				<span class="bio-card-dot"></span>
-				<span class="bio-card-label">Currently</span>
-			</div>
-			<div class="bio-card-body">
-				<p class="bio-card-title">M.Sc. Economics</p>
-				<p class="bio-card-subtitle">Shiv Nadar Institution of Eminence</p>
-				<p class="bio-card-detail">2023 — 2025</p>
-			</div>
-			<div class="bio-card-divider"></div>
-			<div class="bio-card-body">
-				<p class="bio-card-title">Research Consultant</p>
-				<p class="bio-card-subtitle">Inclusion Economics India Centre</p>
-				<p class="bio-card-detail">Yale Research Initiative</p>
-			</div>
-			<div class="bio-card-divider"></div>
-			<div class="bio-card-tag-row">
-				<span class="tag">Open to thoughtful conversations</span>
-			</div>
-		</div>
-	</div>
-</section>
+<div class="about-file" class:motion-enabled={motionEnabled} class:cursor-enabled={cursorEnabled}>
+	<a class="skip-link" href="#file-content">{t.skip}</a>
 
-<!-- ───────────── Education Timeline ───────────── -->
-<section class="page-content timeline-section">
-	<header class="section-header">
-		<span class="section-index">01</span>
-		<h2 class="section-title">Education</h2>
-	</header>
-	<div class="timeline">
-		<div class="timeline-item">
-			<div class="timeline-marker">
-				<span class="timeline-dot"></span>
-				<span class="timeline-line"></span>
+	<div class="file-progress" role="progressbar" aria-label={t.progress} aria-valuemin="0" aria-valuemax="100" aria-valuenow={Math.round(scrollProgress * 100)}>
+		<div class="file-progress__bar" style={`transform: scaleX(${scrollProgress})`}></div>
+		<span>{String(Math.min(6, activeScene + 1)).padStart(2, '0')} / 06</span>
+	</div>
+
+	<div id="file-content" class="file-main">
+		<section id="intake" class="scene intake" data-file-scene aria-labelledby="intake-title">
+			<div class="intake__topline"><span>{t.intake}</span><span>AS / 2026</span></div>
+			<div class="intake__grid">
+				<div class="intake__paper">
+					<div class="paper-grain" aria-hidden="true"></div>
+					<div class="paper-head">
+						<p class="type-label">{t.formTitle}</p>
+						<span class="paper-index">001—A</span>
+					</div>
+					<p class="paper-subtitle">{t.formSubtitle}</p>
+					<dl class="intake-fields">
+						<div class="intake-field"><dt>{t.subject}</dt><dd><span class="field-copy">{t.name}</span><span class="redaction" aria-hidden="true"></span></dd></div>
+						<div class="intake-field"><dt>{t.occupation}</dt><dd><span class="field-copy">{t.occupationValue}</span><span class="redaction redaction--short" aria-hidden="true"></span></dd></div>
+						<div class="intake-field"><dt>{t.location}</dt><dd><span class="field-copy">{t.locationValue}</span><span class="redaction redaction--mid" aria-hidden="true"></span></dd></div>
+						<div class="intake-field"><dt>{t.status}</dt><dd><span class="field-copy">{t.statusValue}</span><span class="redaction redaction--short" aria-hidden="true"></span></dd></div>
+					</dl>
+					<div class="intake__name-block">
+						<p class="type-label">{t.subjectFiled}</p>
+						<h1 id="intake-title">{t.nameFirst} <em>{t.nameLast}</em></h1>
+					</div>
+					<div class="intake__bottom"><span>{t.recordOpen}</span><span>{t.evidenceKeep}</span></div>
+					<div class="stamp stamp--open">{t.stamp}</div>
+					<div class="stamp stamp--disputed">{t.stamp2}</div>
+					</div>
+					<aside class="intake__portrait">
+						<div class="portrait-frame">
+							<picture>
+								<source srcset="/images/anindya2-mobile.webp" media="(max-width: 900px)" type="image/webp" />
+								<source srcset="/images/anindya2-optimized.webp" type="image/webp" />
+								<img src="/images/anindya2.png" alt={t.portraitAlt} width="1086" height="1448" fetchpriority="high" />
+							</picture>
+						</div>
+					<p class="portrait-caption"><span>{t.portraitFigure}</span><span>{t.portraitCaption}</span></p>
+					<p class="personal-line">“{t.personal}”</p>
+				</aside>
 			</div>
-			<div class="timeline-content">
-				<span class="timeline-year">2023 — 2025</span>
-				<h3 class="timeline-title">M.Sc. Economics</h3>
-				<p class="timeline-org">Shiv Nadar Institution of Eminence</p>
-				<p class="timeline-desc">
-					Graduate-level training in econometrics, development economics, and
-					computational methods. Thesis work on labour economics and measurement.
-				</p>
-				<div class="tag-row">
-					<span class="tag">Econometrics</span>
-					<span class="tag">Development</span>
-					<span class="tag">Computational Methods</span>
+			<div class="intake__footer"><span>{t.department}</span><span>{t.scrollContinue}</span></div>
+		</section>
+
+		<section id="classification" class="scene classification" data-file-scene aria-labelledby="classification-title">
+			<header class="scene-heading">
+				<p class="scene-kicker">{t.classification}</p>
+				<h2 id="classification-title">{t.classificationTitle}</h2>
+				<p class="scene-intro">{t.classificationIntro}</p>
+			</header>
+			<div class="classification__grid">
+				<div class="classification__subject">
+					<p class="type-label">{t.subjectFiled}</p>
+					<p class="classification__name">{t.nameFirst} <em>{t.nameLast}</em></p>
+					<p class="classification__self-label">{t.selfLabel}</p>
+					<p class="self-description" class:typed-in={classifierDone}>{t.selfDescription}</p>
+					<p class="classification__aside">{t.classificationAside}</p>
+				</div>
+				<div class="classifier-card" aria-live="polite" aria-atomic="true">
+					<div class="classifier-card__head"><span class="signal-dot" aria-hidden="true"></span><span>{t.classifierLabel}</span><span class="classifier-card__serial">{t.modelSerial}</span></div>
+					<div class="classifier-card__body">
+						{#each t.classifierFrames as frame, index}
+							<div class="classifier-row" class:struck={classifierDone || index !== classifierIndex}>
+								<span>{frame.label}</span><strong>{frame.value}</strong><b>{frame.score}</b>
+							</div>
+						{/each}
+					</div>
+					<p class="classifier-note">{t.classifierDisclaimer}</p>
 				</div>
 			</div>
-		</div>
-		<div class="timeline-item">
-			<div class="timeline-marker">
-				<span class="timeline-dot"></span>
-			</div>
-			<div class="timeline-content">
-				<span class="timeline-year">2020 — 2023</span>
-				<h3 class="timeline-title">B.Sc. Economics</h3>
-				<p class="timeline-org">Bidhannagar Government College</p>
-				<p class="timeline-desc">
-					Foundational training in microeconomics, macroeconomics, statistics,
-					and mathematics for social science.
-				</p>
-				<div class="tag-row">
-					<span class="tag">Microeconomics</span>
-					<span class="tag">Macroeconomics</span>
-					<span class="tag">Statistics</span>
+			<div class="classification__footnote"><span>↳</span><p>{t.classificationNote}</p></div>
+		</section>
+
+		<section id="route" class="scene route-section" data-file-scene aria-labelledby="route-title" bind:this={routeSection}>
+			<header class="scene-heading route-heading">
+				<p class="scene-kicker">{t.route}</p>
+				<h2 id="route-title">{t.routeTitle}</h2>
+				<p class="scene-intro">{t.routeIntro}</p>
+			</header>
+			<div class="route-sticky">
+				<div class="route-map">
+					<div class="map-stamp" aria-hidden="true">FIELD<br />COPY</div>
+					<div class="map-meta"><span>{t.routeMapLabel}</span><span>{t.notToScale}</span></div>
+					<svg viewBox="0 0 560 400" role="img" aria-label={t.routeAlt} class="route-svg">
+						<path class="map-contour" d="M62 76c76-48 145-14 194 2s112-14 183 21M31 140c72-21 123 10 185 21s137-12 235 14M51 235c83-37 153-18 217 8s114-4 171 17M108 325c72-26 128-10 188 5s102-9 149-34" />
+						<path class="route-track" d="M110 300 C145 260, 170 218, 236 198 S318 154, 348 112 S415 88, 453 66" pathLength="1" style={`stroke-dashoffset:${1 - routeProgress}`} />
+						<circle class="route-node" cx="110" cy="300" r="8" /><circle class="route-node" cx="348" cy="112" r="8" /><circle class="route-node" cx="453" cy="66" r="8" />
+						<text x="72" y="338">{t.mapLabels[0]}</text><text x="286" y="91">{t.mapLabels[1]}</text><text x="378" y="42">{t.mapLabels[2]}</text>
+						<path class="map-gridline" d="M24 366H530M24 344H530M24 22V370M68 22V370M112 22V370M156 22V370M200 22V370M244 22V370M288 22V370M332 22V370M376 22V370M420 22V370M464 22V370M508 22V370" />
+					</svg>
+					<div class="map-coordinates"><span>{t.mapFoot}</span><span>{t.mapQualifier}</span></div>
+				</div>
+				<div class="route-notes" aria-label={t.routeNotesLabel}>
+					{#each t.waypoints as point, index}
+						<article class="field-note" class:current={routeProgress >= index / t.waypoints.length && (index === t.waypoints.length - 1 || routeProgress < (index + 1) / t.waypoints.length)}>
+							<p class="field-note__date">{point.date}<span> / 0{index + 1}</span></p>
+							<h3>{point.place}</h3>
+							<p class="field-note__title">{point.title}</p>
+							<p class="field-note__text">{point.text}</p>
+						</article>
+					{/each}
 				</div>
 			</div>
-		</div>
-	</div>
-</section>
+		</section>
 
-<!-- ───────────── Experience Timeline ───────────── -->
-<section class="page-content timeline-section" style="border-top: 1px solid var(--color-border);">
-	<header class="section-header">
-		<span class="section-index">02</span>
-		<h2 class="section-title">Experience</h2>
-	</header>
-	<div class="timeline">
-		<div class="timeline-item">
-			<div class="timeline-marker">
-				<span class="timeline-dot"></span>
-				<span class="timeline-line"></span>
+		<section id="lenses" class="scene lenses" data-file-scene aria-labelledby="lenses-title">
+			<header class="scene-heading">
+				<p class="scene-kicker">{t.lenses}</p>
+				<h2 id="lenses-title">{t.lensesTitle}</h2>
+				<p class="scene-intro">{t.lensesIntro}</p>
+			</header>
+			<div class="lens-grid">
+				{#each t.lensItems as lens, index}
+					<article class="lens-card" style={`--lens-index:${index}`}>
+						<div class={`lens-visual lens-visual--${index + 1}`} aria-hidden="true">
+							{#if index === 0}
+								<div class="ledger-lines"></div><div class="ledger-dots">{#each Array(18) as _, dot}<i style={`--dot:${dot}`}></i>{/each}</div><div class="ledger-bars"><i></i><i></i><i></i><i></i></div>
+							{:else if index === 1}
+								<div class="identity-orbit"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><b>?</b></div><span class="orbit-caption">SORT → UNSORT</span>
+							{:else}
+								<div class="table-visual"><span>NAME</span><span>CLASS</span><span>STATUS</span><i></i><i></i><i></i><b></b><b></b></div><span class="redaction-line"></span>
+							{/if}
+						</div>
+						<div class="lens-card__body"><p class="lens-number">{lens.number} / {lens.mark}</p><h3>{lens.title}</h3><p>{lens.text}</p><p class="lens-caption">{lens.visual}</p></div>
+					</article>
+				{/each}
 			</div>
-			<div class="timeline-content">
-				<span class="timeline-year">Research Consultant</span>
-				<h3 class="timeline-title">Inclusion Economics India Centre</h3>
-				<p class="timeline-org">Yale Research Initiative · 2024 — Present</p>
-				<p class="timeline-desc">
-					Leading data pipelines, survey design, and econometric analysis for
-					research on labour markets and economic inclusion. Building tools for
-					large-scale administrative data processing.
-				</p>
-				<div class="tag-row">
-					<span class="tag">Research Design</span>
-					<span class="tag">Data Pipelines</span>
-					<span class="tag">Stata</span>
-					<span class="tag">Python</span>
+			<aside class="atlas-callout"><div><p class="type-label">{t.projectStatus}</p><h3>{t.atlasTitle}</h3><p>{t.atlasText}</p></div><a href="/annihilation-atlas">{t.atlasLink}<span aria-hidden="true"> ↗</span></a></aside>
+			<div class="related-files"><div class="related-files__intro"><p class="type-label">{t.relatedLabel}</p><p>{t.relatedText}</p></div><ul>{#each t.relatedFiles as file}<li>{file}</li>{/each}</ul><a href="/work">{t.relatedLink}<span aria-hidden="true"> ↗</span></a></div>
+		</section>
+
+		<section id="instruments" class="scene instruments" data-file-scene aria-labelledby="instruments-title">
+			<header class="scene-heading">
+				<p class="scene-kicker">{t.instruments}</p>
+				<h2 id="instruments-title">{t.instrumentsTitle}</h2>
+				<p class="scene-intro">{t.instrumentsIntro}</p>
+			</header>
+			<div class="instrument-row">
+				{#each t.toolGroups as group, index}
+					<div class="instrument" style={`--instrument-index:${index}`}>
+						<div class="instrument__dial" aria-hidden="true"><span class="dial-mark">{String(index + 1).padStart(2, '0')}</span><i></i><b></b></div>
+						<p class="type-label">{group.label}</p>
+						<ul>{#each group.tools as tool}<li>{tool}</li>{/each}</ul>
+					</div>
+				{/each}
+			</div>
+			<div class="experience-head"><div><p class="type-label">{t.experienceIndex}</p><h3>{t.experienceTitle}</h3></div><p>{t.experienceHint}</p></div>
+			<div class="experience-index">
+				{#each t.experiences as experience, index}
+					<details class="index-card" open={index === 0}>
+						<summary>
+							<span class="index-card__serial">0{index + 1}</span>
+							<span class="index-card__main"><span class="index-card__date">{experience.date}</span><strong>{experience.title}</strong><span>{experience.org}</span></span>
+							<span class="index-card__toggle" aria-hidden="true">+</span>
+						</summary>
+						<div class="index-card__detail"><p>{experience.detail}</p><span>{t.filed} / {String(index + 1).padStart(2, '0')}</span></div>
+					</details>
+				{/each}
+			</div>
+		</section>
+
+		<section id="reply" class="scene reply" data-file-scene aria-labelledby="reply-title">
+			<header class="scene-heading">
+				<p class="scene-kicker">{t.reply}</p>
+				<h2 id="reply-title">{t.replyTitle}</h2>
+				<p class="scene-intro">{t.replyText}</p>
+			</header>
+			<div class="reply-slip" class:slip-filed={formState === 'success'}>
+				<div class="slip-perforation" aria-hidden="true"></div>
+				<div class="reply-slip__head"><span>{t.replyForm}</span><span>{t.keepCopy}</span></div>
+				<div class="contact-links" aria-label="Contact and profile links">
+					<a href="mailto:anindya2232@gmail.com"><span>{t.email}</span><b>anindya2232@gmail.com</b><span aria-hidden="true">↗</span></a>
+					<a href="https://linkedin.com/in/anindyakafka" target="_blank" rel="noreferrer noopener"><span>{t.linkedin}</span><b>linkedin.com/in/anindyakafka</b><span aria-hidden="true">↗</span></a>
+					<a href="https://github.com/anindyakafka" target="_blank" rel="noreferrer noopener"><span>{t.github}</span><b>github.com/anindyakafka</b><span aria-hidden="true">↗</span></a>
 				</div>
+				<form class="contact-form" name="contact" method="POST" action="/thank-you" data-netlify="true" data-netlify-honeypot="bot-field" onsubmit={submitContact} aria-busy={formState === 'submitting'}>
+					<input type="hidden" name="form-name" value="contact" />
+					<div class="form-trap" aria-hidden="true"><label>{t.botField}<input name="bot-field" tabindex="-1" autocomplete="off" /></label></div>
+					<fieldset disabled={formState === 'submitting' || formState === 'success'}>
+						<legend>{t.contactForm}</legend>
+						<div class="form-row">
+							<label><span>{t.fieldName}</span><input name="name" autocomplete="name" required /></label>
+							<label><span>{t.fieldEmail}</span><input name="email" type="email" autocomplete="email" required /></label>
+						</div>
+						<label><span>{t.fieldMessage}</span><textarea name="message" rows="5" required aria-describedby="message-hint"></textarea><small id="message-hint">{t.fieldMessageHint}</small></label>
+						<button class="send-button" type="submit" disabled={formState === 'submitting' || formState === 'success'}>{formState === 'submitting' ? t.sending : t.send}<span aria-hidden="true"> →</span></button>
+					</fieldset>
+					{#if formState === 'error'}<p class="form-message form-message--error" role="alert">{formError}</p>{/if}
+					{#if formState === 'success'}<p class="form-message form-message--success" role="status" aria-live="polite">{t.formSuccess}</p>{/if}
+				</form>
+				<div class="reply-slip__foot"><span>{t.replyFooter}</span><span>{t.receivingDesk}</span></div>
 			</div>
-		</div>
-		<div class="timeline-item">
-			<div class="timeline-marker">
-				<span class="timeline-dot"></span>
-			</div>
-			<div class="timeline-content">
-				<span class="timeline-year">Research Assistant</span>
-				<h3 class="timeline-title">Centre for Sustainable Employment</h3>
-				<p class="timeline-org">Azim Premji University</p>
-				<p class="timeline-desc">
-					Contributed to research on employment, livelihoods, and labour market
-					dynamics. Data cleaning, GIS analysis, and report preparation.
-				</p>
-				<div class="tag-row">
-					<span class="tag">Labour Economics</span>
-					<span class="tag">QGIS</span>
-					<span class="tag">R</span>
-				</div>
-			</div>
-		</div>
+			<div class="reply-end"><p>{t.helpHint}</p><span>{t.pageEnd}</span></div>
+		</section>
 	</div>
-</section>
 
-<!-- ───────────── Skills Grid ───────────── -->
-<section class="page-content skills-section" style="border-top: 1px solid var(--color-border);">
-	<header class="section-header">
-		<span class="section-index">03</span>
-		<h2 class="section-title">Toolkit</h2>
-	</header>
-	<div class="skills-grid">
-		<div class="skill-group">
-			<h3 class="skill-group-title">◇ Analysis</h3>
-			<div class="skill-list">
-				<span class="skill-chip">Python</span>
-				<span class="skill-chip">R</span>
-				<span class="skill-chip">Stata</span>
-				<span class="skill-chip">SQL</span>
-			</div>
+	{#if language === 'bn'}<p class="translation-review" role="note">{t.draft}</p>{/if}
+	{#if helpOpen}
+		<div class="help-terminal" role="dialog" aria-labelledby="help-title" aria-modal="false">
+			<div class="help-terminal__head"><h2 id="help-title">{t.dialogTitle}</h2><button type="button" aria-label={t.close} onclick={() => (helpOpen = false)}>×</button></div>
+			{#each t.easterLines as line, index}<p><span>0{index + 1} ›</span> {line}</p>{/each}
 		</div>
-		<div class="skill-group">
-			<h3 class="skill-group-title">◇ Spatial</h3>
-			<div class="skill-list">
-				<span class="skill-chip">QGIS</span>
-			</div>
-		</div>
-		<div class="skill-group">
-			<h3 class="skill-group-title">◇ Engineering</h3>
-			<div class="skill-list">
-				<span class="skill-chip">JavaScript</span>
-				<span class="skill-chip">C++</span>
-				<span class="skill-chip">Git</span>
-			</div>
-		</div>
-		<div class="skill-group">
-			<h3 class="skill-group-title">◇ Publishing</h3>
-			<div class="skill-list">
-				<span class="skill-chip">LaTeX</span>
-			</div>
-		</div>
-	</div>
-</section>
-
-<!-- ───────────── Contact CTA ───────────── -->
-<section class="page-content contact-cta" id="contact">
-	<div class="contact-inner">
-		<span class="section-index">04</span>
-		<h2 class="contact-title">Have something meaningful in mind?</h2>
-		<p class="contact-desc">
-			I am always glad to hear from people led by curiosity, shared interests, or a clear
-			intention. This is not a commercial services page&mdash;write because the idea matters.
-		</p>
-		<div class="contact-actions">
-			<a class="btn btn--primary" href="mailto:anindya2232@gmail.com">
-				Email me
-				<svg viewBox="0 0 16 16" width="14" height="14"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
-			</a>
-			<a class="btn btn--ghost" href="/work">
-				See my work
-				<svg viewBox="0 0 16 16" width="14" height="14"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
-			</a>
-		</div>
-
-		<form class="contact-form" name="contact" method="POST" action="/thank-you" data-netlify="true" data-netlify-honeypot="bot-field" onsubmit={submitContact} aria-busy={formState === 'submitting'}>
-			<input type="hidden" name="form-name" value="contact" />
-			<input class="form-trap" name="bot-field" tabindex="-1" autocomplete="off" aria-hidden="true" />
-			<div class="form-row">
-				<label>
-					<span>Name</span>
-					<input name="name" autocomplete="name" required />
-				</label>
-				<label>
-					<span>Email</span>
-					<input name="email" type="email" autocomplete="email" required />
-				</label>
-			</div>
-			<label>
-				<span>What would you like to talk about?</span>
-				<textarea name="message" rows="6" required></textarea>
-			</label>
-			<button class="btn btn--primary" type="submit" disabled={formState === 'submitting'}>
-				{formState === 'submitting' ? 'Sending…' : 'Send message'}
-			</button>
-			{#if formState === 'error'}
-				<p class="form-error" role="alert">{formError}</p>
-			{/if}
-		</form>
-	</div>
-</section>
+	{/if}
+	<div class="custom-cursor" bind:this={cursorEl} aria-hidden="true"><i></i></div>
+</div>
 
 <style>
-	/* ───────── Page Content Base ───────── */
-	.page-content {
-		max-width: var(--max-width);
-		margin-inline: auto;
-		padding-inline: var(--space-l);
-	}
-
-	/* ───────── Bio Section ───────── */
-	.bio-section {
-		padding-block: var(--space-3xl);
-	}
-
-	.bio-grid {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: var(--space-2xl);
-		align-items: start;
-	}
-
-	.section-index {
-		font-family: var(--font-mono);
-		font-size: var(--step--1);
-		color: var(--color-accent);
-		letter-spacing: 0.05em;
-		display: block;
-		margin-bottom: var(--space-2xs);
-	}
-
-	.bio-title {
-		font-family: var(--font-serif);
-		font-size: var(--step-5);
-		font-weight: 600;
-		line-height: 1.05;
-		letter-spacing: -0.03em;
-		margin-bottom: var(--space-m);
-		animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
-	}
-
-	.bio-lede {
-		font-family: var(--font-serif);
-		font-size: var(--step-1);
-		line-height: 1.5;
-		color: var(--color-text);
-		max-width: var(--measure);
-		margin-bottom: var(--space-m);
-		animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
-	}
-
-	.bio-paragraph {
-		font-size: var(--step-0);
-		line-height: 1.7;
-		color: var(--color-text-muted);
-		max-width: var(--measure);
-		margin-bottom: var(--space-l);
-		animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
-	}
-
-	.bio-meta {
-		display: flex;
-		gap: var(--space-2xl);
-		flex-wrap: wrap;
-		animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
-	}
-
-	.bio-meta-item {
-		display: flex;
-		flex-direction: column;
-		gap: var(--space-3xs);
-	}
-
-	.bio-meta-label {
-		font-family: var(--font-mono);
-		font-size: 0.6875rem;
-		text-transform: uppercase;
-		letter-spacing: 0.08em;
-		color: var(--color-text-muted);
-	}
-
-	.bio-meta-value {
-		font-size: var(--step-0);
-		font-weight: 500;
-	}
-
-	/* ───────── Bio Card ───────── */
-	.bio-card {
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-lg);
-		padding: var(--space-l);
-		animation: cardIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
-	}
-
-	.bio-card-header {
-		display: flex;
-		align-items: center;
-		gap: var(--space-2xs);
-		margin-bottom: var(--space-m);
-	}
-
-	.bio-card-dot {
-		width: 8px;
-		height: 8px;
-		border-radius: 50%;
-		background: #22c55e;
-		animation: pulse 2s ease-in-out infinite;
-	}
-
-	.bio-card-label {
-		font-family: var(--font-mono);
-		font-size: 0.6875rem;
-		text-transform: uppercase;
-		letter-spacing: 0.08em;
-		color: var(--color-text-muted);
-	}
-
-	.bio-card-body {
-		margin-bottom: var(--space-s);
-	}
-
-	.bio-card-title {
-		font-size: var(--step-0);
-		font-weight: 600;
-		margin-bottom: var(--space-3xs);
-	}
-
-	.bio-card-subtitle {
-		font-size: var(--step--1);
-		color: var(--color-text-muted);
-	}
-
-	.bio-card-detail {
-		font-family: var(--font-mono);
-		font-size: 0.6875rem;
-		color: var(--color-text-muted);
-		margin-top: var(--space-3xs);
-	}
-
-	.bio-card-divider {
-		height: 1px;
-		background: var(--color-border);
-		margin-block: var(--space-s);
-	}
-
-	.bio-card-tag-row {
-		margin-top: var(--space-s);
-	}
-
-	/* ───────── Tags ───────── */
-	.tag {
-		display: inline-block;
-		font-family: var(--font-mono);
-		font-size: 0.6875rem;
-		padding: 0.25em 0.6em;
-		background: var(--color-accent-soft);
-		color: var(--color-accent);
-		border-radius: 3px;
-		white-space: nowrap;
-	}
-
-	.tag-row {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--space-2xs);
-		margin-top: var(--space-s);
-	}
-
-	/* ───────── Timeline Section ───────── */
-	.timeline-section {
-		padding-block: var(--space-3xl);
-	}
-
-	.section-header {
-		margin-bottom: var(--space-xl);
-	}
-
-	.section-title {
-		font-family: var(--font-serif);
-		font-size: var(--step-3);
-		font-weight: 500;
-		letter-spacing: -0.02em;
-	}
-
-	.timeline {
-		display: flex;
-		flex-direction: column;
-	}
-
-	.timeline-item {
-		display: flex;
-		gap: var(--space-m);
-		padding-bottom: var(--space-xl);
-	}
-
-	.timeline-item:last-child {
-		padding-bottom: 0;
-	}
-
-	.timeline-marker {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		padding-top: 0.2rem;
-	}
-
-	.timeline-dot {
-		width: 10px;
-		height: 10px;
-		border-radius: 50%;
-		background: var(--color-accent);
-		flex-shrink: 0;
-		z-index: 1;
-	}
-
-	.timeline-line {
-		width: 1px;
-		flex: 1;
-		background: var(--color-border);
-		margin-top: var(--space-2xs);
-	}
-
-	.timeline-content {
-		flex: 1;
-	}
-
-	.timeline-year {
-		font-family: var(--font-mono);
-		font-size: var(--step--1);
-		color: var(--color-accent);
-		letter-spacing: 0.03em;
-		display: block;
-		margin-bottom: var(--space-3xs);
-	}
-
-	.timeline-title {
-		font-size: var(--step-1);
-		font-weight: 600;
-		margin-bottom: var(--space-3xs);
-	}
-
-	.timeline-org {
-		font-size: var(--step-0);
-		color: var(--color-text-muted);
-		margin-bottom: var(--space-s);
-	}
-
-	.timeline-desc {
-		font-size: var(--step-0);
-		line-height: 1.6;
-		color: var(--color-text-muted);
-		max-width: 52ch;
-	}
-
-	/* ───────── Skills Section ───────── */
-	.skills-section {
-		padding-block: var(--space-3xl);
-	}
-
-	.skills-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-		gap: var(--space-l);
-	}
-
-	.skill-group {
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-lg);
-		padding: var(--space-l);
-		transition: border-color var(--transition), transform var(--transition);
-	}
-
-	.skill-group:hover {
-		border-color: var(--color-accent);
-		transform: translateY(-2px);
-	}
-
-	.skill-group-title {
-		font-family: var(--font-mono);
-		font-size: var(--step-0);
-		font-weight: 500;
-		margin-bottom: var(--space-m);
-	}
-
-	.skill-list {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--space-2xs);
-	}
-
-	.skill-chip {
-		display: inline-block;
-		font-family: var(--font-mono);
-		font-size: var(--step--1);
-		padding: 0.3em 0.75em;
-		background: var(--color-bg);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius);
-		color: var(--color-text);
-	}
-
-	/* ───────── Contact CTA ───────── */
-	.contact-cta {
-		padding-block: var(--space-4xl);
-		text-align: center;
-	}
-
-	.contact-inner {
-		max-width: 48rem;
-		margin-inline: auto;
-	}
-
-	.contact-title {
-		font-family: var(--font-serif);
-		font-size: var(--step-4);
-		font-weight: 500;
-		letter-spacing: -0.02em;
-		margin-bottom: var(--space-m);
-	}
-
-	.contact-desc {
-		font-size: var(--step-1);
-		line-height: 1.5;
-		color: var(--color-text-muted);
-		max-width: 36ch;
-		margin-inline: auto;
-		margin-bottom: var(--space-xl);
-	}
-
-	.contact-actions {
-		display: flex;
-		gap: var(--space-s);
-		justify-content: center;
-		flex-wrap: wrap;
-	}
-
-	.contact-form {
-		display: grid;
-		gap: var(--space-m);
-		margin-top: var(--space-2xl);
-		padding: var(--space-xl);
-		text-align: left;
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius);
-	}
-
-	.form-row {
-		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: var(--space-m);
-	}
-
-	.contact-form label {
-		display: grid;
-		gap: var(--space-2xs);
-		font-size: var(--step--1);
-		font-weight: 500;
-	}
-
-	.contact-form input,
-	.contact-form textarea {
-		width: 100%;
-		box-sizing: border-box;
-		padding: 0.75rem;
-		font: inherit;
-		color: var(--color-text);
-		background: var(--color-background);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius);
-	}
-
-	.contact-form textarea {
-		resize: vertical;
-	}
-
-	.contact-form input:focus,
-	.contact-form textarea:focus {
-		outline: 2px solid var(--color-accent);
-		outline-offset: 2px;
-	}
-
-	.contact-form .btn {
-		justify-self: start;
-	}
-
-	.form-trap {
-		display: none !important;
-	}
-
-	.contact-form .btn:disabled { cursor:wait; opacity:.62; }
-	.form-error { margin:0; color:#a33; font-size:var(--step--1); line-height:1.5; }
-
-	/* ───────── Buttons ───────── */
-	.btn {
-		display: inline-flex;
-		align-items: center;
-		gap: var(--space-2xs);
-		padding: 0.7rem 1.4rem;
-		font-family: var(--font-sans);
-		font-size: var(--step-0);
-		font-weight: 500;
-		border-radius: var(--radius);
-		transition: all var(--transition);
-		text-decoration: none;
-		border: 1px solid transparent;
-		cursor: pointer;
-	}
-
-	.btn--primary {
-		background: var(--color-accent);
-		color: #fff;
-	}
-
-	.btn--primary:hover {
-		background: var(--color-accent-hover);
-		transform: translateY(-1px);
-	}
-
-	.btn--ghost {
-		background: transparent;
-		color: var(--color-text);
-		border-color: var(--color-border);
-	}
-
-	.btn--ghost:hover {
-		background: var(--color-surface);
-		border-color: var(--color-text-muted);
-	}
-
-	/* ───────── Responsive ───────── */
-	@media (max-width: 768px) {
-		.bio-grid {
-			grid-template-columns: 1fr;
-			gap: var(--space-xl);
+	.about-file {
+		--ink: #1a1a2e;
+		--ink-soft: #28283d;
+		--paper: #f0eadb;
+		--paper-bright: #f7f2e6;
+		--paper-shadow: #ded5c1;
+		--stamp: #a33e36;
+		--ochre: #9e7c3e;
+		--rule: rgba(26, 26, 46, .18);
+		--body-ink: #29283a;
+		--muted-ink: #686578;
+			position: relative;
+			z-index: 1;
+			color: var(--body-ink);
+			font-family: var(--font-sans);
+			background: var(--paper-bright);
+			overflow: clip;
 		}
-
-		.bio-meta {
-			flex-direction: column;
-			gap: var(--space-s);
-		}
-
-		.contact-actions {
-			flex-direction: column;
-			align-items: stretch;
-		}
-
-		.form-row {
-			grid-template-columns: 1fr;
-		}
-
-		.contact-form {
-			padding: var(--space-l);
-		}
+		:global(body:has(.about-file)) { background-attachment: scroll; }
+		:global(html:not([data-language='bn']) body:has(.about-file) .language-toggle) { font-family: var(--font-sans); }
+		:global(body:has(.about-file))::before { animation: none; }
+		:global(body:has(.about-file))::after { animation: none; filter: none; }
+		.about-file :global(a) { color: inherit; }
+		.about-file :global(a:focus-visible), .about-file button:focus-visible, .about-file summary:focus-visible, .about-file input:focus-visible, .about-file textarea:focus-visible { outline: 3px solid var(--stamp); outline-offset: 4px; }
+		.file-main { max-width: 100%; }
+		.scene { position: relative; padding: clamp(4.5rem, 9vw, 8.5rem) max(1.2rem, calc((100vw - 72rem) / 2)); }
+		.scene:not(.intake) { content-visibility: auto; contain-intrinsic-size: auto 900px; }
+		.scene.classification { contain-intrinsic-size: auto 863px; }
+		.scene.route-section { contain-intrinsic-size: auto 1438px; }
+		.scene.lenses { contain-intrinsic-size: auto 1098px; }
+		.scene.instruments { contain-intrinsic-size: auto 1203px; }
+		.scene.reply { contain-intrinsic-size: auto 1035px; }
+		.skip-link { position: absolute; z-index: 200; top: .5rem; left: .5rem; transform: translateY(-180%); background: var(--paper); color: var(--ink); padding: .6rem 1rem; border: 2px solid var(--stamp); font: .78rem var(--font-mono); }
+	.skip-link:focus { transform: translateY(0); }
+	.file-progress { position: fixed; z-index: 150; right: max(1rem, calc((100vw - 90rem) / 2)); top: 50%; display: grid; grid-template-columns: 2px auto; gap: .65rem; align-items: center; color: var(--paper); font: .62rem var(--font-mono); writing-mode: vertical-rl; letter-spacing: .12em; }
+	.file-progress::before { content: ''; height: 6rem; grid-column: 1; grid-row: 1; background: rgba(247, 242, 230, .24); }
+	.file-progress__bar { width: 2px; height: 6rem; background: var(--stamp); grid-column: 1; grid-row: 1; transform-origin: top; }
+	.file-progress span { grid-column: 2; grid-row: 1; }
+	.intake { min-height: calc(100svh - 64px); padding-block: 2.2rem 1.4rem; color: var(--paper); background: var(--ink); isolation: isolate; display: flex; flex-direction: column; justify-content: center; }
+	.intake::before { content: ''; position: absolute; inset: 0; z-index: -1; opacity: .14; background: repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,.04) 4px), radial-gradient(ellipse at 12% 18%, rgba(255,255,255,.12), transparent 45%); pointer-events: none; }
+	.intake__topline, .intake__footer { display: flex; justify-content: space-between; gap: 1rem; width: min(100%, 72rem); margin-inline: auto; font: .65rem var(--font-mono); letter-spacing: .14em; color: rgba(240,234,219,.68); }
+	.intake__topline { margin-bottom: clamp(1.2rem, 3vw, 2rem); }
+	.intake__footer { margin-top: clamp(1.2rem, 2.8vw, 2rem); }
+	.intake__grid { width: min(100%, 72rem); margin-inline: auto; display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(15rem, .62fr); gap: clamp(1.2rem, 4vw, 3.5rem); align-items: center; }
+	.intake__paper { min-height: 31rem; position: relative; overflow: hidden; isolation: isolate; color: var(--ink); background: var(--paper); padding: clamp(1.3rem, 4vw, 3.1rem); box-shadow: 12px 14px 0 rgba(0,0,0,.15), 0 30px 65px rgba(0,0,0,.18); transform: rotate(-.35deg); }
+	.paper-grain { position: absolute; z-index: -1; inset: 0; opacity: .25; pointer-events: none; background-image: repeating-linear-gradient(90deg, transparent 0 7px, rgba(70,50,30,.025) 8px), radial-gradient(circle at 80% 20%, rgba(125,95,42,.12), transparent 46%); }
+	.paper-head { display: flex; justify-content: space-between; align-items: center; padding-bottom: .8rem; border-bottom: 1px solid var(--rule); }
+	.type-label { margin: 0; color: var(--muted-ink); font: .62rem/1.4 var(--font-mono); letter-spacing: .13em; text-transform: uppercase; }
+		.paper-index { margin-right: clamp(6rem, 8vw, 7rem); color: var(--stamp); font: .64rem var(--font-mono); }
+	.paper-subtitle { max-width: none; margin: .8rem 0 1.5rem; color: var(--muted-ink); font: italic 1rem/1.45 var(--font-serif); }
+	.intake-fields { display: grid; gap: .63rem; }
+	.intake-field { display: grid; grid-template-columns: 8rem minmax(0,1fr); gap: .8rem; align-items: center; border-bottom: 1px dotted rgba(26,26,46,.23); padding-bottom: .45rem; }
+	.intake-field dt { color: var(--muted-ink); font: .62rem var(--font-mono); letter-spacing: .1em; }
+	.intake-field dd { position: relative; min-height: 1.3rem; margin: 0; font: .85rem var(--font-mono); }
+	.field-copy { display: inline-block; }
+	.redaction { position: absolute; inset: .05rem auto .05rem 0; width: 100%; background: var(--ink); transform: scaleX(0); transform-origin: right; }
+	.motion-enabled .redaction { transform: scaleX(1); animation: peel 700ms cubic-bezier(.7,0,.2,1) forwards; animation-delay: 600ms; }
+	.motion-enabled .redaction--short { width: 57%; animation-delay: 900ms; }
+	.motion-enabled .redaction--mid { width: 76%; animation-delay: 750ms; }
+	.intake__name-block { margin-top: clamp(1.6rem, 4vw, 3rem); padding-top: 1rem; border-top: 1px solid var(--rule); }
+	.intake__name-block h1 { margin: .25rem 0 0; color: var(--ink); font: 500 clamp(3.3rem, 8.4vw, 7rem)/.91 var(--font-serif); letter-spacing: -.065em; }
+	.intake__name-block h1 em, .classification__name em { color: var(--stamp); font-weight: 400; }
+	.intake__bottom { display: flex; justify-content: space-between; gap: .75rem; margin-top: 1.3rem; color: var(--muted-ink); font: .54rem var(--font-mono); letter-spacing: .08em; }
+	.stamp { position: absolute; padding: .48rem .8rem; border: 2px solid var(--stamp); color: var(--stamp); font: 700 .72rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }
+	.stamp--open { top: 1.4rem; right: 1.35rem; transform: rotate(8deg); }
+	.stamp--disputed { right: 2rem; bottom: 3.9rem; font-size: .58rem; transform: rotate(-8deg); }
+	.motion-enabled .stamp--open { animation: stamp-in 480ms cubic-bezier(.16,1,.3,1) 1s both; }
+	.motion-enabled .stamp--disputed { animation: stamp-in 480ms cubic-bezier(.16,1,.3,1) 1.35s both; }
+		.intake__portrait { max-width: 21rem; justify-self: center; }
+		.portrait-frame { position: relative; padding: .7rem; border: 1px solid rgba(240,234,219,.34); transform: rotate(1.5deg); }
+		.portrait-frame::after { content: ''; position: absolute; inset: .7rem; border: 1px solid rgba(240,234,219,.3); pointer-events: none; }
+		.portrait-frame picture { display: block; }
+		.portrait-frame img { display: block; width: 100%; height: auto; aspect-ratio: 4/5; object-fit: cover; filter: saturate(.82) contrast(1.03); }
+	.portrait-caption { display: flex; justify-content: space-between; gap: .6rem; margin: .8rem 0 0; color: rgba(240,234,219,.62); font: .54rem var(--font-mono); letter-spacing: .1em; }
+	.personal-line { max-width: 30ch; margin: 1.3rem 0 0; color: var(--paper); font: italic clamp(1rem,1.7vw,1.25rem)/1.4 var(--font-serif); }
+	.scene-heading { max-width: 57rem; margin: 0 auto clamp(2rem, 5vw, 3.4rem); }
+	.scene-kicker { margin: 0 0 .8rem; color: var(--stamp); font: .68rem var(--font-mono); letter-spacing: .15em; text-transform: uppercase; }
+	.scene-heading h2 { margin: 0; color: var(--ink); font: 500 clamp(2.25rem, 5.8vw, 5rem)/.98 var(--font-serif); letter-spacing: -.05em; }
+	.scene-intro { max-width: 48ch; margin: 1.1rem 0 0; color: var(--muted-ink); font-size: clamp(.97rem, 1.25vw, 1.13rem); line-height: 1.65; }
+	.classification { background: var(--paper-bright); }
+	.classification__grid { max-width: 72rem; margin: auto; display: grid; grid-template-columns: .92fr 1.08fr; gap: clamp(2rem, 7vw, 6rem); align-items: center; }
+	.classification__subject { padding: clamp(1rem, 3vw, 2rem) 0; }
+	.classification__name { margin: .5rem 0 2rem; color: var(--ink); font: 500 clamp(2.8rem,6.5vw,5.5rem)/.95 var(--font-serif); letter-spacing: -.06em; }
+	.classification__self-label { margin: 0 0 .45rem; color: var(--stamp); font: .64rem var(--font-mono); letter-spacing: .13em; }
+	.self-description { max-width: 40ch; margin: 0; color: var(--ink); font: clamp(1.35rem, 2.4vw, 2rem)/1.28 var(--font-serif); }
+	.motion-enabled .self-description:not(.typed-in) { animation: ink-write 850ms steps(34, end) 250ms both; }
+	.classification__aside { max-width: 35ch; margin: 1.5rem 0 0; color: var(--muted-ink); font: italic 1rem/1.5 var(--font-serif); }
+	.classifier-card { position: relative; border: 1px solid var(--rule); background: #e8e0ce; padding: clamp(1rem,2.5vw,1.65rem); box-shadow: 7px 8px 0 rgba(26,26,46,.08); transform: rotate(.65deg); }
+	.classifier-card__head { display: flex; align-items: center; gap: .6rem; padding-bottom: .8rem; border-bottom: 1px solid var(--rule); color: var(--muted-ink); font: .59rem var(--font-mono); letter-spacing: .1em; }
+	.signal-dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--stamp); box-shadow: 0 0 0 3px rgba(163,62,54,.13); }
+	.classifier-card__serial { margin-left: auto; color: var(--stamp); }
+	.classifier-card__body { display: grid; gap: .25rem; padding-block: .8rem; }
+	.classifier-row { position: relative; display: grid; grid-template-columns: .8fr 1.4fr auto; gap: .5rem; align-items: center; min-height: 2.7rem; padding: .4rem .2rem; color: var(--ink); font: .66rem var(--font-mono); }
+	.classifier-row > span { color: var(--muted-ink); font-size: .56rem; letter-spacing: .06em; }
+	.classifier-row strong { font-weight: 500; }
+	.classifier-row b { color: var(--stamp); font-weight: 500; }
+	.classifier-row.struck::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--stamp); transform: scaleX(1); transform-origin: left; }
+	.classifier-note { margin: 0; padding-top: .7rem; border-top: 1px solid var(--rule); color: var(--muted-ink); font: .53rem var(--font-mono); letter-spacing: .08em; }
+	.classification__footnote { max-width: 72rem; margin: 3rem auto 0; display: flex; gap: .9rem; align-items: flex-start; color: var(--muted-ink); font: italic 1.05rem/1.5 var(--font-serif); }
+	.classification__footnote span { color: var(--stamp); font: 1.25rem var(--font-mono); }
+	.classification__footnote p { max-width: 43ch; margin: 0; }
+	.route-section { min-height: 190svh; padding-top: clamp(4rem,8vw,7rem); padding-bottom: 2rem; background: #e8e0ce; }
+	.route-heading { margin-bottom: 1.3rem; }
+	.route-sticky { position: sticky; top: 70px; max-width: 72rem; min-height: calc(100svh - 72px); margin: auto; display: grid; grid-template-columns: 1.12fr .88fr; gap: clamp(1.5rem,5vw,4rem); align-items: center; }
+	.route-map { position: relative; min-height: 23rem; border: 1px solid rgba(26,26,46,.23); background-color: #e2d9c5; background-image: radial-gradient(circle at 18% 20%, rgba(255,255,255,.45), transparent 39%), repeating-linear-gradient(0deg, transparent 0 27px, rgba(26,26,46,.035) 28px); padding: 2.8rem 1rem 2rem; overflow: hidden; }
+	.map-stamp { position: absolute; z-index: 1; top: 1rem; right: 1rem; padding: .36rem .5rem; border: 1px solid rgba(163,62,54,.65); color: var(--stamp); font: .6rem/.95 var(--font-mono); letter-spacing: .1em; transform: rotate(7deg); }
+	.map-meta,.map-coordinates { position: absolute; left: 1rem; right: 1rem; display: flex; justify-content: space-between; gap: .7rem; color: var(--muted-ink); font: .51rem var(--font-mono); letter-spacing: .08em; }
+	.map-meta { top: 1rem; }.map-coordinates { bottom: .8rem; font-size: .47rem; }
+	.route-svg { width: 100%; height: auto; max-height: 25rem; overflow: visible; }
+	.route-svg text { fill: var(--ink); font: 9px var(--font-mono); letter-spacing: .08em; }
+	.map-contour { fill: none; stroke: rgba(26,26,46,.13); stroke-width: 1.2; }
+	.map-gridline { fill: none; stroke: rgba(26,26,46,.08); stroke-width: .6; }
+	.route-track { fill: none; stroke: var(--stamp); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 1; transition: stroke-dashoffset 80ms linear; }
+	.route-node { fill: var(--paper-bright); stroke: var(--stamp); stroke-width: 3; }
+	.route-notes { display: grid; gap: .8rem; }
+	.field-note { position: relative; padding: 1rem 1.1rem 1rem 1.3rem; border: 1px solid rgba(26,26,46,.16); border-left: 3px solid transparent; color: var(--muted-ink); background: rgba(247,242,230,.62); transition: border-color 450ms, transform 450ms cubic-bezier(.22,1,.36,1), background-color 450ms; }
+	.field-note.current { border-left-color: var(--stamp); background: var(--paper-bright); transform: translateX(-.35rem); }
+	.field-note__date { margin: 0 0 .4rem; color: var(--stamp); font: .59rem var(--font-mono); letter-spacing: .08em; }
+	.field-note__date span { color: var(--muted-ink); }
+	.field-note h3 { margin: 0; color: var(--ink); font: 500 1.5rem/1.1 var(--font-serif); }
+	.field-note__title { margin: .35rem 0; color: var(--ink); font-size: .83rem; font-weight: 600; }
+	.field-note__text { max-width: 42ch; margin: 0; font-size: .79rem; line-height: 1.55; }
+	.lenses { background: var(--paper-bright); }
+	.lens-grid { max-width: 72rem; margin: auto; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1rem; }
+	.lens-card { min-width: 0; background: var(--paper); border: 1px solid rgba(26,26,46,.13); transition: transform 600ms cubic-bezier(.22,1,.36,1), box-shadow 600ms; }
+	.lens-card:hover,.lens-card:focus-within { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(26,26,46,.1); }
+	.lens-visual { position: relative; height: clamp(10rem,17vw,14rem); overflow: hidden; background: #ddd3bd; border-bottom: 1px solid var(--rule); }
+	.ledger-lines { position: absolute; inset: 15% 10%; background: repeating-linear-gradient(0deg, transparent 0 22px, rgba(26,26,46,.13) 23px 24px); }
+	.ledger-dots { position: absolute; inset: 18% 13%; display: grid; grid-template-columns: repeat(6,1fr); grid-template-rows: repeat(3,1fr); align-items: center; justify-items: center; }
+	.ledger-dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--stamp); opacity: .82; transform: translateY(2px); transition: transform 650ms cubic-bezier(.22,1,.36,1); }
+	.lens-card:hover .ledger-dots i:nth-child(odd) { transform: translateY(-4px) translateX(4px); }
+	.lens-card:hover .ledger-dots i:nth-child(even) { transform: translateY(4px) translateX(-4px); }
+	.ledger-bars { position: absolute; inset: 28% 22% 16% auto; width: 38%; display: flex; gap: 7%; align-items: end; }
+	.ledger-bars i { display: block; width: 18%; height: 75%; border: 1px solid var(--ink); background: rgba(26,26,46,.13); transform: scaleY(.27); transform-origin: bottom; transition: transform 600ms cubic-bezier(.22,1,.36,1); }
+	.ledger-bars i:nth-child(2) { transform: scaleY(.64); }.ledger-bars i:nth-child(3) { transform: scaleY(.45); }.ledger-bars i:nth-child(4) { transform: scaleY(.92); }
+	.lens-card:hover .ledger-bars i:nth-child(1) { transform: scaleY(.48); }.lens-card:hover .ledger-bars i:nth-child(2) { transform: scaleY(.86); }.lens-card:hover .ledger-bars i:nth-child(3) { transform: scaleY(.7); }
+	.identity-orbit { position: absolute; width: 9rem; height: 9rem; top: 50%; left: 50%; transform: translate(-50%,-50%); border: 1px dashed rgba(26,26,46,.35); border-radius: 50%; }
+	.identity-orbit::before,.identity-orbit::after { content: ''; position: absolute; inset: 1.5rem; border: 1px solid rgba(26,26,46,.2); border-radius: 50%; }
+	.identity-orbit::after { inset: 3rem; border-style: dashed; }
+	.identity-orbit i { position: absolute; width: 8px; height: 8px; border: 1px solid var(--stamp); border-radius: 50%; background: var(--paper); transition: transform 700ms cubic-bezier(.22,1,.36,1); }
+	.identity-orbit i:nth-child(1) { top: 8%; left: 47%; }.identity-orbit i:nth-child(2) { top: 22%; right: 12%; }.identity-orbit i:nth-child(3) { top: 48%; right: 3%; }.identity-orbit i:nth-child(4) { bottom: 14%; right: 17%; }.identity-orbit i:nth-child(5) { bottom: 5%; left: 47%; }.identity-orbit i:nth-child(6) { bottom: 22%; left: 10%; }.identity-orbit i:nth-child(7) { top: 38%; left: 5%; }.identity-orbit i:nth-child(8) { top: 12%; left: 18%; }
+	.lens-card:hover .identity-orbit i:nth-child(odd) { transform: translate(11px,-6px); }.lens-card:hover .identity-orbit i:nth-child(even) { transform: translate(-8px,9px); }
+	.identity-orbit b { position: absolute; top: 50%; left: 50%; color: var(--stamp); font: 1.8rem var(--font-serif); transform: translate(-50%,-55%); }
+	.orbit-caption { position: absolute; bottom: -1.5rem; left: 50%; width: max-content; color: var(--muted-ink); font: .48rem var(--font-mono); letter-spacing: .12em; transform: translateX(-50%); }
+	.table-visual { position: absolute; inset: 22% 11%; display: grid; grid-template-columns: repeat(3,1fr); grid-template-rows: 1.3rem repeat(3,1fr); gap: 1px; padding: .5rem; border: 1px solid rgba(26,26,46,.3); background: rgba(247,242,230,.45); }
+	.table-visual span { color: var(--muted-ink); font: .46rem var(--font-mono); letter-spacing: .04em; }
+	.table-visual i,.table-visual b { border-top: 1px solid rgba(26,26,46,.16); }
+	.table-visual b { background: linear-gradient(90deg,var(--ink) 80%,transparent 80%); opacity: .86; }
+	.redaction-line { position: absolute; width: 73%; height: .45rem; top: 55%; left: 13%; background: var(--stamp); opacity: .85; transform: rotate(-3deg); transition: width 550ms cubic-bezier(.22,1,.36,1); }
+	.lens-card:hover .redaction-line { width: 39%; }
+	.lens-card__body { padding: 1.2rem; }
+	.lens-number { margin: 0 0 .7rem; color: var(--stamp); font: .54rem var(--font-mono); letter-spacing: .12em; }
+	.lens-card__body h3 { margin: 0 0 .65rem; color: var(--ink); font: 500 clamp(1.7rem,3vw,2.4rem)/1 var(--font-serif); }
+	.lens-card__body > p:not(.lens-number) { margin: 0; color: var(--muted-ink); font-size: .88rem; line-height: 1.6; }
+	.lens-caption { padding-top: 1rem; color: var(--stamp) !important; font: italic .82rem/1.45 var(--font-serif) !important; }
+	.atlas-callout { max-width: 72rem; margin: clamp(2rem,5vw,4rem) auto 0; padding: 1.3rem clamp(1.1rem,3vw,2rem); display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+	.atlas-callout h3 { margin: .35rem 0; color: var(--ink); font: 500 clamp(1.35rem,2.5vw,2rem) var(--font-serif); }
+	.atlas-callout p:not(.type-label) { max-width: 52ch; margin: 0; color: var(--muted-ink); font-size: .85rem; line-height: 1.5; }
+	.atlas-callout a { flex: 0 0 auto; padding: .65rem .9rem; border: 1px solid var(--ink); color: var(--ink); font: .71rem var(--font-mono); text-decoration: none; transition: background-color 250ms,color 250ms; }
+	.atlas-callout a:hover { color: var(--paper); background: var(--ink); }
+	.related-files { max-width: 72rem; margin: 1.4rem auto 0; padding: 1.1rem 0; display: grid; grid-template-columns: minmax(12rem,.8fr) minmax(0,1.7fr) auto; gap: 1.2rem; align-items: center; border-bottom: 1px solid var(--rule); }
+	.related-files__intro > p:last-child { max-width: 32ch; margin: .4rem 0 0; color: var(--muted-ink); font: .83rem/1.5 var(--font-serif); }
+	.related-files ul { display: flex; flex-wrap: wrap; gap: .35rem; margin: 0; padding: 0; list-style: none; }
+	.related-files li { padding: .25rem .42rem; border: 1px solid rgba(26,26,46,.16); color: var(--muted-ink); font: .59rem/1.35 var(--font-mono); }
+	.related-files > a { color: var(--stamp); font: .67rem var(--font-mono); text-decoration: underline; text-underline-offset: .22rem; white-space: nowrap; }
+	.instruments { color: var(--paper); background: var(--ink); }
+	.instruments .scene-kicker { color: #d17968; }.instruments .scene-heading h2 { color: var(--paper); }.instruments .scene-intro { color: rgba(240,234,219,.65); }
+	.instrument-row { max-width: 72rem; margin: 0 auto clamp(4rem,8vw,6.5rem); display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); border-top: 1px solid rgba(240,234,219,.23); border-bottom: 1px solid rgba(240,234,219,.23); }
+	.instrument { position: relative; min-height: 13rem; padding: 1.3rem 1.2rem; border-right: 1px solid rgba(240,234,219,.18); }
+	.instrument:last-child { border-right: 0; }
+	.instrument__dial { position: relative; width: 4.2rem; height: 4.2rem; margin-bottom: 1rem; border: 1px solid rgba(240,234,219,.52); border-radius: 50%; background: repeating-conic-gradient(from -130deg, rgba(240,234,219,.4) 0 1deg, transparent 1deg 16deg); }
+	.instrument__dial::after { content: ''; position: absolute; inset: .43rem; border: 1px solid rgba(240,234,219,.21); border-radius: 50%; }
+	.instrument__dial i { position: absolute; z-index: 1; left: 50%; top: 50%; width: 1px; height: 1.3rem; background: #d17968; transform: translate(-50%,-100%) rotate(calc(-40deg + var(--instrument-index) * 28deg)); transform-origin: bottom; }
+	.instrument__dial b { position: absolute; z-index: 2; top: 50%; left: 50%; width: .35rem; height: .35rem; border-radius: 50%; background: var(--paper); transform: translate(-50%,-50%); }
+	.dial-mark { position: absolute; inset: auto 0 .95rem; text-align: center; color: rgba(240,234,219,.65); font: .5rem var(--font-mono); }
+	.instrument .type-label { color: rgba(240,234,219,.55); }
+	.instrument ul { display: flex; flex-wrap: wrap; gap: .34rem; margin: .65rem 0 0; padding: 0; list-style: none; }
+	.instrument li { padding: .28rem .42rem; border: 1px solid rgba(240,234,219,.23); color: var(--paper); font: .65rem var(--font-mono); }
+	.experience-head { max-width: 72rem; margin: 0 auto 1.2rem; display: flex; justify-content: space-between; align-items: end; gap: 1.5rem; }
+	.experience-head h3 { margin: .4rem 0 0; color: var(--paper); font: 500 clamp(1.8rem,3.5vw,2.8rem)/1 var(--font-serif); }
+	.experience-head > p { margin: 0; color: rgba(240,234,219,.58); font: .61rem var(--font-mono); }
+	.experience-index { max-width: 72rem; margin: auto; border-top: 1px solid rgba(240,234,219,.29); }
+	.index-card { position: relative; border-bottom: 1px solid rgba(240,234,219,.24); background: transparent; }
+	.index-card summary { display: grid; grid-template-columns: 3.5rem 1fr 2rem; gap: 1rem; align-items: center; padding: 1.1rem .3rem; cursor: pointer; list-style: none; }
+	.index-card summary::-webkit-details-marker { display: none; }
+	.index-card__serial { align-self: start; color: #d17968; font: .7rem var(--font-mono); }
+	.index-card__main { display: grid; gap: .2rem; }
+	.index-card__date { color: rgba(240,234,219,.54); font: .56rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
+	.index-card__main strong { color: var(--paper); font: 500 clamp(1.2rem,2vw,1.55rem) var(--font-serif); }
+	.index-card__main > span:last-child { color: rgba(240,234,219,.66); font-size: .79rem; }
+	.index-card__toggle { color: #d17968; font: 1.4rem var(--font-mono); transition: transform 350ms; }
+	.index-card[open] .index-card__toggle { transform: rotate(45deg); }
+	.index-card__detail { padding: 0 3rem 1.3rem 4.5rem; display: flex; justify-content: space-between; align-items: end; gap: 1rem; animation: card-reveal 360ms cubic-bezier(.22,1,.36,1) both; }
+	.index-card__detail p { max-width: 50ch; margin: 0; color: rgba(240,234,219,.73); font: .9rem/1.6 var(--font-serif); }
+	.index-card__detail span { color: rgba(240,234,219,.42); font: .54rem var(--font-mono); white-space: nowrap; }
+	.reply { background: #e8e0ce; padding-bottom: 4.5rem; }
+	.reply .scene-heading h2 { max-width: 15ch; }
+	.reply-slip { position: relative; max-width: 61rem; margin: auto; padding: clamp(1.4rem,4vw,3rem); border: 1px solid rgba(26,26,46,.2); background: var(--paper); box-shadow: 9px 11px 0 rgba(26,26,46,.08); transition: transform 650ms cubic-bezier(.22,1,.36,1), clip-path 650ms; }
+	.reply-slip::before,.reply-slip::after { content: ''; position: absolute; top: 0; bottom: 0; width: .8rem; background: radial-gradient(circle at center, #e8e0ce 0 3px, transparent 3.4px) center / 10px 12px repeat-y; }
+	.reply-slip::before { left: -.4rem; }.reply-slip::after { right: -.4rem; }
+	.reply-slip.slip-filed { transform: translateY(8px) rotate(-.7deg); clip-path: polygon(0 0,100% 0,100% 98%,96% 96%,92% 99%,87% 96%,82% 99%,77% 96%,72% 99%,67% 96%,62% 99%,57% 96%,52% 99%,47% 96%,42% 99%,37% 96%,32% 99%,27% 96%,22% 99%,17% 96%,12% 99%,7% 96%,0 99%); }
+	.slip-perforation { position: absolute; top: 0; left: 1rem; right: 1rem; border-top: 1px dashed rgba(26,26,46,.24); }
+	.reply-slip__head,.reply-slip__foot { display: flex; justify-content: space-between; gap: 1rem; color: var(--muted-ink); font: .57rem var(--font-mono); letter-spacing: .1em; }
+	.reply-slip__head { padding-bottom: 1rem; border-bottom: 1px solid var(--rule); }
+	.contact-links { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: .7rem; padding-block: 1.2rem; border-bottom: 1px solid var(--rule); }
+	.contact-links a { min-width: 0; display: grid; grid-template-columns: 1fr auto; gap: .2rem .3rem; padding: .7rem; border: 1px solid rgba(26,26,46,.17); color: var(--ink); text-decoration: none; transition: border-color 250ms,background-color 250ms; }
+	.contact-links a:hover { border-color: var(--stamp); background: rgba(163,62,54,.04); }
+	.contact-links a span:first-child { grid-column: 1 / -1; color: var(--muted-ink); font: .55rem var(--font-mono); text-transform: uppercase; }
+	.contact-links a b { overflow-wrap: anywhere; font: 600 .68rem var(--font-mono); }
+	.contact-links a span:last-child { grid-column: 2; grid-row: 2; color: var(--stamp); }
+	.contact-form { margin-top: 1.3rem; }
+	.contact-form fieldset { display: grid; gap: 1rem; margin: 0; padding: 0; border: 0; }
+	.contact-form legend { margin-bottom: .9rem; color: var(--ink); font: 500 1.4rem var(--font-serif); }
+	.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+	.contact-form label { display: grid; gap: .4rem; color: var(--ink); font: .69rem var(--font-mono); }
+	.contact-form input,.contact-form textarea { width: 100%; min-width: 0; border: 1px solid rgba(26,26,46,.26); border-radius: 0; padding: .72rem .75rem; color: var(--ink); background: rgba(255,255,255,.32); font: .9rem var(--font-sans); }
+	.contact-form textarea { min-height: 8rem; resize: vertical; }
+	.contact-form small { color: var(--muted-ink); font: .65rem/1.5 var(--font-sans); }
+	.send-button { justify-self: start; display: inline-flex; gap: .6rem; align-items: center; border: 1px solid var(--ink); padding: .78rem 1rem; color: var(--paper); background: var(--ink); cursor: pointer; font: .7rem var(--font-mono); transition: background-color 250ms,color 250ms,transform 250ms; }
+	.send-button:hover:not(:disabled) { color: var(--ink); background: transparent; transform: translateY(-2px); }
+	.send-button:disabled { opacity: .68; cursor: wait; }
+	.form-trap { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+	.form-message { margin: 1rem 0 0; padding: .8rem; font: .8rem/1.5 var(--font-mono); }
+	.form-message--error { color: #7d241f; background: #f4ddd8; border-left: 3px solid #a33e36; }
+	.form-message--success { color: #31513a; background: #e2eadb; border-left: 3px solid #497450; }
+	.reply-slip__foot { margin-top: 1.3rem; padding-top: .8rem; border-top: 1px solid var(--rule); }
+	.reply-end { max-width: 61rem; margin: 2rem auto 0; display: flex; justify-content: space-between; gap: 1rem; align-items: center; color: var(--muted-ink); }
+	.reply-end p { margin: 0; color: var(--stamp); font: italic .95rem var(--font-serif); }
+	.reply-end span { font: .52rem var(--font-mono); letter-spacing: .08em; text-align: right; }
+	.translation-review { position: fixed; z-index: 180; right: .7rem; bottom: .7rem; max-width: 15rem; margin: 0; padding: .45rem .6rem; border: 1px solid var(--stamp); color: var(--paper); background: var(--ink); font: .62rem/1.35 var(--font-mono); }
+	.help-terminal { position: fixed; z-index: 190; right: 1rem; bottom: 1rem; width: min(25rem,calc(100vw - 2rem)); padding: 1rem; border: 1px solid #73bb72; color: #b0eea1; background: #09140c; box-shadow: 0 10px 50px rgba(0,0,0,.3); font-family: var(--font-mono); }
+	.help-terminal__head { display: flex; justify-content: space-between; gap: 1rem; align-items: center; padding-bottom: .6rem; border-bottom: 1px solid rgba(115,187,114,.35); }
+	.help-terminal h2 { margin: 0; color: #b0eea1; font: .72rem var(--font-mono); letter-spacing: .08em; }
+	.help-terminal button { border: 0; color: inherit; background: transparent; font: 1.3rem var(--font-mono); cursor: pointer; }
+	.help-terminal > p { margin: .65rem 0 0; font: .66rem/1.45 var(--font-mono); }
+	.help-terminal > p span { color: #73bb72; }
+	.custom-cursor { display: none; }
+	@media (hover:hover) and (pointer:fine) { .cursor-enabled .custom-cursor { position: fixed; z-index: 170; top: 0; left: 0; display: block; width: .38rem; height: .38rem; pointer-events: none; transform: var(--cursor-transform,translate3d(-10px,-10px,0)); border-radius: 50%; background: var(--stamp); transition: width 180ms,height 180ms,border-radius 180ms; } .custom-cursor i { display: block; width: 100%; height: 100%; } .custom-cursor.cursor-over-text { width: 1rem; height: .22rem; border-radius: 0; } }
+	.motion-enabled .scene-heading,.motion-enabled .lens-card,.motion-enabled .atlas-callout,.motion-enabled .field-note { animation: arrive 700ms cubic-bezier(.22,1,.36,1) both; animation-timeline: view(); animation-range: entry 0% entry 28%; }
+	.motion-enabled .lens-card:nth-child(2) { animation-delay: 100ms; }.motion-enabled .lens-card:nth-child(3) { animation-delay: 180ms; }
+	@keyframes peel { 0% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
+	@keyframes stamp-in { 0% { opacity: 0; transform: scale(1.5) rotate(18deg); } 65% { opacity: 1; transform: scale(.96) rotate(-5deg); } 100% { opacity: 1; transform: scale(1) rotate(8deg); } }
+	@keyframes ink-write { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+	@keyframes card-reveal { from { opacity: .45; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+	@keyframes arrive { from { opacity: .62; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+		@media (max-width: 900px) {
+			.file-progress { right: .4rem; }
+			.scene.classification { contain-intrinsic-size: auto 626px; }
+			.scene.route-section { contain-intrinsic-size: auto 1566px; }
+			.scene.lenses { contain-intrinsic-size: auto 903px; }
+			.scene.instruments { contain-intrinsic-size: auto 986px; }
+			.scene.reply { contain-intrinsic-size: auto 903px; }
+			.intake__grid { grid-template-columns: minmax(0,1fr) minmax(12rem,.55fr); gap: 1.2rem; }
+		.intake__paper { min-height: 29rem; padding: 1.5rem; }
+		.stamp--disputed { bottom: 3.6rem; right: .9rem; }
+		.route-sticky { gap: 1rem; }
+		.route-map { min-height: 20rem; }
+		.lens-grid { gap: .65rem; }
+		.lens-card__body { padding: .95rem; }
 	}
-
-	/* ───────── Animations ───────── */
-	@keyframes fadeUp {
-		from {
-			opacity: 0;
-			transform: translateY(0.3em);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
+		@media (max-width: 640px) {
+			.scene { padding-inline: 1rem; padding-block: 4.2rem; }
+			.scene.classification { contain-intrinsic-size: auto 950px; }
+			.scene.route-section { contain-intrinsic-size: auto 1100px; }
+			.scene.lenses { contain-intrinsic-size: auto 1477px; }
+			.scene.instruments { contain-intrinsic-size: auto 1277px; }
+			.scene.reply { contain-intrinsic-size: auto 1099px; }
+			.intake { min-height: auto; padding-top: 2rem; padding-bottom: 1.2rem; }
+		.intake__topline,.intake__footer { font-size: .52rem; }
+		.intake__grid { grid-template-columns: 1fr; }
+		.intake__paper { min-height: 29rem; padding: 1.2rem; }
+		.intake-field { grid-template-columns: 6.2rem minmax(0,1fr); gap: .4rem; }
+		.intake-field dd { font-size: .7rem; }
+		.intake__name-block h1 { font-size: clamp(3.4rem,16vw,5.7rem); }
+		.stamp { padding: .35rem .5rem; font-size: .56rem; }
+		.stamp--open { top: 1.1rem; right: 1rem; }
+		.stamp--disputed { right: .7rem; bottom: 3.5rem; font-size: .47rem; }
+		.intake__bottom { font-size: .43rem; }
+		.intake__portrait { width: min(78%,18rem); justify-self: end; margin-top: .5rem; }
+		.personal-line { margin-top: 1rem; }
+		.scene-heading { margin-bottom: 1.7rem; }
+		.scene-heading h2 { font-size: clamp(2.4rem,12vw,3.8rem); }
+		.classification__grid { grid-template-columns: 1fr; gap: 1.2rem; }
+		.classification__name { font-size: 3.6rem; margin-bottom: 1.2rem; }
+		.classification__aside { margin-top: .9rem; }
+		.classification__footnote { margin-top: 1.5rem; }
+		.route-section { min-height: auto; padding-bottom: 4rem; }
+		.route-sticky { position: relative; top: auto; min-height: 0; grid-template-columns: 1fr; }
+		.route-map { min-height: 17rem; padding-inline: .35rem; }
+		.map-coordinates { font-size: .4rem; }
+		.route-notes { gap: .55rem; }
+		.field-note.current { transform: translateX(.2rem); }
+		.lens-grid { grid-template-columns: 1fr; gap: .85rem; }
+		.lens-card { display: grid; grid-template-columns: minmax(7rem,.72fr) 1fr; }
+		.lens-visual { height: 100%; min-height: 12rem; border-bottom: 0; border-right: 1px solid var(--rule); }
+		.lens-card__body { padding: .9rem; }
+		.lens-card__body h3 { font-size: 1.9rem; }
+		.lens-card__body > p:not(.lens-number) { font-size: .8rem; }
+		.atlas-callout { align-items: flex-start; flex-direction: column; gap: .9rem; }
+		.related-files { grid-template-columns: 1fr; gap: .8rem; }
+		.instrument-row { grid-template-columns: repeat(2,minmax(0,1fr)); }
+		.instrument { min-height: 11.5rem; padding: 1rem; border-bottom: 1px solid rgba(240,234,219,.18); }
+		.instrument:nth-child(2) { border-right: 0; }
+		.instrument:nth-child(3),.instrument:nth-child(4) { border-bottom: 0; }
+		.experience-head { align-items: flex-start; flex-direction: column; gap: .55rem; }
+		.index-card summary { grid-template-columns: 2rem minmax(0,1fr) 1.5rem; gap: .5rem; }
+		.index-card__main > span:last-child { font-size: .7rem; }
+		.index-card__detail { padding: 0 .3rem 1rem 2.5rem; flex-direction: column; align-items: flex-start; }
+		.reply { padding-bottom: 3rem; }
+		.reply-slip { padding: 1.1rem; }
+		.reply-slip__head,.reply-slip__foot { font-size: .45rem; }
+		.contact-links { grid-template-columns: 1fr; }
+		.contact-links a { grid-template-columns: 5rem minmax(0,1fr) auto; align-items: center; }
+		.contact-links a span:first-child { grid-column: 1; grid-row: 1; }
+		.contact-links a b { grid-column: 2; grid-row: 1; font-size: .62rem; }
+		.contact-links a span:last-child { grid-column: 3; grid-row: 1; }
+		.form-row { grid-template-columns: 1fr; }
+		.reply-end { align-items: flex-start; flex-direction: column; }
+		.reply-end span { text-align: left; }
+		.file-progress { top: auto; right: .5rem; bottom: .5rem; grid-template-columns: 3.4rem 2px; writing-mode: horizontal-tb; font-size: .55rem; gap: .45rem; }
+		.file-progress::before { width: 3.4rem; height: 2px; grid-column: 1; grid-row: 1; }
+		.file-progress__bar { width: 3.4rem; height: 2px; grid-column: 1; grid-row: 1; transform-origin: left; }
+		.file-progress span { grid-column: 2; grid-row: 1; writing-mode: vertical-rl; }
+		.translation-review { right: auto; left: .5rem; bottom: .5rem; max-width: 12rem; font-size: .54rem; }
 	}
-
-	@keyframes cardIn {
-		from {
-			opacity: 0;
-			transform: translateY(12px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
-	}
-
-	@keyframes pulse {
-		0%, 100% { opacity: 1; }
-		50% { opacity: 0.5; }
-	}
-
 	@media (prefers-reduced-motion: reduce) {
-		*,
-		*::before,
-		*::after {
-			animation-duration: 0.01ms !important;
-			animation-delay: 0ms !important;
-			transition-duration: 0.01ms !important;
-		}
-
-		.bio-title,
-		.bio-lede,
-		.bio-paragraph,
-		.bio-meta,
-		.bio-card {
-			opacity: 1 !important;
-			transform: none !important;
-		}
+		.about-file *, .about-file *::before, .about-file *::after { animation-duration: .01ms !important; animation-delay: 0ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+		.motion-enabled .redaction { transform: scaleX(0); }
+		.self-description { clip-path: none !important; }
+		.custom-cursor { display: none !important; }
+	}
+	@media (max-width: 380px) {
+		.intake__paper { min-height: 31rem; }
+		.intake-field { grid-template-columns: 5.3rem minmax(0,1fr); }
+		.intake-field dt { font-size: .53rem; }
+		.intake-field dd { font-size: .65rem; }
+		.lens-card { grid-template-columns: 6.1rem minmax(0,1fr); }
+		.lens-visual { min-height: 13rem; }
+		.lens-card__body { padding: .75rem; }
+		.lens-card__body h3 { font-size: 1.65rem; }
 	}
 </style>

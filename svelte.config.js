@@ -22,6 +22,7 @@ const config = {
 			precompress: false,
 			strict: true
 		}),
+		inlineStyleThreshold: 45000,
 		alias: {
 			$content: 'src/content',
 			$data: 'src/data',
