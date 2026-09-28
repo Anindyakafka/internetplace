@@ -124,6 +124,16 @@
 			<a href="/legal-explorer" class="section-link">Open the legal record →</a>
 		</article>
 
+		<article class="section-card section-card--neta">
+			<img class="card-image" src="/images/sections/find-your-neta.jpg" alt="A collage of Indian voters, Parliament, and constituency information from the representative explorer" loading="lazy" />
+			<h2>Find out about your neta</h2>
+			<p>
+				Explore Lok Sabha constituencies through representatives’ declared assets, criminal cases,
+				attendance, education, questions, and election affidavits.
+			</p>
+			<a href="/find-out-about-your-neta" class="section-link">Open the constituency explorer →</a>
+		</article>
+
 		<article class="section-card section-card--about">
 			<img class="card-image" src="/images/sections/about-coordinates.jpg?v=2" alt="A worn field notebook beside a brass compass" loading="lazy" />
 			<h2>About & Coordinates</h2>
@@ -318,11 +328,12 @@
 	.section-card--data { order: 2; }
 	.section-card--vehicles { order: 3; }
 	.section-card--legal { order: 4; }
-	.section-card--writing { order: 5; }
-	.section-card--tracks { order: 6; }
-	.section-card--work { order: 7; }
-	.section-card--about { order: 8; }
-	.section-card--colophon { order: 9; }
+	.section-card--neta { order: 5; }
+	.section-card--writing { order: 6; }
+	.section-card--tracks { order: 7; }
+	.section-card--work { order: 8; }
+	.section-card--about { order: 9; }
+	.section-card--colophon { order: 10; }
 	.section-card--colophon .card-image { object-position: center 58%; }
 
 	.section-card:has(.section-link):hover {
