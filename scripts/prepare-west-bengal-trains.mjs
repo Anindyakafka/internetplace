@@ -5,7 +5,17 @@ const root = resolve(import.meta.dirname, '..');
 const output = resolve(root, 'static/data/west-bengal-trains.json');
 // Major suburban terminals and interchange points across the Sealdah and
 // Howrah systems. Invalid/unsupported boards are skipped without erasing cache.
-const hubs = ['SDAH', 'HWH', 'MJT', 'KOAA', 'SHM', 'RHA', 'KNJ', 'NH', 'BT', 'BNJ', 'CG', 'DH', 'LKPR', 'NMKA', 'HNB', 'BWN', 'BDC', 'KGP', 'MCA', 'TAK', 'AMBG', 'GOGT', 'HLZ'];
+const hubs = [
+	// Kolkata terminals and the first suburban ring.
+	'SDAH', 'HWH', 'MJT', 'KOAA', 'SHM', 'RHA', 'KNJ', 'NH', 'BT', 'BNJ',
+	'CG', 'DH', 'LKPR', 'NMKA', 'HNB',
+	// Earlier Howrah and south-west expansion.
+	'BWN', 'BDC', 'KGP', 'MCA', 'TAK', 'AMBG', 'GOGT', 'HLZ',
+	// 2026-09-28: extend north through the Bhagirathi belt and west/south-west
+	// through the MEMU network. Unsupported boards are safely skipped.
+	'KWAE', 'NDAE', 'STB', 'AZ', 'RPH', 'BHP', 'SNT', 'UDL', 'ASN', 'DGR',
+	'BQA', 'VSU', 'MDN', 'BCK', 'PKU', 'KATI', 'DGHA'
+];
 const delay = (ms) => new Promise((done) => setTimeout(done, ms));
 
 async function readKey() {

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
-	import { waterLogReports, type WaterLogReport } from '$lib/data/kolkata-water-log';
+	import { waterLogPlaces, type WaterLogPlace } from '$lib/data/kolkata-water-log';
 	import 'maplibre-gl/dist/maplibre-gl.css';
 
 	let mapNode: HTMLDivElement;
@@ -9,15 +9,15 @@
 	let opacity = $state(80);
 	let open = $state(false);
 	let screen = $state<'index' | 'report' | 'method'>('index');
-	let selected = $state<WaterLogReport | null>(null);
+	let selected = $state<WaterLogPlace | null>(null);
 	let ready = $state(false);
 	let locating = $state(false);
 	let notice = $state('');
 	const bounds = { west: 88.18, south: 22.45, east: 88.58, north: 22.72 };
-	const reports = [...waterLogReports].sort((a, b) => a.name.localeCompare(b.name));
+	const places = [...waterLogPlaces].sort((a, b) => a.name.localeCompare(b.name));
 
-	function choose(report: WaterLogReport) {
-		selected = report; screen = 'report'; open = true;
+	function choose(place: WaterLogPlace) {
+		selected = place; screen = 'report'; open = true;
 	}
 	function index() { selected = null; screen = 'index'; }
 	function closeDrawer() { open = false; }
@@ -73,7 +73,7 @@
 				// visibly drift when a pitched WebGL map is panned or zoomed.
 				map.addSource('water-reports', {
 					type: 'geojson',
-					data: { type: 'FeatureCollection', features: waterLogReports.map((report, index) => ({ type: 'Feature', geometry: { type: 'Point', coordinates: report.coordinates }, properties: { index, name: report.name } })) }
+					data: { type: 'FeatureCollection', features: waterLogPlaces.map((place, index) => ({ type: 'Feature', geometry: { type: 'Point', coordinates: place.coordinates }, properties: { index, name: place.name, count: place.reports.length } })) }
 				});
 				const pill = document.createElement('canvas'); pill.width = 128; pill.height = 56;
 				const context = pill.getContext('2d');
@@ -85,7 +85,7 @@
 				map.addLayer({ id: 'report-labels', type: 'symbol', source: 'water-reports', layout: { 'icon-image': 'report-pill', 'icon-text-fit': 'both', 'icon-text-fit-padding': [5,10,5,10], 'text-field': ['get','name'], 'text-size': 12, 'text-font': ['Noto Sans Regular'], 'text-anchor': 'center', 'text-allow-overlap': true, 'icon-allow-overlap': true, 'symbol-sort-key': ['get','index'], 'text-pitch-alignment': 'viewport', 'text-rotation-alignment': 'viewport' }, paint: { 'text-color': '#ffffff' } });
 				const openReport = (event: import('maplibre-gl').MapLayerMouseEvent) => {
 					const reportIndex = Number(event.features?.[0]?.properties?.index);
-					if (Number.isInteger(reportIndex) && waterLogReports[reportIndex]) choose(waterLogReports[reportIndex]);
+					if (Number.isInteger(reportIndex) && waterLogPlaces[reportIndex]) choose(waterLogPlaces[reportIndex]);
 				};
 				map.on('click', 'report-labels', openReport);
 				for (const layerId of ['report-labels']) {
@@ -119,7 +119,7 @@
 		<div class="body">
 			{#if screen === 'report' && selected}
 				<div class="screen"><header class="screen-head"><div><h2>{selected.name}</h2><p>{selected.neighbourhood}</p></div><button onclick={index}>← Back</button></header>
-					<div class="report"><h3>In the news</h3><article><time>{selected.date}</time><div><strong>{selected.source}</strong><p>A documented report of waterlogging around {selected.name}. The marker locates the neighbourhood, not the extent or depth of inundation.</p><a href={selected.url} target="_blank" rel="noreferrer">Read the original report ↗</a></div></article></div><footer class="empty"><img src="/images/water-log/frog.png" alt="A frog rowing a small boat" /><span>That is everything collected here—for now.</span></footer>
+					<div class="report"><h3>In the news <small>{selected.reports.length} {selected.reports.length === 1 ? 'report' : 'reports'}</small></h3>{#each selected.reports as item}<article lang={item.language === 'bn' ? 'bn' : 'en'}><time>{item.date}</time><div><strong>{item.source}</strong>{#if item.headline}<h4>{item.headline}</h4>{/if}<p>A documented report of waterlogging around {selected.name}. The marker locates the neighbourhood, not the extent or depth of inundation.</p><a href={item.url} target="_blank" rel="noreferrer">Read the original report ↗</a></div></article>{/each}</div><footer class="empty"><img src="/images/water-log/frog.png" alt="A frog rowing a small boat" /><span>That is everything collected here—for now.</span></footer>
 				</div>
 			{:else if screen === 'method'}
 				<div class="screen"><header class="screen-head"><div><h2>Methodology</h2><p>How this surface was made</p></div><button onclick={index}>Back →</button></header>
@@ -128,7 +128,7 @@
 				</div>
 			{:else}
 				<div class="screen"><div class="intro"><div><p class="eyebrow">The way of water</p><h2>The city interrupts a surface that still remembers how to drain.</h2><p>Blue traces show where terrain concentrates flow. Beside them sits a growing archive of places repeatedly named in reporting.</p></div><div class="diagram"><i></i><i></i><i></i><b></b><span></span></div></div>
-					<div class="browse"><div><p>Choose a locality to read its collected report.</p><button onclick={() => { screen = 'method'; }}>Methodology</button></div><nav>{#each reports as report}<button onclick={() => choose(report)}>{report.name}<b>→</b></button>{/each}</nav></div>
+					<div class="browse"><div><p>Choose a locality to read its collected reports.</p><button onclick={() => { screen = 'method'; }}>Methodology</button></div><nav>{#each places as place}<button onclick={() => choose(place)}><span>{place.name}{#if place.reports.length > 1}<small>{place.reports.length}</small>{/if}</span><b>→</b></button>{/each}</nav></div>
 					<div class="opacity"><label for="opacity"><span>Water-layer opacity</span><b>{opacity}%</b></label><input id="opacity" type="range" min="0" max="100" bind:value={opacity} oninput={updateOpacity} style={`--p:${opacity}%`} /></div>
 				</div>
 			{/if}
@@ -138,6 +138,9 @@
 </main>
 
 <style>
+	.report h3{display:flex;justify-content:space-between}.report h3 small{color:#76807e;font:600 .68rem var(--font-mono)}
+	.report article{margin-bottom:.7rem}.report h4{margin:.35rem 0 0;font-size:1.05rem;line-height:1.35}.report article[lang="bn"] h4{font-family:var(--font-bangla,var(--font-sans));font-size:1.15rem}
+	.browse nav button small{display:inline-grid;place-items:center;min-width:1.25rem;height:1.25rem;margin-left:.45rem;border-radius:50%;background:#dceae7;color:#356f73;font:700 .6rem var(--font-mono)}
 	:global(body:has(.page)){overflow:hidden}.page{position:relative;height:calc(100dvh - 4rem);min-height:38rem;background:#d7dfdc;color:#293130}.map{position:absolute;inset:0}.shade{position:absolute;z-index:2;inset:0 0 auto;height:18%;pointer-events:none;background:linear-gradient(#17201fa8,transparent)}.loading{position:absolute;z-index:5;inset:0;display:grid;place-content:center;justify-items:center;gap:.8rem;background:#dce5e1;color:#356f73;font:600 .7rem var(--font-mono);text-transform:uppercase}.loading i{width:2.6rem;height:2.6rem;border:3px solid #519ea233;border-top-color:#519ea2;border-radius:50%;animation:spin 1s linear infinite}
 	.title{position:absolute;z-index:10;top:1rem;left:50%;width:min(20rem,calc(100% - 10rem));min-height:5.6rem;transform:translateX(-50%);overflow:hidden;border:1px solid #ddd;border-radius:.65rem;background:white;box-shadow:0 8px 25px #0004}.title>div{position:relative;z-index:2;padding:.7rem;text-align:center}.title h1{margin:0;font:700 clamp(1.7rem,3vw,2.5rem)/1 var(--font-sans);text-transform:uppercase}.title p{margin:.3rem 0;font:600 .7rem var(--font-sans)}.fill{position:absolute;inset:auto 0 0;height:46%;background:#74b1b5b5;animation:tide 30s ease-in-out infinite}.fill:before{content:'';position:absolute;left:-10%;top:-8px;width:120%;height:16px;background:radial-gradient(ellipse,#74b1b5 48%,transparent 51%) 0 0/28px 15px;animation:wave 5s linear infinite}.fill i{position:absolute;bottom:-5px;width:5px;height:5px;border-radius:50%;background:#fff9;animation:bubble 4s infinite}.fill i:nth-child(1){left:15%}.fill i:nth-child(2){left:40%;animation-delay:1s}.fill i:nth-child(3){left:65%;animation-delay:2s}.fill i:nth-child(4){left:85%;animation-delay:3s}
 	.mark,.locate{position:absolute;z-index:10;border:1px solid #d3d3d0;border-radius:.45rem;background:#fff;box-shadow:0 6px 20px #0004}.mark{left:1rem;bottom:1rem;display:flex;align-items:center;gap:.5rem;padding:.35rem .55rem;color:inherit;text-decoration:none}.mark>b{display:grid;place-items:center;width:2.2rem;height:2.2rem;border-radius:.25rem;background:#74b1b5;color:white;font-size:1.35rem}.mark small,.mark strong{display:block}.mark small{font-size:.58rem}.mark strong{font:.7rem var(--font-mono);text-transform:uppercase}.locate{right:1rem;top:1rem;display:flex;align-items:center;gap:.4rem;padding:.5rem .7rem;color:#356f73;cursor:pointer}.locate b{font-size:1.3rem}.locate span{font-weight:700}.water-slider{position:absolute;z-index:19;left:50%;bottom:6.2rem;display:flex;align-items:center;gap:.6rem;width:min(18rem,calc(100% - 3rem));padding:.7rem .9rem;transform:translateX(-50%);border:1px solid #ddd;border-radius:.55rem;background:#fff;box-shadow:0 7px 20px #0003;transition:opacity .2s}.water-slider.hidden{opacity:0;pointer-events:none}.water-slider span{color:#74b1b5;font-size:1.4rem}.water-slider input{width:100%;height:.5rem;appearance:none;border-radius:1rem;background:linear-gradient(to right,#74b1b5 var(--p),#e4e4e1 var(--p));accent-color:#74b1b5}
