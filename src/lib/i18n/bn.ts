@@ -131,7 +131,6 @@ export const bn: Record<string, string> = {
 	'LOCALTIME:': 'স্থানীয় সময়:',
 	'WEATHER:': 'আবহাওয়া:',
 	'SCRIBBLING': 'লিখছেন',
-	'DEAD': 'নেই',
 	'MARGIN NOTES IN PROGRESS': 'পাশে টীকা লেখা চলছে',
 	'LOADING IST...': 'ভারতীয় সময় আসছে…',
 	'SIGNAL PENDING': 'সংকেতের অপেক্ষা',

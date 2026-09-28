@@ -768,7 +768,7 @@
 				appendTerminalLines([
 					`CURRENTLY: ${operatorOnline ? 'ONLINE' : 'OFFLINE'}`,
 					'OPERATOR: COMRADE ANINDYA',
-					`STATUS: ${operatorOnline ? 'SCRIBBLING' : 'DEAD'}`,
+					`STATUS: ${operatorOnline ? 'SCRIBBLING' : 'OFFLINE'}`,
 					`LOCALTIME: ${istTimeLabel}`,
 					`WEATHER: ${weatherLabel}`,
 					pickOne([
@@ -1023,7 +1023,7 @@
 			</p>
 			<div class="status-grid">
 				<p><span>OPERATOR:</span> ANINDYA</p>
-				<p><span>STATUS:</span> {operatorOnline ? 'SCRIBBLING' : 'DEAD'}</p>
+				<p><span>STATUS:</span> {operatorOnline ? 'SCRIBBLING' : 'OFFLINE'}</p>
 				<p><span>MODE:</span> {operatorOnline ? 'MARGIN NOTES IN PROGRESS' : 'OFFLINE'}</p>
 				<p><span>LOCALTIME:</span> {istTimeLabel}</p>
 				<p><span>WEATHER:</span> {weatherLabel}</p>

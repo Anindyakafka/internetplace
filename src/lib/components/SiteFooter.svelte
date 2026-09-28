@@ -100,7 +100,7 @@
 		</section>
 		<section class="status-panel" aria-label="Operator status panel">
 			<p class="status-currently">Currently <strong>{operatorOnline ? 'ONLINE' : 'OFFLINE'}</strong></p>
-			<div class="status-grid"><p><span>OPERATOR:</span> ANINDYA</p><p><span>STATUS:</span> {operatorOnline ? 'SCRIBBLING' : 'DEAD'}</p><p><span>MODE:</span> {operatorOnline ? 'MARGIN NOTES IN PROGRESS' : 'OFFLINE'}</p><p><span>LOCALTIME:</span> {istTimeLabel}</p><p><span>WEATHER:</span> {weatherLabel}</p></div>
+			<div class="status-grid"><p><span>OPERATOR:</span> ANINDYA</p><p><span>STATUS:</span> {operatorOnline ? 'SCRIBBLING' : 'OFFLINE'}</p><p><span>MODE:</span> {operatorOnline ? 'MARGIN NOTES IN PROGRESS' : 'OFFLINE'}</p><p><span>LOCALTIME:</span> {istTimeLabel}</p><p><span>WEATHER:</span> {weatherLabel}</p></div>
 		</section>
 		<section class="chhipi-terminal" aria-label="Interactive terminal">
 			<div class="terminal-shell" role="region" aria-live="polite" aria-label="Terminal output">
