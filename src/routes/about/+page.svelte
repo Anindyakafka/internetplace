@@ -459,9 +459,15 @@
 					<div class="intake__bottom"><span>{t.recordOpen}</span><span>{t.evidenceKeep}</span></div>
 					<div class="stamp stamp--open">{t.stamp}</div>
 					<div class="stamp stamp--disputed">{t.stamp2}</div>
-				</div>
-				<aside class="intake__portrait">
-					<div class="portrait-frame"><img src="/images/anindya2.png" alt={t.portraitAlt} width="560" height="720" fetchpriority="high" /></div>
+					</div>
+					<aside class="intake__portrait">
+						<div class="portrait-frame">
+							<picture>
+								<source srcset="/images/anindya2-mobile.webp" media="(max-width: 900px)" type="image/webp" />
+								<source srcset="/images/anindya2-optimized.webp" type="image/webp" />
+								<img src="/images/anindya2.png" alt={t.portraitAlt} width="1086" height="1448" fetchpriority="high" />
+							</picture>
+						</div>
 					<p class="portrait-caption"><span>{t.portraitFigure}</span><span>{t.portraitCaption}</span></p>
 					<p class="personal-line">“{t.personal}”</p>
 				</aside>
@@ -643,18 +649,28 @@
 		--rule: rgba(26, 26, 46, .18);
 		--body-ink: #29283a;
 		--muted-ink: #686578;
-		position: relative;
-		z-index: 1;
-		color: var(--body-ink);
-		font-family: var(--font-sans);
-		background: var(--paper-bright);
-		overflow: clip;
-	}
-	.about-file :global(a) { color: inherit; }
-	.about-file :global(a:focus-visible), .about-file button:focus-visible, .about-file summary:focus-visible, .about-file input:focus-visible, .about-file textarea:focus-visible { outline: 3px solid var(--stamp); outline-offset: 4px; }
-	.file-main { max-width: 100%; }
-	.scene { position: relative; padding: clamp(4.5rem, 9vw, 8.5rem) max(1.2rem, calc((100vw - 72rem) / 2)); }
-	.skip-link { position: absolute; z-index: 200; top: .5rem; left: .5rem; transform: translateY(-180%); background: var(--paper); color: var(--ink); padding: .6rem 1rem; border: 2px solid var(--stamp); font: .78rem var(--font-mono); }
+			position: relative;
+			z-index: 1;
+			color: var(--body-ink);
+			font-family: var(--font-sans);
+			background: var(--paper-bright);
+			overflow: clip;
+		}
+		:global(body:has(.about-file)) { background-attachment: scroll; }
+		:global(html:not([data-language='bn']) body:has(.about-file) .language-toggle) { font-family: var(--font-sans); }
+		:global(body:has(.about-file))::before { animation: none; }
+		:global(body:has(.about-file))::after { animation: none; filter: none; }
+		.about-file :global(a) { color: inherit; }
+		.about-file :global(a:focus-visible), .about-file button:focus-visible, .about-file summary:focus-visible, .about-file input:focus-visible, .about-file textarea:focus-visible { outline: 3px solid var(--stamp); outline-offset: 4px; }
+		.file-main { max-width: 100%; }
+		.scene { position: relative; padding: clamp(4.5rem, 9vw, 8.5rem) max(1.2rem, calc((100vw - 72rem) / 2)); }
+		.scene:not(.intake) { content-visibility: auto; contain-intrinsic-size: auto 900px; }
+		.scene.classification { contain-intrinsic-size: auto 863px; }
+		.scene.route-section { contain-intrinsic-size: auto 1438px; }
+		.scene.lenses { contain-intrinsic-size: auto 1098px; }
+		.scene.instruments { contain-intrinsic-size: auto 1203px; }
+		.scene.reply { contain-intrinsic-size: auto 1035px; }
+		.skip-link { position: absolute; z-index: 200; top: .5rem; left: .5rem; transform: translateY(-180%); background: var(--paper); color: var(--ink); padding: .6rem 1rem; border: 2px solid var(--stamp); font: .78rem var(--font-mono); }
 	.skip-link:focus { transform: translateY(0); }
 	.file-progress { position: fixed; z-index: 150; right: max(1rem, calc((100vw - 90rem) / 2)); top: 50%; display: grid; grid-template-columns: 2px auto; gap: .65rem; align-items: center; color: var(--paper); font: .62rem var(--font-mono); writing-mode: vertical-rl; letter-spacing: .12em; }
 	.file-progress::before { content: ''; height: 6rem; grid-column: 1; grid-row: 1; background: rgba(247, 242, 230, .24); }
@@ -670,7 +686,7 @@
 	.paper-grain { position: absolute; z-index: -1; inset: 0; opacity: .25; pointer-events: none; background-image: repeating-linear-gradient(90deg, transparent 0 7px, rgba(70,50,30,.025) 8px), radial-gradient(circle at 80% 20%, rgba(125,95,42,.12), transparent 46%); }
 	.paper-head { display: flex; justify-content: space-between; align-items: center; padding-bottom: .8rem; border-bottom: 1px solid var(--rule); }
 	.type-label { margin: 0; color: var(--muted-ink); font: .62rem/1.4 var(--font-mono); letter-spacing: .13em; text-transform: uppercase; }
-	.paper-index { color: var(--stamp); font: .64rem var(--font-mono); }
+		.paper-index { margin-right: clamp(6rem, 8vw, 7rem); color: var(--stamp); font: .64rem var(--font-mono); }
 	.paper-subtitle { max-width: none; margin: .8rem 0 1.5rem; color: var(--muted-ink); font: italic 1rem/1.45 var(--font-serif); }
 	.intake-fields { display: grid; gap: .63rem; }
 	.intake-field { display: grid; grid-template-columns: 8rem minmax(0,1fr); gap: .8rem; align-items: center; border-bottom: 1px dotted rgba(26,26,46,.23); padding-bottom: .45rem; }
@@ -690,10 +706,11 @@
 	.stamp--disputed { right: 2rem; bottom: 3.9rem; font-size: .58rem; transform: rotate(-8deg); }
 	.motion-enabled .stamp--open { animation: stamp-in 480ms cubic-bezier(.16,1,.3,1) 1s both; }
 	.motion-enabled .stamp--disputed { animation: stamp-in 480ms cubic-bezier(.16,1,.3,1) 1.35s both; }
-	.intake__portrait { max-width: 21rem; justify-self: center; }
-	.portrait-frame { position: relative; padding: .7rem; border: 1px solid rgba(240,234,219,.34); transform: rotate(1.5deg); }
-	.portrait-frame::after { content: ''; position: absolute; inset: .7rem; border: 1px solid rgba(240,234,219,.3); pointer-events: none; }
-	.portrait-frame img { display: block; width: 100%; aspect-ratio: 4/5; object-fit: cover; filter: saturate(.82) contrast(1.03); }
+		.intake__portrait { max-width: 21rem; justify-self: center; }
+		.portrait-frame { position: relative; padding: .7rem; border: 1px solid rgba(240,234,219,.34); transform: rotate(1.5deg); }
+		.portrait-frame::after { content: ''; position: absolute; inset: .7rem; border: 1px solid rgba(240,234,219,.3); pointer-events: none; }
+		.portrait-frame picture { display: block; }
+		.portrait-frame img { display: block; width: 100%; height: auto; aspect-ratio: 4/5; object-fit: cover; filter: saturate(.82) contrast(1.03); }
 	.portrait-caption { display: flex; justify-content: space-between; gap: .6rem; margin: .8rem 0 0; color: rgba(240,234,219,.62); font: .54rem var(--font-mono); letter-spacing: .1em; }
 	.personal-line { max-width: 30ch; margin: 1.3rem 0 0; color: var(--paper); font: italic clamp(1rem,1.7vw,1.25rem)/1.4 var(--font-serif); }
 	.scene-heading { max-width: 57rem; margin: 0 auto clamp(2rem, 5vw, 3.4rem); }
@@ -866,9 +883,14 @@
 	@keyframes ink-write { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
 	@keyframes card-reveal { from { opacity: .45; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
 	@keyframes arrive { from { opacity: .62; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-	@media (max-width: 900px) {
-		.file-progress { right: .4rem; }
-		.intake__grid { grid-template-columns: minmax(0,1fr) minmax(12rem,.55fr); gap: 1.2rem; }
+		@media (max-width: 900px) {
+			.file-progress { right: .4rem; }
+			.scene.classification { contain-intrinsic-size: auto 626px; }
+			.scene.route-section { contain-intrinsic-size: auto 1566px; }
+			.scene.lenses { contain-intrinsic-size: auto 903px; }
+			.scene.instruments { contain-intrinsic-size: auto 986px; }
+			.scene.reply { contain-intrinsic-size: auto 903px; }
+			.intake__grid { grid-template-columns: minmax(0,1fr) minmax(12rem,.55fr); gap: 1.2rem; }
 		.intake__paper { min-height: 29rem; padding: 1.5rem; }
 		.stamp--disputed { bottom: 3.6rem; right: .9rem; }
 		.route-sticky { gap: 1rem; }
@@ -876,9 +898,14 @@
 		.lens-grid { gap: .65rem; }
 		.lens-card__body { padding: .95rem; }
 	}
-	@media (max-width: 640px) {
-		.scene { padding-inline: 1rem; padding-block: 4.2rem; }
-		.intake { min-height: auto; padding-top: 2rem; padding-bottom: 1.2rem; }
+		@media (max-width: 640px) {
+			.scene { padding-inline: 1rem; padding-block: 4.2rem; }
+			.scene.classification { contain-intrinsic-size: auto 950px; }
+			.scene.route-section { contain-intrinsic-size: auto 1100px; }
+			.scene.lenses { contain-intrinsic-size: auto 1477px; }
+			.scene.instruments { contain-intrinsic-size: auto 1277px; }
+			.scene.reply { contain-intrinsic-size: auto 1099px; }
+			.intake { min-height: auto; padding-top: 2rem; padding-bottom: 1.2rem; }
 		.intake__topline,.intake__footer { font-size: .52rem; }
 		.intake__grid { grid-template-columns: 1fr; }
 		.intake__paper { min-height: 29rem; padding: 1.2rem; }

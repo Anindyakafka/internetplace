@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	import type { Snippet } from 'svelte';
 	import SiteFooter from '$lib/components/SiteFooter.svelte';
-	import { startTranslation, translateTree, type SiteLanguage } from '$lib/i18n/runtime';
+	import { startTranslation, type SiteLanguage } from '$lib/i18n/runtime';
 	import '../lib/styles/global.css';
 
 	let { children }: { children: Snippet } = $props();
@@ -12,6 +12,8 @@
 	let scrolled = $state(false);
 	let theme = $state<'light' | 'dark'>('light');
 	let language = $state<SiteLanguage>('en');
+	let translationApply: (() => void) | undefined;
+	let appliedLanguage: SiteLanguage = 'en';
 
 	type SocialMeta = { title: string; description: string; image: string; imageAlt: string };
 	const archiveImage = '/images/sections/data-methods.jpg';
@@ -70,16 +72,23 @@
 	onMount(() => {
 		const stored = localStorage.getItem('site-language');
 		if (stored === 'bn' || stored === 'en') language = stored;
-		const translator = startTranslation(() => language);
-		return translator.stop;
+		const translator = startTranslation(() => language, false);
+		translationApply = translator.apply;
+		return () => {
+			translator.stop();
+			translationApply = undefined;
+		};
 	});
 
 	$effect(() => {
 		if (!browser) return;
 		document.documentElement.lang = language === 'bn' ? 'bn' : 'en';
-		document.documentElement.dataset.language = language;
-		localStorage.setItem('site-language', language);
-		if (document.documentElement) translateTree(document.documentElement, language);
+		 document.documentElement.dataset.language = language;
+		 localStorage.setItem('site-language', language);
+		 if (appliedLanguage !== language) {
+			appliedLanguage = language;
+			translationApply?.();
+		}
 	});
 
 	$effect(() => {
@@ -102,15 +111,28 @@
 	<meta property="og:image:alt" content={socialMeta($page.url.pathname).imageAlt} />
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content={socialMeta($page.url.pathname).title} />
-	<meta name="twitter:description" content={socialMeta($page.url.pathname).description} />
-	<meta name="twitter:image" content={`https://anindyasingh.com${socialMeta($page.url.pathname).image}`} />
-	<meta name="twitter:image:alt" content={socialMeta($page.url.pathname).imageAlt} />
-	<link rel="preconnect" href="https://fonts.googleapis.com" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-	<link
-		href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap"
-		rel="stylesheet"
-	/>
+		<meta name="twitter:description" content={socialMeta($page.url.pathname).description} />
+		<meta name="twitter:image" content={`https://anindyasingh.com${socialMeta($page.url.pathname).image}`} />
+		<meta name="twitter:image:alt" content={socialMeta($page.url.pathname).imageAlt} />
+		{#if $page.url.pathname === '/'}
+			<link rel="preload" as="image" href="/images/states/barwani.webp" />
+			<link rel="preload" as="image" href="/images/states/west_bengal.webp" />
+			<link rel="preload" as="image" href="/images/states/dadri.webp" />
+		{/if}
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap"
+			rel="stylesheet"
+			media="print"
+			onload={(event) => ((event.currentTarget as HTMLLinkElement).media = 'all')}
+		/>
+		<noscript>
+			<link
+				href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap"
+				rel="stylesheet"
+			/>
+		</noscript>
 </svelte:head>
 
 <div class="site">
@@ -188,9 +210,9 @@
 		{@render children()}
 	</main>
 
-	{#if $page.url.pathname !== '/' && !$page.url.pathname.startsWith('/game')}
-		<SiteFooter />
-	{/if}
+		{#if $page.url.pathname !== '/' && !$page.url.pathname.startsWith('/game')}
+			<SiteFooter aboutRoute={$page.url.pathname.replace(/\/$/, '') === '/about'} />
+		{/if}
 </div>
 
 <style>

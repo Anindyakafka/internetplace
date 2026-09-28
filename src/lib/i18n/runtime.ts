@@ -61,7 +61,7 @@ export function translateTree(root: Node, language: SiteLanguage) {
 	}
 }
 
-export function startTranslation(language: () => SiteLanguage) {
+export function startTranslation(language: () => SiteLanguage, applyImmediately = true) {
 	let applying = false;
 	const apply = (root: Node = document.documentElement) => {
 		if (applying) return;
@@ -69,7 +69,7 @@ export function startTranslation(language: () => SiteLanguage) {
 		translateTree(root, language());
 		applying = false;
 	};
-	apply();
+	if (applyImmediately) apply();
 	const observer = new MutationObserver((records) => {
 		if (applying) return;
 		for (const record of records) {
