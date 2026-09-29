@@ -175,7 +175,7 @@
 			<div class="header-inner">
 				<a class="site-mark" href="/" aria-label="Home"></a>
 				<div class="header-actions">
-				<button class="language-toggle" aria-label="Change language" onclick={toggleLanguage}>
+				<button class="language-toggle" onclick={toggleLanguage}>
 					{language === 'en' ? 'বাংলা' : 'English'}
 				</button>
 				<button
