@@ -16,23 +16,26 @@
 			occupation: 'OCCUPATION',
 			location: 'LOCATION',
 			status: 'STATUS',
-			name: 'Anindya Singh',
-			nameFirst: 'Anindya',
-			nameLast: 'Singh',
-			occupationValue: 'Researcher · data scientist · writer',
-			locationValue: 'West Bengal, India',
-			statusValue: 'In the field / in the margins',
+				name: 'Anindya Singh',
+				nameFirst: 'Anindya',
+				nameLast: 'Singh',
+				occupationValue: 'Researcher · data scientist · writer',
+				locationValue: 'Delhi NCR, India',
+				statusValue: 'In the field / in the margins',
 			subjectFiled: 'SUBJECT / NAME AS FILED',
 			recordOpen: 'RECORD STATUS: OPEN',
 			evidenceKeep: 'KEEP WITH THE EVIDENCE',
-			portraitFigure: 'FIG. 01',
-			portraitCaption: 'SUBJECT, OUTSIDE THE ARCHIVE',
-			department: 'DEPARTMENT OF INCOMPLETE KNOWLEDGE',
-			scrollContinue: 'SCROLL TO CONTINUE ↓',
-			stamp: 'OPEN FILE',
-			stamp2: 'CLASSIFICATION DISPUTED',
-			portraitAlt: 'Anindya Singh wearing a colourful ceremonial hat outdoors',
-			personal: 'I keep asking public data to explain itself; it usually requests an extension.',
+				department: 'DEPARTMENT OF INCOMPLETE KNOWLEDGE',
+				scrollContinue: 'SCROLL TO CONTINUE ↓',
+				stamp: 'OPEN FILE',
+				personal: 'I keep asking public data to explain itself; it usually requests an extension.',
+				signalTitle: 'FIELDWORK / RESEARCH SIGNAL',
+				signalSubtitle: 'People, places, and systems—before the dataset.',
+				signalMetrics: [
+					{ value: '13', label: 'person field team' },
+					{ value: '02', label: 'states' },
+					{ value: '04', label: 'district administrations' }
+				],
 			classification: 'FILE 01 / CLASSIFICATION',
 			classificationTitle: 'The record has opinions.',
 			classificationIntro: 'A small machine is very sure of itself. The person it describes is less impressed.',
@@ -52,18 +55,18 @@
 			route: 'FILE 02 / THE ROUTE',
 			routeTitle: 'A route, not a straight line.',
 			routeIntro: 'A few places and institutions that appear in the record. No claim that a map can explain the journey.',
-			routeAlt: 'A drawn route connecting Kolkata, Shiv Nadar and Dadri, and research work.',
+				routeAlt: 'A drawn route connecting Kolkata, Shiv Nadar and Dadri, and current field research in Delhi NCR.',
 			routeProgress: 'Route progress',
 			routeNotesLabel: 'Route field notes',
 			routeMapLabel: 'ROUTE / 03 ENTRIES',
 			notToScale: 'NOT TO SCALE',
-			mapLabels: ['KOLKATA', 'SHIV NADAR / DADRI', 'RESEARCH WORK'],
+				mapLabels: ['KOLKATA', 'SHIV NADAR / DADRI', 'DELHI NCR / FIELD SITES'],
 			mapFoot: 'DOCUMENTED MOVEMENT / THREE STOPS',
 			mapQualifier: '— NOT A COMPLETE HISTORY —',
 			waypoints: [
 				{ place: 'Kolkata', date: '2020 — 2023', title: 'B.Sc. Economics', text: 'Bidhannagar Government College. The first set of questions; none of the last ones.' },
 				{ place: 'Shiv Nadar / Dadri', date: '2023 — 2025', title: 'M.Sc. Economics + fieldwork', text: '214 household surveys across seven villages in Dadri, alongside satellite imagery, oral histories, and land-record politics.' },
-				{ place: 'Research work', date: 'ONGOING', title: 'Data, policy, and the human scale', text: 'Research tools and public datasets, read alongside the lives and labour that administrative categories can flatten.' }
+					{ place: 'Delhi NCR / field sites', date: 'SEP 2025 — PRESENT', title: 'Research Consultant', text: 'Leading field research on MGNREGA assets, with high-frequency checks and reusable data workflows across two states.' }
 			],
 			lenses: 'FILE 03 / THREE LENSES',
 			lensesTitle: 'The questions travel together.',
@@ -78,25 +81,31 @@
 			projectStatus: 'LONG-RUNNING PROJECT / IN PROGRESS',
 			atlasLink: 'Visit the project',
 			relatedLabel: 'SUBFILES / SELECTED WORK',
-			relatedText: 'Field research, public records, and small instruments for reading what the official ledger leaves unresolved.',
-			relatedFiles: ['Dadri Forecast', 'CBFC Watch', 'MGNREGA asset pipelines', 'West Bengal 2002 electoral rolls', 'Local Lines', 'Delhi Vehicles', 'Flights over India', 'Legal Explorer'],
+				relatedText: 'A few projects where field systems, public records, and machine-made categories meet real-world constraints.',
+				relatedProjects: [
+					{ category: 'FIELD SYSTEMS / MGNREGA', title: 'Building resilience through MGNREGA assets', detail: 'Led a 13-person field team across two states; daily high-frequency checks and transferable data pipelines strengthened field operations and data quality.' },
+					{ category: 'CLIMATE / GOOGLE-X COLLECTORS', title: 'Planning for climate resilience', detail: 'Scoped an AI-assisted disaster-mitigation prototype with four district administrations across Shillong, Nandurbar, Chennai, and Ramanathapuram.' },
+					{ category: 'PUBLIC RECORDS / WEST BENGAL', title: 'Electoral rolls, 2002 + 2026 SIR', detail: 'Built resumable pipelines to turn tens of thousands of booth-level PDFs into structured, analyzable electoral data for research and public exhibition.' },
+					{ category: 'CLASSIFICATION / SOUNDING NAMES', title: 'Auditing the assumptions behind names', detail: 'Built reproducible tools to audit religion and race/ethnicity bias in datasets—not to treat a classifier as an authority on identity.' }
+				],
+				openProject: 'OPEN FIELD NOTE',
 			relatedLink: 'Browse the work index',
 			instruments: 'FILE 04 / INSTRUMENT PANEL',
 			instrumentsTitle: 'Tools are not neutral. Still useful.',
 			instrumentsIntro: 'A working toolkit for asking, checking, mapping, and occasionally arguing with the data.',
 			toolGroups: [
-				{ label: 'ANALYSIS', tools: ['Python', 'R', 'Stata', 'SQL'] },
-				{ label: 'SPATIAL', tools: ['QGIS'] },
-				{ label: 'BUILD', tools: ['JavaScript', 'C++', 'Git'] },
-				{ label: 'PUBLISH', tools: ['LaTeX'] }
+					{ label: 'ANALYSIS', tools: ['Python', 'R', 'Stata', 'SPSS', 'MATLAB'] },
+					{ label: 'SPATIAL / DATA', tools: ['QGIS', 'Gretl', 'GAMS'] },
+					{ label: 'BUILD', tools: ['Python', 'C++', 'JavaScript', 'Git'] },
+					{ label: 'PUBLISH', tools: ['LaTeX', 'Excel', 'PowerPoint'] }
 			],
 			experienceTitle: 'Experience & education',
 			experienceHint: 'Open an index card for the field note.',
 			experienceIndex: 'INDEX / EXPERIENCE',
 			filed: 'FILED',
-			experiences: [
-				{ date: 'START DATE TO CONFIRM', title: 'Research Consultant', org: 'Inclusion Economics India Centre · Yale Research Initiative', detail: 'Research and data work at the intersection of economics and inclusion. The start date is deliberately left open rather than guessed.' },
-				{ date: 'EARLIER', title: 'Research Assistant', org: 'Centre for Sustainable Employment · Azim Premji University', detail: 'Work on employment and livelihoods, with data cleaning, spatial analysis, and the careful business of making evidence usable.' },
+					experiences: [
+					{ date: 'SEP 2025 — PRESENT', title: 'Research Consultant', org: 'Inclusion Economics India Centre · affiliated with Inclusion Economics at Yale University', detail: 'Led a 13-person field team across two states for Building Resilience through MGNREGA Assets; daily high-frequency checks and reusable data workflows supported stronger field-data quality.' },
+					{ date: 'JUN 2024 — AUG 2024', title: 'Research Assistant', org: 'Centre for Sustainable Employment · Azim Premji University', detail: 'Delivered cleaned, analysis-ready electoral and NCRB datasets and supported preliminary econometric analysis for research on employment and livelihoods.' },
 				{ date: '2023 — 2025', title: 'M.Sc. Economics', org: 'Shiv Nadar Institution of Eminence', detail: 'Graduate training in economics, methods, and the empirical questions that become harder—not easier—when people enter the dataset.' },
 				{ date: '2020 — 2023', title: 'B.Sc. Economics (Hons)', org: 'Bidhannagar Government College, Kolkata', detail: 'Undergraduate study in economics, statistics, and the habit of checking what a clean table has left outside its frame.' }
 			],
@@ -138,23 +147,26 @@
 			occupation: 'পেশা',
 			location: 'অবস্থান',
 			status: 'অবস্থা',
-			name: 'অনিন্দ্য সিং',
-			nameFirst: 'অনিন্দ্য',
-			nameLast: 'সিং',
-			occupationValue: 'গবেষক · ডেটা সায়েন্টিস্ট · লেখক',
-			locationValue: 'পশ্চিমবঙ্গ, ভারত',
-			statusValue: 'মাঠে / প্রান্তিক টীকায়',
+				name: 'অনিন্দ্য সিং',
+				nameFirst: 'অনিন্দ্য',
+				nameLast: 'সিং',
+				occupationValue: 'গবেষক · ডেটা সায়েন্টিস্ট · লেখক',
+				locationValue: 'দিল্লি এনসিআর, ভারত',
+				statusValue: 'মাঠে / প্রান্তিক টীকায়',
 			subjectFiled: 'বিষয় / নথিতে লেখা নাম',
 			recordOpen: 'নথির অবস্থা: খোলা',
 			evidenceKeep: 'প্রমাণের সঙ্গে রাখুন',
-			portraitFigure: 'চিত্র ০১',
-			portraitCaption: 'সংগ্রহশালার বাইরে বিষয়',
-			department: 'অসম্পূর্ণ জ্ঞানের বিভাগ',
-			scrollContinue: 'চালিয়ে যেতে স্ক্রল করুন ↓',
-			stamp: 'নথি খুলুন',
-			stamp2: 'শ্রেণিবিভাগ নিয়ে আপত্তি আছে',
-			portraitAlt: 'বাইরে রঙিন আনুষ্ঠানিক টুপি পরে অনিন্দ্য সিং',
-			personal: 'সরকারি তথ্যকে নিজের কথা বুঝিয়ে বলতে বলি; সাধারণত সে সময় বাড়ানোর আবেদন করে।',
+				department: 'অসম্পূর্ণ জ্ঞানের বিভাগ',
+				scrollContinue: 'চালিয়ে যেতে স্ক্রল করুন ↓',
+				stamp: 'নথি খুলুন',
+				personal: 'সরকারি তথ্যকে নিজের কথা বুঝিয়ে বলতে বলি; সাধারণত সে সময় বাড়ানোর আবেদন করে।',
+				signalTitle: 'মাঠকাজ / গবেষণার সংকেত',
+				signalSubtitle: 'তথ্যভাণ্ডারের আগে মানুষ, স্থান ও ব্যবস্থার কথা।',
+				signalMetrics: [
+					{ value: '১৩', label: 'সদস্যের মাঠদল' },
+					{ value: '০২', label: 'রাজ্য' },
+					{ value: '০৪', label: 'জেলা প্রশাসন' }
+				],
 			classification: 'নথি ০১ / শ্রেণিবিভাগ',
 			classificationTitle: 'নথিটির নিজস্ব মতামত আছে।',
 			classificationIntro: 'একটি ছোট যন্ত্র নিজের বিষয়ে খুব নিশ্চিত। যাকে সে বর্ণনা করছে, তিনি ততটা মুগ্ধ নন।',
@@ -174,18 +186,18 @@
 			route: 'নথি ০২ / পথরেখা',
 			routeTitle: 'একটি পথ, সরলরেখা নয়।',
 			routeIntro: 'নথিতে দেখা যায় এমন কয়েকটি স্থান ও প্রতিষ্ঠান। কোনও মানচিত্রই পুরো যাত্রার ব্যাখ্যা দিতে পারে না।',
-			routeAlt: 'কলকাতা, শিব নাদার ও দাদরি, এবং গবেষণার কাজকে যুক্ত করা একটি আঁকা পথ।',
+				routeAlt: 'কলকাতা, শিব নাদার ও দাদরি, এবং দিল্লি এনসিআরের বর্তমান মাঠগবেষণাকে যুক্ত করা একটি আঁকা পথ।',
 			routeProgress: 'পথের অগ্রগতি',
 			routeNotesLabel: 'পথের মাঠ-নোট',
 			routeMapLabel: 'পথ / ০৩টি নথি',
 			notToScale: 'মাপ অনুযায়ী নয়',
-			mapLabels: ['কলকাতা', 'শিব নাদার / দাদরি', 'গবেষণার কাজ'],
+				mapLabels: ['কলকাতা', 'শিব নাদার / দাদরি', 'দিল্লি এনসিআর / মাঠ এলাকা'],
 			mapFoot: 'নথিভুক্ত চলাচল / তিনটি থামা',
 			mapQualifier: '— সম্পূর্ণ ইতিহাস নয় —',
 			waypoints: [
 				{ place: 'কলকাতা', date: '২০২০ — ২০২৩', title: 'অর্থনীতিতে স্নাতক', text: 'বিধাননগর সরকারি কলেজ। প্রশ্নের প্রথম দফা; শেষ দফা নয়।' },
 				{ place: 'শিব নাদার / দাদরি', date: '২০২৩ — ২০২৫', title: 'স্নাতকোত্তর + মাঠকাজ', text: 'দাদরির সাতটি গ্রামে ২১৪টি পরিবারের সমীক্ষা; সঙ্গে উপগ্রহ-চিত্র, মৌখিক ইতিহাস এবং জমির নথির রাজনীতি।' },
-				{ place: 'গবেষণার কাজ', date: 'চলমান', title: 'তথ্য, নীতি, মানুষের মাপ', text: 'গবেষণার সরঞ্জাম ও সরকারি তথ্যভাণ্ডার—সেই মানুষ ও শ্রমের পাশে পড়া, যাদের প্রশাসনিক শ্রেণি ছোট করে দেয়।' }
+					{ place: 'দিল্লি এনসিআর / মাঠ এলাকা', date: 'সেপ্টেম্বর ২০২৫ — বর্তমান', title: 'গবেষণা পরামর্শক', text: 'দুটি রাজ্যে MGNREGA সম্পদ নিয়ে মাঠগবেষণা, নিয়মিত উচ্চ-ফ্রিকোয়েন্সি যাচাই এবং পুনর্ব্যবহারযোগ্য তথ্যপ্রবাহ।' }
 			],
 			lenses: 'নথি ০৩ / তিনটি দৃষ্টিকোণ',
 			lensesTitle: 'প্রশ্নগুলি একসঙ্গেই চলে।',
@@ -200,25 +212,31 @@
 			projectStatus: 'দীর্ঘমেয়াদি প্রকল্প / কাজ চলছে',
 			atlasLink: 'প্রকল্পটি দেখুন',
 			relatedLabel: 'উপ-নথি / নির্বাচিত কাজ',
-			relatedText: 'মাঠগবেষণা, সরকারি নথি, এবং সরকারি খাতায় অমীমাংসিত থেকে যাওয়া বিষয় পড়ার ছোট যন্ত্র।',
-			relatedFiles: ['Dadri Forecast', 'CBFC Watch', 'MGNREGA asset pipelines', 'West Bengal 2002 electoral rolls', 'Local Lines', 'Delhi Vehicles', 'Flights over India', 'Legal Explorer'],
+				relatedText: 'মাঠের ব্যবস্থা, সরকারি নথি ও যন্ত্রনির্ভর শ্রেণিবিভাগ—বাস্তব জগতের সীমাবদ্ধতার মুখোমুখি হলে কী হয়, তার কয়েকটি প্রকল্প।',
+				relatedProjects: [
+					{ category: 'মাঠের ব্যবস্থা / MGNREGA', title: 'Building resilience through MGNREGA assets', detail: 'দুটি রাজ্যে ১৩ জনের মাঠদল পরিচালনা; দৈনিক উচ্চ-ফ্রিকোয়েন্সি যাচাই এবং হস্তান্তরযোগ্য তথ্যপ্রবাহ মাঠকাজ ও তথ্যের গুণমানকে শক্তিশালী করেছে।' },
+					{ category: 'জলবায়ু / Google-X Collectors', title: 'জলবায়ু-সহনশীলতার পরিকল্পনা', detail: 'Shillong, Nandurbar, Chennai ও Ramanathapuram-এ চারটি জেলা প্রশাসনের সঙ্গে দুর্যোগ-প্রশমন ও বিনিয়োগ পরিকল্পনার AI-সহায়ক প্রোটোটাইপ নিয়ে কাজ।' },
+					{ category: 'সরকারি নথি / পশ্চিমবঙ্গ', title: 'ভোটার তালিকা, ২০০২ + ২০২৬ SIR', detail: 'দশ-হাজারের বেশি বুথ-স্তরের PDF থেকে গবেষণা ও জন-প্রদর্শনীর জন্য বিশ্লেষণযোগ্য তথ্য তৈরির পুনরারম্ভযোগ্য পাইপলাইন।' },
+					{ category: 'শ্রেণিবিভাগ / Sounding Names', title: 'নামের পেছনের অনুমান যাচাই', detail: 'ধর্ম ও জাতি/বর্ণের লেবেলে ডেটাসেটের পক্ষপাত যাচাইয়ের পুনরুৎপাদনযোগ্য সরঞ্জাম—পরিচয়ের চূড়ান্ত উত্তর হিসেবে শ্রেণিবিভাগ নয়।' }
+				],
+				openProject: 'মাঠ-নোট খুলুন',
 			relatedLink: 'কাজের সূচি দেখুন',
 			instruments: 'নথি ০৪ / যন্ত্রপাতির প্যানেল',
 			instrumentsTitle: 'সরঞ্জাম নিরপেক্ষ নয়। তবু কাজে লাগে।',
 			instrumentsIntro: 'প্রশ্ন করা, যাচাই, মানচিত্র আঁকা এবং কখনও তথ্যের সঙ্গে তর্ক করার কাজের সরঞ্জাম।',
-			toolGroups: [
-				{ label: 'বিশ্লেষণ', tools: ['Python', 'R', 'Stata', 'SQL'] },
-				{ label: 'স্থানিক', tools: ['QGIS'] },
-				{ label: 'নির্মাণ', tools: ['JavaScript', 'C++', 'Git'] },
-				{ label: 'প্রকাশনা', tools: ['LaTeX'] }
+				toolGroups: [
+					{ label: 'বিশ্লেষণ', tools: ['Python', 'R', 'Stata', 'SPSS', 'MATLAB'] },
+					{ label: 'স্থানিক / তথ্য', tools: ['QGIS', 'Gretl', 'GAMS'] },
+					{ label: 'নির্মাণ', tools: ['Python', 'C++', 'JavaScript', 'Git'] },
+					{ label: 'প্রকাশনা', tools: ['LaTeX', 'Excel', 'PowerPoint'] }
 			],
 			experienceTitle: 'অভিজ্ঞতা ও শিক্ষা',
 			experienceHint: 'মাঠের নোট দেখতে একটি কার্ড খুলুন।',
 			experienceIndex: 'সূচি / অভিজ্ঞতা',
 			filed: 'নথিভুক্ত',
-			experiences: [
-				{ date: 'শুরুর তারিখ নিশ্চিত করতে হবে', title: 'গবেষণা পরামর্শক', org: 'Inclusion Economics India Centre · Yale Research Initiative', detail: 'অর্থনীতি ও অন্তর্ভুক্তির সংযোগস্থলে গবেষণা ও তথ্যের কাজ। অনুমান না করে শুরুর তারিখটি খোলা রাখা হয়েছে।' },
-				{ date: 'পূর্বে', title: 'গবেষণা সহকারী', org: 'Centre for Sustainable Employment · Azim Premji University', detail: 'কর্মসংস্থান ও জীবিকা নিয়ে কাজ; তথ্য পরিষ্কার করা, স্থানিক বিশ্লেষণ, এবং প্রমাণকে ব্যবহারযোগ্য করার যত্নশীল কাজ।' },
+				experiences: [
+					{ date: 'সেপ্টেম্বর ২০২৫ — বর্তমান', title: 'গবেষণা পরামর্শক', org: 'Inclusion Economics India Centre · Inclusion Economics at Yale University-এর সঙ্গে যুক্ত', detail: 'দুটি রাজ্যে MGNREGA সম্পদ প্রকল্পে ১৩ জনের মাঠদল পরিচালনা; দৈনিক উচ্চ-ফ্রিকোয়েন্সি যাচাই ও পুনর্ব্যবহারযোগ্য তথ্যপ্রবাহ তথ্যের গুণমান বাড়াতে সহায়তা করেছে।' },
+					{ date: 'জুন ২০২৪ — আগস্ট ২০২৪', title: 'গবেষণা সহকারী', org: 'Centre for Sustainable Employment · Azim Premji University', detail: 'কর্মসংস্থান ও জীবিকা গবেষণার জন্য পরিষ্কার, বিশ্লেষণ-প্রস্তুত নির্বাচনী ও NCRB ডেটাসেট তৈরি এবং প্রাথমিক অর্থমিতিক বিশ্লেষণে সহায়তা।' },
 				{ date: '২০২৩ — ২০২৫', title: 'অর্থনীতিতে স্নাতকোত্তর', org: 'Shiv Nadar Institution of Eminence', detail: 'অর্থনীতি, পদ্ধতি এবং মানুষেরা তথ্যভাণ্ডারে এলে যে অভিজ্ঞতাভিত্তিক প্রশ্নগুলি আরও কঠিন হয়—সেগুলি নিয়ে পড়াশোনা।' },
 				{ date: '২০২০ — ২০২৩', title: 'অর্থনীতিতে স্নাতক (সম্মান)', org: 'Bidhannagar Government College, Kolkata', detail: 'অর্থনীতি, পরিসংখ্যান, এবং একটি পরিষ্কার সারণি ফ্রেমের বাইরে কী রেখেছে তা যাচাই করার অভ্যাস।' }
 			],
@@ -353,10 +371,23 @@
 				if (visible) activeScene = scenes.indexOf(visible.target as HTMLElement);
 			},
 			{ rootMargin: '-15% 0px -55% 0px', threshold: [0, 0.15, 0.4, 0.7] }
-		);
-		scenes.forEach((scene) => sceneObserver.observe(scene));
+			);
+			scenes.forEach((scene) => sceneObserver.observe(scene));
 
-		let raf = 0;
+			const animatedCards = Array.from(document.querySelectorAll<HTMLElement>('[data-animate-card]'));
+			const revealObserver = new IntersectionObserver(
+				(entries, observer) => {
+					entries.forEach((entry) => {
+						if (!entry.isIntersecting) return;
+						entry.target.classList.add('has-entered');
+						observer.unobserve(entry.target);
+					});
+				},
+				{ rootMargin: '0px 0px -7% 0px', threshold: 0.12 }
+			);
+			animatedCards.forEach((card) => revealObserver.observe(card));
+
+			let raf = 0;
 		const updateScroll = () => {
 			if (raf) return;
 			raf = window.requestAnimationFrame(() => {
@@ -405,10 +436,11 @@
 		};
 		window.addEventListener('keydown', onKeyDown);
 
-		return () => {
-			languageObserver.disconnect();
-			sceneObserver.disconnect();
-			reducedMotion.removeEventListener('change', onMotionChange);
+			return () => {
+				languageObserver.disconnect();
+				sceneObserver.disconnect();
+				revealObserver.disconnect();
+				reducedMotion.removeEventListener('change', onMotionChange);
 			if (classifierTimer) window.clearInterval(classifierTimer);
 			if (raf) window.cancelAnimationFrame(raf);
 			if (cursorFrame) window.cancelAnimationFrame(cursorFrame);
@@ -422,9 +454,10 @@
 
 <svelte:head>
 	<title>About — Anindya Singh</title>
-	<meta name="description" content="A case file on Anindya Singh: researcher, data scientist, and writer working with economics, labour, identity, information, and public data." />
-	<meta name="author" content="Anindya Singh" />
-	<script type="application/ld+json">{JSON.stringify(personSchema)}</script>
+		<meta name="description" content="A case file on Anindya Singh: researcher, data scientist, and writer working with economics, labour, identity, information, and public data." />
+		<meta name="author" content="Anindya Singh" />
+		<link rel="preload" href="https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwgknk-4.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+		<script type="application/ld+json">{JSON.stringify(personSchema)}</script>
 </svelte:head>
 
 <div class="about-file" class:motion-enabled={motionEnabled} class:cursor-enabled={cursorEnabled}>
@@ -456,22 +489,27 @@
 						<p class="type-label">{t.subjectFiled}</p>
 						<h1 id="intake-title">{t.nameFirst} <em>{t.nameLast}</em></h1>
 					</div>
-					<div class="intake__bottom"><span>{t.recordOpen}</span><span>{t.evidenceKeep}</span></div>
-					<div class="stamp stamp--open">{t.stamp}</div>
-					<div class="stamp stamp--disputed">{t.stamp2}</div>
+						<div class="intake__bottom"><span>{t.recordOpen}</span><span>{t.evidenceKeep}</span></div>
+						<div class="stamp stamp--open">{t.stamp}</div>
 					</div>
-					<aside class="intake__portrait">
-						<div class="portrait-frame">
-							<picture>
-								<source srcset="/images/anindya2-mobile.webp" media="(max-width: 900px)" type="image/webp" />
-								<source srcset="/images/anindya2-optimized.webp" type="image/webp" />
-								<img src="/images/anindya2.png" alt={t.portraitAlt} width="1086" height="1448" fetchpriority="high" />
-							</picture>
-						</div>
-					<p class="portrait-caption"><span>{t.portraitFigure}</span><span>{t.portraitCaption}</span></p>
-					<p class="personal-line">“{t.personal}”</p>
-				</aside>
-			</div>
+					<aside class="intake__signal" aria-label={t.signalTitle}>
+						<div class="signal-head"><span>{t.signalTitle}</span><span>FIELD / 13</span></div>
+						<svg class="signal-visual" viewBox="0 0 420 210" aria-hidden="true">
+							<path class="signal-orbit" d="M26 106C78 15 143 15 210 106S342 197 394 106" />
+							<path class="signal-orbit signal-orbit--second" d="M26 106C78 197 143 197 210 106S342 15 394 106" />
+							<path class="signal-route" d="M34 145C91 145 104 53 163 53s74 105 130 105 63-63 93-63" />
+							<circle class="signal-node" cx="34" cy="145" r="6" /><circle class="signal-node" cx="163" cy="53" r="6" /><circle class="signal-node" cx="293" cy="158" r="6" /><circle class="signal-node" cx="386" cy="95" r="6" />
+							<circle class="signal-core" cx="210" cy="106" r="11" /><circle class="signal-core-ring" cx="210" cy="106" r="25" />
+						</svg>
+						<p class="signal-subtitle">{t.signalSubtitle}</p>
+						<dl class="signal-metrics">
+							{#each t.signalMetrics as metric}
+								<div><dt>{metric.value}</dt><dd>{metric.label}</dd></div>
+							{/each}
+						</dl>
+						<p class="personal-line">“{t.personal}”</p>
+					</aside>
+				</div>
 			<div class="intake__footer"><span>{t.department}</span><span>{t.scrollContinue}</span></div>
 		</section>
 
@@ -489,7 +527,7 @@
 					<p class="self-description" class:typed-in={classifierDone}>{t.selfDescription}</p>
 					<p class="classification__aside">{t.classificationAside}</p>
 				</div>
-				<div class="classifier-card" aria-live="polite" aria-atomic="true">
+					<div class="classifier-card" aria-live="polite" aria-atomic="true" data-animate-card>
 					<div class="classifier-card__head"><span class="signal-dot" aria-hidden="true"></span><span>{t.classifierLabel}</span><span class="classifier-card__serial">{t.modelSerial}</span></div>
 					<div class="classifier-card__body">
 						{#each t.classifierFrames as frame, index}
@@ -525,7 +563,7 @@
 				</div>
 				<div class="route-notes" aria-label={t.routeNotesLabel}>
 					{#each t.waypoints as point, index}
-						<article class="field-note" class:current={routeProgress >= index / t.waypoints.length && (index === t.waypoints.length - 1 || routeProgress < (index + 1) / t.waypoints.length)}>
+							<article class="field-note" data-animate-card style={`--card-order:${index}`} class:current={routeProgress >= index / t.waypoints.length && (index === t.waypoints.length - 1 || routeProgress < (index + 1) / t.waypoints.length)}>
 							<p class="field-note__date">{point.date}<span> / 0{index + 1}</span></p>
 							<h3>{point.place}</h3>
 							<p class="field-note__title">{point.title}</p>
@@ -544,7 +582,7 @@
 			</header>
 			<div class="lens-grid">
 				{#each t.lensItems as lens, index}
-					<article class="lens-card" style={`--lens-index:${index}`}>
+						<article class="lens-card" data-animate-card style={`--lens-index:${index};--card-order:${index}`}>
 						<div class={`lens-visual lens-visual--${index + 1}`} aria-hidden="true">
 							{#if index === 0}
 								<div class="ledger-lines"></div><div class="ledger-dots">{#each Array(18) as _, dot}<i style={`--dot:${dot}`}></i>{/each}</div><div class="ledger-bars"><i></i><i></i><i></i><i></i></div>
@@ -558,8 +596,24 @@
 					</article>
 				{/each}
 			</div>
-			<aside class="atlas-callout"><div><p class="type-label">{t.projectStatus}</p><h3>{t.atlasTitle}</h3><p>{t.atlasText}</p></div><a href="/annihilation-atlas">{t.atlasLink}<span aria-hidden="true"> ↗</span></a></aside>
-			<div class="related-files"><div class="related-files__intro"><p class="type-label">{t.relatedLabel}</p><p>{t.relatedText}</p></div><ul>{#each t.relatedFiles as file}<li>{file}</li>{/each}</ul><a href="/work">{t.relatedLink}<span aria-hidden="true"> ↗</span></a></div>
+				<aside class="atlas-callout" data-animate-card><div><p class="type-label">{t.projectStatus}</p><h3>{t.atlasTitle}</h3><p>{t.atlasText}</p></div><a href="/annihilation-atlas">{t.atlasLink}<span aria-hidden="true"> ↗</span></a></aside>
+				<div class="related-files">
+					<div class="related-files__intro"><p class="type-label">{t.relatedLabel}</p><p>{t.relatedText}</p></div>
+					<div class="related-projects">
+						{#each t.relatedProjects as project, index}
+							<details class="project-card" data-animate-card style={`--card-order:${index}`}>
+								<summary>
+									<span class="project-card__serial">0{index + 1}</span>
+									<span class="project-card__category">{project.category}</span>
+									<h3>{project.title}</h3>
+									<span class="project-card__toggle">{t.openProject}<b aria-hidden="true">+</b></span>
+								</summary>
+								<div class="project-card__detail"><p>{project.detail}</p></div>
+							</details>
+						{/each}
+					</div>
+					<a class="related-files__link" href="/work">{t.relatedLink}<span aria-hidden="true"> ↗</span></a>
+				</div>
 		</section>
 
 		<section id="instruments" class="scene instruments" data-file-scene aria-labelledby="instruments-title">
@@ -570,7 +624,7 @@
 			</header>
 			<div class="instrument-row">
 				{#each t.toolGroups as group, index}
-					<div class="instrument" style={`--instrument-index:${index}`}>
+						<div class="instrument" data-animate-card style={`--instrument-index:${index};--card-order:${index}`}>
 						<div class="instrument__dial" aria-hidden="true"><span class="dial-mark">{String(index + 1).padStart(2, '0')}</span><i></i><b></b></div>
 						<p class="type-label">{group.label}</p>
 						<ul>{#each group.tools as tool}<li>{tool}</li>{/each}</ul>
@@ -580,7 +634,7 @@
 			<div class="experience-head"><div><p class="type-label">{t.experienceIndex}</p><h3>{t.experienceTitle}</h3></div><p>{t.experienceHint}</p></div>
 			<div class="experience-index">
 				{#each t.experiences as experience, index}
-					<details class="index-card" open={index === 0}>
+						<details class="index-card" data-animate-card style={`--card-order:${index}`} open={index === 0}>
 						<summary>
 							<span class="index-card__serial">0{index + 1}</span>
 							<span class="index-card__main"><span class="index-card__date">{experience.date}</span><strong>{experience.title}</strong><span>{experience.org}</span></span>
@@ -598,7 +652,7 @@
 				<h2 id="reply-title">{t.replyTitle}</h2>
 				<p class="scene-intro">{t.replyText}</p>
 			</header>
-			<div class="reply-slip" class:slip-filed={formState === 'success'}>
+				<div class="reply-slip" data-animate-card class:slip-filed={formState === 'success'}>
 				<div class="slip-perforation" aria-hidden="true"></div>
 				<div class="reply-slip__head"><span>{t.replyForm}</span><span>{t.keepCopy}</span></div>
 				<div class="contact-links" aria-label="Contact and profile links">
@@ -667,8 +721,8 @@
 		.scene:not(.intake) { content-visibility: auto; contain-intrinsic-size: auto 900px; }
 		.scene.classification { contain-intrinsic-size: auto 863px; }
 		.scene.route-section { contain-intrinsic-size: auto 1438px; }
-		.scene.lenses { contain-intrinsic-size: auto 1098px; }
-		.scene.instruments { contain-intrinsic-size: auto 1203px; }
+		.scene.lenses { contain-intrinsic-size: auto 1382px; }
+		.scene.instruments { contain-intrinsic-size: auto 1259px; }
 		.scene.reply { contain-intrinsic-size: auto 1035px; }
 		.skip-link { position: absolute; z-index: 200; top: .5rem; left: .5rem; transform: translateY(-180%); background: var(--paper); color: var(--ink); padding: .6rem 1rem; border: 2px solid var(--stamp); font: .78rem var(--font-mono); }
 	.skip-link:focus { transform: translateY(0); }
@@ -686,7 +740,7 @@
 	.paper-grain { position: absolute; z-index: -1; inset: 0; opacity: .25; pointer-events: none; background-image: repeating-linear-gradient(90deg, transparent 0 7px, rgba(70,50,30,.025) 8px), radial-gradient(circle at 80% 20%, rgba(125,95,42,.12), transparent 46%); }
 	.paper-head { display: flex; justify-content: space-between; align-items: center; padding-bottom: .8rem; border-bottom: 1px solid var(--rule); }
 	.type-label { margin: 0; color: var(--muted-ink); font: .62rem/1.4 var(--font-mono); letter-spacing: .13em; text-transform: uppercase; }
-		.paper-index { margin-right: clamp(6rem, 8vw, 7rem); color: var(--stamp); font: .64rem var(--font-mono); }
+			.paper-index { margin-right: clamp(7rem, 9vw, 8rem); color: var(--stamp); font: .64rem var(--font-mono); }
 	.paper-subtitle { max-width: none; margin: .8rem 0 1.5rem; color: var(--muted-ink); font: italic 1rem/1.45 var(--font-serif); }
 	.intake-fields { display: grid; gap: .63rem; }
 	.intake-field { display: grid; grid-template-columns: 8rem minmax(0,1fr); gap: .8rem; align-items: center; border-bottom: 1px dotted rgba(26,26,46,.23); padding-bottom: .45rem; }
@@ -703,16 +757,8 @@
 	.intake__bottom { display: flex; justify-content: space-between; gap: .75rem; margin-top: 1.3rem; color: var(--muted-ink); font: .54rem var(--font-mono); letter-spacing: .08em; }
 	.stamp { position: absolute; padding: .48rem .8rem; border: 2px solid var(--stamp); color: var(--stamp); font: 700 .72rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }
 	.stamp--open { top: 1.4rem; right: 1.35rem; transform: rotate(8deg); }
-	.stamp--disputed { right: 2rem; bottom: 3.9rem; font-size: .58rem; transform: rotate(-8deg); }
-	.motion-enabled .stamp--open { animation: stamp-in 480ms cubic-bezier(.16,1,.3,1) 1s both; }
-	.motion-enabled .stamp--disputed { animation: stamp-in 480ms cubic-bezier(.16,1,.3,1) 1.35s both; }
-		.intake__portrait { max-width: 21rem; justify-self: center; }
-		.portrait-frame { position: relative; padding: .7rem; border: 1px solid rgba(240,234,219,.34); transform: rotate(1.5deg); }
-		.portrait-frame::after { content: ''; position: absolute; inset: .7rem; border: 1px solid rgba(240,234,219,.3); pointer-events: none; }
-		.portrait-frame picture { display: block; }
-		.portrait-frame img { display: block; width: 100%; height: auto; aspect-ratio: 4/5; object-fit: cover; filter: saturate(.82) contrast(1.03); }
-	.portrait-caption { display: flex; justify-content: space-between; gap: .6rem; margin: .8rem 0 0; color: rgba(240,234,219,.62); font: .54rem var(--font-mono); letter-spacing: .1em; }
-	.personal-line { max-width: 30ch; margin: 1.3rem 0 0; color: var(--paper); font: italic clamp(1rem,1.7vw,1.25rem)/1.4 var(--font-serif); }
+		.motion-enabled .stamp--open { animation: stamp-in 480ms cubic-bezier(.16,1,.3,1) 1s both; }
+		.personal-line { max-width: 30ch; margin: 1.3rem 0 0; color: var(--paper); font: italic clamp(1rem,1.7vw,1.25rem)/1.4 var(--font-serif); }
 	.scene-heading { max-width: 57rem; margin: 0 auto clamp(2rem, 5vw, 3.4rem); }
 	.scene-kicker { margin: 0 0 .8rem; color: var(--stamp); font: .68rem var(--font-mono); letter-spacing: .15em; text-transform: uppercase; }
 	.scene-heading h2 { margin: 0; color: var(--ink); font: 500 clamp(2.25rem, 5.8vw, 5rem)/.98 var(--font-serif); letter-spacing: -.05em; }
@@ -800,9 +846,6 @@
 	.atlas-callout a:hover { color: var(--paper); background: var(--ink); }
 	.related-files { max-width: 72rem; margin: 1.4rem auto 0; padding: 1.1rem 0; display: grid; grid-template-columns: minmax(12rem,.8fr) minmax(0,1.7fr) auto; gap: 1.2rem; align-items: center; border-bottom: 1px solid var(--rule); }
 	.related-files__intro > p:last-child { max-width: 32ch; margin: .4rem 0 0; color: var(--muted-ink); font: .83rem/1.5 var(--font-serif); }
-	.related-files ul { display: flex; flex-wrap: wrap; gap: .35rem; margin: 0; padding: 0; list-style: none; }
-	.related-files li { padding: .25rem .42rem; border: 1px solid rgba(26,26,46,.16); color: var(--muted-ink); font: .59rem/1.35 var(--font-mono); }
-	.related-files > a { color: var(--stamp); font: .67rem var(--font-mono); text-decoration: underline; text-underline-offset: .22rem; white-space: nowrap; }
 	.instruments { color: var(--paper); background: var(--ink); }
 	.instruments .scene-kicker { color: #d17968; }.instruments .scene-heading h2 { color: var(--paper); }.instruments .scene-intro { color: rgba(240,234,219,.65); }
 	.instrument-row { max-width: 72rem; margin: 0 auto clamp(4rem,8vw,6.5rem); display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); border-top: 1px solid rgba(240,234,219,.23); border-bottom: 1px solid rgba(240,234,219,.23); }
@@ -876,24 +919,22 @@
 	.help-terminal > p span { color: #73bb72; }
 	.custom-cursor { display: none; }
 	@media (hover:hover) and (pointer:fine) { .cursor-enabled .custom-cursor { position: fixed; z-index: 170; top: 0; left: 0; display: block; width: .38rem; height: .38rem; pointer-events: none; transform: var(--cursor-transform,translate3d(-10px,-10px,0)); border-radius: 50%; background: var(--stamp); transition: width 180ms,height 180ms,border-radius 180ms; } .custom-cursor i { display: block; width: 100%; height: 100%; } .custom-cursor.cursor-over-text { width: 1rem; height: .22rem; border-radius: 0; } }
-	.motion-enabled .scene-heading,.motion-enabled .lens-card,.motion-enabled .atlas-callout,.motion-enabled .field-note { animation: arrive 700ms cubic-bezier(.22,1,.36,1) both; animation-timeline: view(); animation-range: entry 0% entry 28%; }
-	.motion-enabled .lens-card:nth-child(2) { animation-delay: 100ms; }.motion-enabled .lens-card:nth-child(3) { animation-delay: 180ms; }
+		.motion-enabled .scene-heading { animation: arrive 700ms cubic-bezier(.22,1,.36,1) both; animation-timeline: view(); animation-range: entry 0% entry 28%; }
 	@keyframes peel { 0% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
 	@keyframes stamp-in { 0% { opacity: 0; transform: scale(1.5) rotate(18deg); } 65% { opacity: 1; transform: scale(.96) rotate(-5deg); } 100% { opacity: 1; transform: scale(1) rotate(8deg); } }
 	@keyframes ink-write { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
-	@keyframes card-reveal { from { opacity: .45; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
-	@keyframes arrive { from { opacity: .62; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+		@keyframes card-reveal { from { transform: translateY(-4px); } to { transform: translateY(0); } }
+		@keyframes arrive { from { transform: translateY(15px); } to { transform: translateY(0); } }
 		@media (max-width: 900px) {
 			.file-progress { right: .4rem; }
 			.scene.classification { contain-intrinsic-size: auto 626px; }
 			.scene.route-section { contain-intrinsic-size: auto 1566px; }
-			.scene.lenses { contain-intrinsic-size: auto 903px; }
-			.scene.instruments { contain-intrinsic-size: auto 986px; }
+			.scene.lenses { contain-intrinsic-size: auto 1178px; }
+			.scene.instruments { contain-intrinsic-size: auto 1041px; }
 			.scene.reply { contain-intrinsic-size: auto 903px; }
 			.intake__grid { grid-template-columns: minmax(0,1fr) minmax(12rem,.55fr); gap: 1.2rem; }
 		.intake__paper { min-height: 29rem; padding: 1.5rem; }
-		.stamp--disputed { bottom: 3.6rem; right: .9rem; }
-		.route-sticky { gap: 1rem; }
+			.route-sticky { gap: 1rem; }
 		.route-map { min-height: 20rem; }
 		.lens-grid { gap: .65rem; }
 		.lens-card__body { padding: .95rem; }
@@ -902,20 +943,19 @@
 			.scene { padding-inline: 1rem; padding-block: 4.2rem; }
 			.scene.classification { contain-intrinsic-size: auto 950px; }
 			.scene.route-section { contain-intrinsic-size: auto 1100px; }
-			.scene.lenses { contain-intrinsic-size: auto 1477px; }
-			.scene.instruments { contain-intrinsic-size: auto 1277px; }
-			.scene.reply { contain-intrinsic-size: auto 1099px; }
+			.scene.lenses { contain-intrinsic-size: auto 1822px; }
+			.scene.instruments { contain-intrinsic-size: auto 1421px; }
+			.scene.reply { contain-intrinsic-size: auto 1111px; }
 			.intake { min-height: auto; padding-top: 2rem; padding-bottom: 1.2rem; }
 		.intake__topline,.intake__footer { font-size: .52rem; }
 		.intake__grid { grid-template-columns: 1fr; }
-		.intake__paper { min-height: 29rem; padding: 1.2rem; }
+		.intake__paper { min-height: 31.75rem; padding: 1.2rem; }
 		.intake-field { grid-template-columns: 6.2rem minmax(0,1fr); gap: .4rem; }
 		.intake-field dd { font-size: .7rem; }
 		.intake__name-block h1 { font-size: clamp(3.4rem,16vw,5.7rem); }
 		.stamp { padding: .35rem .5rem; font-size: .56rem; }
 		.stamp--open { top: 1.1rem; right: 1rem; }
-		.stamp--disputed { right: .7rem; bottom: 3.5rem; font-size: .47rem; }
-		.intake__bottom { font-size: .43rem; }
+			.intake__bottom { font-size: .43rem; }
 		.intake__portrait { width: min(78%,18rem); justify-self: end; margin-top: .5rem; }
 		.personal-line { margin-top: 1rem; }
 		.scene-heading { margin-bottom: 1.7rem; }
@@ -969,14 +1009,170 @@
 		.self-description { clip-path: none !important; }
 		.custom-cursor { display: none !important; }
 	}
-	@media (max-width: 380px) {
-		.intake__paper { min-height: 31rem; }
-		.intake-field { grid-template-columns: 5.3rem minmax(0,1fr); }
-		.intake-field dt { font-size: .53rem; }
-		.intake-field dd { font-size: .65rem; }
-		.lens-card { grid-template-columns: 6.1rem minmax(0,1fr); }
-		.lens-visual { min-height: 13rem; }
-		.lens-card__body { padding: .75rem; }
-		.lens-card__body h3 { font-size: 1.65rem; }
-	}
-</style>
+		@media (max-width: 380px) {
+			.intake__paper { min-height: 32.25rem; }
+			.intake-field { grid-template-columns: 5.3rem minmax(0,1fr); }
+			.intake-field dt { font-size: .53rem; }
+			.intake-field dd { font-size: .65rem; }
+			.lens-card { grid-template-columns: 6.1rem minmax(0,1fr); }
+			.lens-visual { min-height: 13rem; }
+				.lens-card__body { padding: .75rem; }
+				.lens-card__body h3 { font-size: 1.65rem; }
+			}
+		@media (max-width: 340px) {
+			.intake__paper { min-height: 33rem; }
+		}
+
+		/* Shared internetplace palette: the About narrative now follows both site themes. */
+		.about-file {
+			--ink: var(--color-text);
+			--about-readable-muted: color-mix(in srgb, var(--color-text) 80%, var(--color-surface) 20%);
+			--about-readable-accent: color-mix(in srgb, var(--color-accent) 40%, var(--color-text) 60%);
+			--about-readable-highlight: color-mix(in srgb, var(--color-highlight) 30%, var(--color-text) 70%);
+			--ink-soft: var(--about-readable-muted);
+			--paper: var(--color-surface);
+			--paper-bright: var(--color-bg);
+			--paper-shadow: var(--color-border);
+			--stamp: var(--color-accent);
+			--ochre: var(--color-highlight);
+			--rule: color-mix(in srgb, var(--color-border) 84%, transparent);
+			--body-ink: var(--color-text);
+			--muted-ink: var(--about-readable-muted);
+			color: var(--color-text);
+			background: var(--color-bg);
+		}
+		.about-file .intake,
+		.about-file .lenses,
+		.about-file .reply { color: var(--color-text); background: var(--color-bg); }
+		.about-file .classification,
+		.about-file .instruments { color: var(--color-text); background: var(--color-surface); }
+		.about-file .route-section { background: color-mix(in srgb, var(--color-highlight) 8%, var(--color-bg)); }
+		.about-file .intake::before {
+			opacity: .5;
+			background-image: linear-gradient(color-mix(in srgb, var(--color-border) 28%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--color-border) 28%, transparent) 1px, transparent 1px), radial-gradient(ellipse at 82% 18%, color-mix(in srgb, var(--color-highlight) 20%, transparent), transparent 42%);
+			background-size: 34px 34px, 34px 34px, auto;
+		}
+		.file-progress { color: var(--about-readable-muted); }
+		.scene-kicker, .instruments .scene-kicker { color: var(--about-readable-accent); }
+		.file-progress::before { background: color-mix(in srgb, var(--color-text) 16%, transparent); }
+		.file-progress__bar { background: var(--color-highlight); }
+		.intake__topline, .intake__footer { color: var(--color-text-muted); }
+		.intake__paper { border: 1px solid var(--color-border); background: var(--color-surface); box-shadow: 10px 12px 0 color-mix(in srgb, var(--color-text) 8%, transparent), 0 1.5rem 3rem color-mix(in srgb, var(--color-text) 7%, transparent); transform: rotate(-.2deg); }
+		.paper-grain { opacity: .12; background-image: repeating-linear-gradient(90deg, transparent 0 7px, color-mix(in srgb, var(--color-text) 3%, transparent) 8px), radial-gradient(circle at 80% 20%, color-mix(in srgb, var(--color-highlight) 13%, transparent), transparent 46%); }
+		.intake-field { border-bottom-color: color-mix(in srgb, var(--color-border-strong) 70%, transparent); }
+		.intake-field dd { color: var(--color-text); }
+		.stamp { border-color: var(--color-highlight); color: var(--color-accent); }
+		.intake__signal {
+			position: relative;
+			width: min(100%, 25rem);
+			justify-self: center;
+			overflow: hidden;
+			padding: clamp(1.1rem, 2.6vw, 1.6rem);
+			border: 1px solid var(--color-border);
+			border-top: 3px solid var(--color-highlight);
+			border-radius: var(--radius-lg);
+			background: color-mix(in srgb, var(--color-surface) 94%, var(--color-highlight));
+			box-shadow: var(--shadow-md);
+		}
+		.signal-head { display: flex; justify-content: space-between; gap: .5rem; color: var(--color-text-muted); font: .55rem var(--font-mono); letter-spacing: .08em; }
+		.signal-visual { display: block; width: 100%; height: auto; margin: .8rem auto .2rem; overflow: visible; }
+		.signal-orbit { fill: none; stroke: color-mix(in srgb, var(--color-accent) 28%, transparent); stroke-width: 1; stroke-dasharray: 3 6; }
+		.signal-orbit--second { opacity: .6; }
+		.signal-route { fill: none; stroke: var(--color-highlight); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 420; stroke-dashoffset: 0; }
+		.motion-enabled .signal-route { animation: signal-draw 1.5s cubic-bezier(.22,1,.36,1) .15s both; }
+		.signal-node { fill: var(--color-surface-raised); stroke: var(--color-accent); stroke-width: 2; }
+		.signal-core { fill: var(--color-highlight); }
+		.signal-core-ring { fill: none; stroke: var(--color-highlight); stroke-width: 1; opacity: .42; transform-box: fill-box; transform-origin: center; }
+		.motion-enabled .signal-core-ring { animation: signal-pulse 2.4s ease-in-out .4s infinite; }
+		.signal-subtitle { margin: 0 0 .85rem; color: var(--color-text-secondary); font: italic .9rem/1.45 var(--font-serif); }
+		.signal-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-block: 1px solid var(--color-border); }
+		.signal-metrics > div { min-width: 0; padding: .7rem .45rem .68rem; }
+		.signal-metrics > div + div { border-left: 1px solid var(--color-border); }
+		.signal-metrics dt { color: var(--color-accent); font: 500 1.3rem/1 var(--font-serif); }
+		.signal-metrics dd { margin: .35rem 0 0; color: var(--color-text-muted); font: .48rem/1.4 var(--font-mono); text-transform: uppercase; }
+		.personal-line { max-width: 32ch; margin: .9rem 0 0; color: var(--color-text-secondary); font: italic .9rem/1.5 var(--font-serif); }
+		.classifier-card { border-color: var(--color-border); background: var(--color-surface); box-shadow: var(--shadow-md); }
+		.signal-dot { background: var(--color-highlight); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-highlight) 24%, transparent); }
+		.route-map { border-color: var(--color-border-strong); border-radius: var(--radius-lg); background-color: var(--color-surface); background-image: linear-gradient(color-mix(in srgb, var(--color-border) 40%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--color-border) 40%, transparent) 1px, transparent 1px), radial-gradient(circle at 18% 20%, color-mix(in srgb, var(--color-highlight) 16%, transparent), transparent 45%); background-size: 28px 28px, 28px 28px, auto; box-shadow: var(--shadow-sm); }
+		.map-stamp { border-color: color-mix(in srgb, var(--color-highlight) 72%, var(--color-border-strong)); color: var(--color-accent); }
+		.map-contour { stroke: color-mix(in srgb, var(--color-text) 16%, transparent); }
+		.map-gridline { stroke: color-mix(in srgb, var(--color-text) 9%, transparent); }
+		.field-note { border-color: var(--color-border); border-left-color: transparent; border-radius: var(--radius); background: var(--color-surface); box-shadow: var(--shadow-sm); }
+		.field-note.current { border-left-color: var(--color-highlight); background: var(--color-surface-raised); }
+		.lens-card { overflow: hidden; border-color: var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); }
+		.lens-card:hover, .lens-card:focus-within { border-color: var(--color-border-strong); box-shadow: var(--shadow-md); }
+		.lens-visual { background: color-mix(in srgb, var(--color-highlight) 8%, var(--color-surface)); }
+		.ledger-lines { background: repeating-linear-gradient(0deg, transparent 0 22px, color-mix(in srgb, var(--color-text) 14%, transparent) 23px 24px); }
+		.ledger-bars i { border-color: var(--color-border-strong); background: color-mix(in srgb, var(--color-accent) 13%, transparent); }
+		.identity-orbit { border-color: color-mix(in srgb, var(--color-text) 36%, transparent); }
+		.identity-orbit::before { border-color: color-mix(in srgb, var(--color-text) 23%, transparent); }
+		.identity-orbit i { background: var(--color-surface); }
+		.table-visual { border-color: var(--color-border-strong); background: color-mix(in srgb, var(--color-surface-raised) 82%, transparent); }
+		.table-visual i, .table-visual b { border-top-color: var(--color-border); }
+		.atlas-callout { border-left: 3px solid var(--color-highlight); background: color-mix(in srgb, var(--color-surface) 75%, transparent); padding-left: clamp(1.1rem, 3vw, 2rem); }
+		.related-files { display: grid; grid-template-columns: 1fr; gap: 1rem; align-items: stretch; padding: 1.8rem 0 .5rem; border-bottom: 0; }
+		.related-files__intro { max-width: 48rem; }
+		.related-projects { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+		.project-card { min-width: 0; overflow: hidden; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); box-shadow: var(--shadow-sm); transition: border-color 250ms ease, box-shadow 250ms ease; }
+		.project-card:hover, .project-card:focus-within, .project-card[open] { border-color: var(--color-border-strong); box-shadow: var(--shadow-md); }
+		.project-card summary { position: relative; display: grid; grid-template-columns: auto 1fr; gap: .45rem .75rem; align-items: start; padding: 1rem 1.1rem; cursor: pointer; list-style: none; }
+		.project-card summary::-webkit-details-marker { display: none; }
+		.project-card__serial { grid-row: span 2; color: var(--about-readable-highlight); font: .66rem var(--font-mono); }
+		.project-card__category { color: var(--about-readable-muted); font: .53rem/1.4 var(--font-mono); letter-spacing: .08em; }
+		.project-card summary h3 { margin: 0; color: var(--color-text); font: 500 clamp(1.15rem, 1.7vw, 1.45rem)/1.18 var(--font-serif); }
+		.project-card__toggle { grid-column: 2; display: flex; justify-content: space-between; gap: .4rem; align-items: center; margin-top: .25rem; color: var(--color-accent); font: .5rem var(--font-mono); letter-spacing: .06em; }
+		.project-card__toggle b { color: var(--color-highlight); font: 1rem var(--font-mono); transition: transform 250ms ease; }
+		.project-card[open] .project-card__toggle b { transform: rotate(45deg); }
+		.project-card__detail { padding: 0 1.1rem 1rem 2.6rem; animation: card-reveal 320ms cubic-bezier(.22,1,.36,1) both; }
+		.project-card__detail p { margin: 0; color: var(--color-text-secondary); font-size: .82rem; line-height: 1.55; }
+		.related-files__link { display: inline-flex; min-height: 2.5rem; align-items: center; justify-self: start; padding: .4rem .65rem; border: 1px solid var(--color-border); border-radius: var(--radius); color: var(--color-accent); font: .67rem var(--font-mono); text-decoration: underline; text-underline-offset: .22rem; }
+		.instruments .scene-kicker { color: var(--about-readable-accent); }
+		.instruments .scene-heading h2, .experience-head h3 { color: var(--color-text); }
+		.instruments .scene-intro, .experience-head > p { color: var(--about-readable-muted); }
+		.instrument-row { gap: .7rem; border: 0; }
+		.instrument { min-width: 0; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-bg); box-shadow: var(--shadow-sm); transition: border-color 250ms ease, box-shadow 250ms ease; }
+		.instrument:hover { border-color: var(--color-border-strong); box-shadow: var(--shadow-md); }
+		.instrument__dial { border-color: var(--color-border-strong); background: repeating-conic-gradient(from -130deg, color-mix(in srgb, var(--color-text) 28%, transparent) 0 1deg, transparent 1deg 16deg); }
+		.instrument__dial::after { border-color: var(--color-border); }
+		.instrument__dial i { background: var(--color-highlight); }
+		.instrument__dial b { background: var(--color-surface); }
+		.dial-mark, .instrument .type-label { color: var(--about-readable-muted); }
+		.instrument li { border-color: var(--color-border); color: var(--color-text-secondary); background: var(--color-surface); }
+		.experience-index { display: grid; gap: .65rem; border-top: 0; }
+		.index-card { overflow: hidden; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-bg); box-shadow: var(--shadow-sm); transition: border-color 250ms ease, box-shadow 250ms ease; }
+		.index-card:hover, .index-card:focus-within, .index-card[open] { border-color: var(--color-border-strong); box-shadow: var(--shadow-md); }
+		.index-card summary { padding-inline: 1rem; }
+		.index-card__serial, .index-card__toggle { color: var(--about-readable-highlight); }
+		.index-card__date, .index-card__detail span { color: var(--about-readable-muted); }
+		.index-card__main strong, .index-card__detail p { color: var(--color-text); }
+		.index-card__main > span:last-child { color: var(--about-readable-muted); }
+		.reply-slip { border-color: var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); box-shadow: 0 10px 0 color-mix(in srgb, var(--color-text) 5%, transparent), var(--shadow-md); }
+		.reply-slip::before, .reply-slip::after { background: radial-gradient(circle at center, var(--color-bg) 0 3px, transparent 3.4px) center / 10px 12px repeat-y; }
+		.slip-perforation { border-top-color: var(--color-border); }
+		.contact-links a { border-color: var(--color-border); border-radius: var(--radius); background: var(--color-bg); }
+		.contact-links a:hover { border-color: var(--color-highlight); background: color-mix(in srgb, var(--color-highlight) 8%, var(--color-surface)); }
+		.contact-form input, .contact-form textarea { border-color: var(--color-border-strong); border-radius: var(--radius); background: var(--color-bg); }
+		.contact-form input:focus, .contact-form textarea:focus { border-color: var(--color-highlight); }
+		.form-message--error, .form-message--success { color: var(--color-text); background: color-mix(in srgb, var(--color-highlight) 12%, var(--color-surface)); border-left-color: var(--color-highlight); }
+		.translation-review { color: var(--color-text); background: var(--color-surface); }
+		.help-terminal { border-color: var(--color-border-strong); border-radius: var(--radius-lg); color: var(--color-text); background: var(--color-surface); box-shadow: 0 1rem 3rem color-mix(in srgb, var(--color-text) 18%, transparent); }
+		.help-terminal__head { border-bottom-color: var(--color-border); }
+		.help-terminal h2, .help-terminal > p span { color: var(--color-accent); }
+		.motion-enabled [data-animate-card] { transform: translate3d(0, 1.1rem, 0); transition: transform 560ms cubic-bezier(.22,1,.36,1), border-color 250ms ease, box-shadow 250ms ease; transition-delay: calc(var(--card-order, 0) * 55ms); }
+		.motion-enabled :global([data-animate-card].has-entered) { transform: translate3d(0, 0, 0); }
+		.motion-enabled :global([data-animate-card].has-entered:is(:hover, :focus-within)) { transform: translate3d(0, -.25rem, 0); box-shadow: var(--shadow-md); }
+		.motion-enabled :global(.field-note[data-animate-card].has-entered.current) { transform: translate3d(-.35rem, 0, 0); }
+		@keyframes signal-draw { from { stroke-dashoffset: 420; } to { stroke-dashoffset: 0; } }
+		@keyframes signal-pulse { 0%, 100% { opacity: .32; transform: scale(.88); } 50% { opacity: .75; transform: scale(1.12); } }
+		@media (max-width: 640px) {
+			.intake__signal { width: 100%; max-width: none; }
+			.related-projects { grid-template-columns: 1fr; }
+			.project-card summary { padding: .9rem; }
+			.project-card__detail { padding-inline: 2.35rem .9rem; }
+			.motion-enabled :global(.field-note[data-animate-card].has-entered.current) { transform: translate3d(.2rem, 0, 0); }
+		}
+		@media (prefers-reduced-motion: reduce) {
+			.motion-enabled [data-animate-card], .motion-enabled :global([data-animate-card].has-entered) { opacity: 1 !important; transform: none !important; }
+			.signal-route, .signal-core-ring { animation: none !important; }
+		}
+	</style>
