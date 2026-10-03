@@ -11,6 +11,7 @@
     "data:trains:west-bengal": "node scripts/prepare-west-bengal-trains.mjs",
     "data:railways:west-bengal": "node scripts/prepare-west-bengal-railways.mjs",
     "data:legal": "node scripts/prepare-legal-explorer.mjs",
+    "data:neta": "python scripts/prepare-neta-2024.py",
     "build": "npm run data:prepare && vite build",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
