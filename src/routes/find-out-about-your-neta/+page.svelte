@@ -28,7 +28,6 @@
 	let panY = 0;
 	let dragging = false;
 	let dragMoved = false;
-	let ignoreNextMapClick = false;
 	let dragX = 0;
 	let dragY = 0;
 	let error = '';
@@ -137,14 +136,16 @@
 		dragMoved = false;
 		dragX = event.clientX;
 		dragY = event.clientY;
-		(event.currentTarget as SVGElement).setPointerCapture(event.pointerId);
 	}
 	function movePan(event: PointerEvent) {
 		if (!dragging) return;
 		const movedX = event.clientX-dragX;
 		const movedY = event.clientY-dragY;
 		if (Math.abs(movedX) <= 2 && Math.abs(movedY) <= 2) return;
-		dragMoved = true;
+		if (!dragMoved) {
+			dragMoved = true;
+			(event.currentTarget as SVGElement).setPointerCapture(event.pointerId);
+		}
 		// At 100% the viewBox already contains the entire map, so there is no
 		// off-screen area to pan into. A deliberate drag gently enters the
 		// pannable view instead of appearing to do nothing.
@@ -162,14 +163,12 @@
 	}
 	function endPan(event: PointerEvent) {
 		if (!dragging) return;
-		ignoreNextMapClick = dragMoved;
 		dragging = false;
 		const map = event.currentTarget as SVGElement;
 		if (map.hasPointerCapture(event.pointerId)) map.releasePointerCapture(event.pointerId);
 	}
-	function chooseFromMap(item: Representative | undefined) {
-		if (ignoreNextMapClick) { ignoreNextMapClick = false; return; }
-		if (item) choose(item);
+	function chooseFromMap(event: PointerEvent, item: Representative | undefined) {
+		if (event.button === 0 && !dragMoved && item) choose(item);
 	}
 	function resetMap() { zoom=1; panX=0; panY=0; }
 	function mapPath(coordinates: any): string {
@@ -213,7 +212,7 @@
 
 	{#if error}<p class="error">{error}</p>{:else}
 	<div class:has-selection={!!selected} class="map-workspace">
-	<section id="constituency-map-panel" class="map-panel"><div class="mode-control"><span>Shade constituencies by:</span><div class="mode-bar" aria-label="Shade constituencies by">{#each modes as item}<button class:active={mode===item.id} onclick={() => changeMode(item.id)}>{item.label}</button>{/each}</div></div><div class="map-wrap"><svg class:dragging class="constituency-map" viewBox={mapViewBox} role="img" aria-label="Interactive, zoomable and draggable map of Lok Sabha constituencies" onwheel={zoomMap} onpointerdown={startPan} onpointermove={movePan} onpointerup={endPan} onpointercancel={endPan}>{#each mapFeatures as feature}<path d={feature.d} fill={featureFill(feature.record, mode)} class:selected={selected && feature.recordKey===key(selected.state_ut_name,selected.ls_seat_name)} role="button" tabindex="0" onclick={() => chooseFromMap(feature.record)} onkeydown={(event) => { if ((event.key==='Enter'||event.key===' ') && feature.record) choose(feature.record); }}><title>{feature.record ? `${feature.record.ls_seat_name}, ${feature.record.state_ut_name}` : 'Constituency boundary'}</title></path>{/each}</svg>{#if mapLoading || loading}<div class="loading"><i></i><span>Drawing 545 constituencies…</span></div>{/if}{#if mapLoaded}<div class="map-tools" aria-label="Map zoom controls"><button onclick={() => setZoom(zoom*1.35)} aria-label="Zoom in">+</button><button onclick={() => setZoom(zoom/1.35)} aria-label="Zoom out">−</button><button onclick={resetMap}>Reset</button><span>{Math.round(zoom*100)}%</span></div><div class="map-key"><span>{modes.find((item)=>item.id===mode)?.label}</span><i class={`ramp ramp--${mode}`}></i><small>{mode==='all'?'Click any constituency':mode==='assets'?'Lower → higher declared value':mode==='cases'?'None → more declared cases':mode==='attendance'?'Lower → higher attendance':'Education categories'}</small></div>{/if}</div></section>
+	<section id="constituency-map-panel" class="map-panel"><div class="mode-control"><span>Shade constituencies by:</span><div class="mode-bar" aria-label="Shade constituencies by">{#each modes as item}<button class:active={mode===item.id} onclick={() => changeMode(item.id)}>{item.label}</button>{/each}</div></div><div class="map-wrap"><svg class:dragging class="constituency-map" viewBox={mapViewBox} role="img" aria-label="Interactive, zoomable and draggable map of Lok Sabha constituencies" onwheel={zoomMap} onpointerdown={startPan} onpointermove={movePan} onpointerup={endPan} onpointercancel={endPan}>{#each mapFeatures as feature}<path d={feature.d} fill={featureFill(feature.record, mode)} class:selected={selected && feature.recordKey===key(selected.state_ut_name,selected.ls_seat_name)} role="button" tabindex="0" onpointerup={(event) => chooseFromMap(event, feature.record)} onkeydown={(event) => { if ((event.key==='Enter'||event.key===' ') && feature.record) choose(feature.record); }}><title>{feature.record ? `${feature.record.ls_seat_name}, ${feature.record.state_ut_name}` : 'Constituency boundary'}</title></path>{/each}</svg>{#if mapLoading || loading}<div class="loading"><i></i><span>Drawing 545 constituencies…</span></div>{/if}{#if mapLoaded}<div class="map-tools" aria-label="Map zoom controls"><button onclick={() => setZoom(zoom*1.35)} aria-label="Zoom in">+</button><button onclick={() => setZoom(zoom/1.35)} aria-label="Zoom out">−</button><button onclick={resetMap}>Reset</button><span>{Math.round(zoom*100)}%</span></div><div class="map-key"><span>{modes.find((item)=>item.id===mode)?.label}</span><i class={`ramp ramp--${mode}`}></i><small>{mode==='all'?'Click any constituency':mode==='assets'?'Lower → higher declared value':mode==='cases'?'None → more declared cases':mode==='attendance'?'Lower → higher attendance':'Education categories'}</small></div>{/if}</div></section>
 	<details class="search-first" aria-busy={loading}><summary>Search by name or state instead</summary><div class="search-heading"><div><p class="eyebrow">Alternative route</p><h2>Find a constituency</h2></div>{#if loading}<span class="index-loading">Opening the record index…</span>{/if}</div><div class="search-controls"><label><span>Pick a state</span><select bind:value={selectedState}><option value="">All states and union territories</option>{#each states as state}<option value={state}>{state}</option>{/each}</select></label><label for="neta-search"><span>Search constituency, representative or party</span><input id="neta-search" bind:value={query} placeholder="Try Kolkata Dakshin" /></label></div>{#if !loading}<div class="results" aria-live="polite">{#each filtered as item}<button class:selected={selected===item} onclick={() => choose(item)}><span><strong>{item.ls_seat_name}</strong><small>{item.state_ut_name}</small></span><span><b>{item.candidate}</b><small>{item.party_x}</small></span></button>{/each}</div>{/if}</details>
 	{#if selected}
 	<section class="selection-bar"><div><small>Selected constituency</small><strong>{selected.ls_seat_name} · {selected.state_ut_name}</strong></div><button onclick={changeSelection}>Change constituency</button></section>
